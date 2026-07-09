@@ -36,24 +36,6 @@
                         ]
                     },
                     {
-                        "description": "Ctrl + Space -> Switch to US layout",
-                        "manipulators": [
-                            {
-                                "from": {
-                                    "key_code": "spacebar",
-                                    "modifiers": {
-                                        "mandatory": ["left_control"],
-                                        "optional": ["any"]
-                                    }
-                                },
-                                "to": [
-                                    { "select_input_source": { "input_source_id": "^com\\.apple\\.keylayout\\.US$" } }
-                                ],
-                                "type": "basic"
-                            }
-                        ]
-                    },
-                    {
                         "description": "Double tap Left or Right Shift to Switch Language (Snappy 200ms)",
                         "manipulators": [
                             {
