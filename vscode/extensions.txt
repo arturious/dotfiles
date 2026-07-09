@@ -1,0 +1,3 @@
+arturious.solarized-kuro
+esbenp.prettier-vscode
+file-icons.file-icons

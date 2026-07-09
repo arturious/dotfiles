@@ -83,6 +83,15 @@ install_vscode() {
   ln -s "$src" "$dest"
 
   echo "    Symlinked $dest -> $src"
+
+  local extensions_file="$DOTFILES_DIR/vscode/extensions.txt"
+  if command -v code >/dev/null 2>&1 && [ -f "$extensions_file" ]; then
+    echo "    Installing VS Code extensions..."
+    while IFS= read -r extension; do
+      [ -z "$extension" ] && continue
+      code --install-extension "$extension"
+    done < "$extensions_file"
+  fi
 }
 
 # ---------------------------------------------------------------------------
