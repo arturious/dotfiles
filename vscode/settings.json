@@ -1,0 +1,51 @@
+{
+  "workbench.tips.enabled": false,
+  "editor.guides.bracketPairs": true,
+  "editor.accessibilitySupport": "on",
+  "editor.fontSize": 14,
+  "editor.fontFamily": "JetBrainsMono Nerd Font Mono, Menlo, Monaco, 'Courier New', monospace",
+  "editor.minimap.enabled": false,
+  "editor.fontLigatures": "'calt', 'liga', 'ss02'",
+  "workbench.iconTheme": "file-icons",
+  "claudeCode.preferredLocation": "panel",
+  "workbench.browser.showInTitleBar": true,
+  "chat.viewSessions.orientation": "stacked",
+  "workbench.activityBar.location": "top",
+  "git.enableSmartCommit": true,
+  "git.confirmSync": false,
+  "explorer.confirmDelete": false,
+  "git.autofetch": true,
+  "workbench.colorTheme": "Solarized Kuro",
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "notebook.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnPaste": true,
+  "notebook.formatOnCellExecution": true,
+  "notebook.formatOnSave.enabled": true,
+  "prettier.documentSelectors": [""],
+
+  "[html]": {
+    "editor.defaultFormatter": "vscode.html-language-features",
+  },
+  "workbench.startupEditor": "none",
+  "workbench.tree.renderIndentGuides": "always",
+  "editor.unicodeHighlight.nonBasicASCII": false,
+
+  "editor.tokenColorCustomizations": {
+    "textMateRules": [
+      {
+        "scope": ["comment", "punctuation.definition.comment"],
+        "settings": {
+          "fontStyle": "italic",
+        },
+      },
+      {
+        "scope": ["keyword", "storage.type", "storage.modifier"],
+        "settings": {
+          "fontStyle": "italic",
+        },
+      },
+    ],
+  },
+  "chat.unifiedAgentsBar.enabled": true,
+}
