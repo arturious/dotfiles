@@ -24,7 +24,39 @@ install_iterm2() {
 }
 
 # ---------------------------------------------------------------------------
+# Karabiner-Elements
+# ---------------------------------------------------------------------------
+install_karabiner() {
+  echo "==> Karabiner-Elements"
+
+  local src="$DOTFILES_DIR/karabiner"
+  local dest="$HOME/.config/karabiner"
+
+  if [ ! -d "$src" ]; then
+    echo "    !! $src not found, skipping"
+    return
+  fi
+
+  if [ -L "$dest" ]; then
+    echo "    $dest is already a symlink, skipping"
+    return
+  fi
+
+  if [ -e "$dest" ]; then
+    local backup="$dest.bak.$(date +%Y%m%d%H%M%S)"
+    echo "    Existing $dest found, backing up to $backup"
+    mv "$dest" "$backup"
+  fi
+
+  mkdir -p "$HOME/.config"
+  ln -s "$src" "$dest"
+
+  echo "    Symlinked $dest -> $src"
+}
+
+# ---------------------------------------------------------------------------
 # Add new install_<app> functions below and call them here
 # ---------------------------------------------------------------------------
 
 install_iterm2
+install_karabiner
