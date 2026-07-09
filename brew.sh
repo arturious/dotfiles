@@ -11,7 +11,18 @@ install_fonts() {
 }
 
 # ---------------------------------------------------------------------------
+# Casks
+# ---------------------------------------------------------------------------
+install_casks() {
+  echo "==> Casks"
+
+  brew install --cask iterm2
+  brew install --cask karabiner-elements
+}
+
+# ---------------------------------------------------------------------------
 # Add new install_<group> functions below and call them here
 # ---------------------------------------------------------------------------
 
 install_fonts
+install_casks
