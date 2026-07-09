@@ -44,6 +44,10 @@
                                         "name": "left_shift_pressed",
                                         "type": "variable_if",
                                         "value": 1
+                                    },
+                                    {
+                                        "input_sources": [{ "input_source_id": "^com\\.apple\\.keylayout\\.US$" }],
+                                        "type": "input_source_if"
                                     }
                                 ],
                                 "from": {
@@ -51,10 +55,34 @@
                                     "modifiers": { "optional": ["any"] }
                                 },
                                 "to": [
+                                    { "select_input_source": { "input_source_id": "^com\\.apple\\.keylayout\\.Russian$" } },
                                     {
-                                        "key_code": "spacebar",
-                                        "modifiers": ["left_control"]
+                                        "set_variable": {
+                                            "name": "left_shift_pressed",
+                                            "value": 0
+                                        }
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "name": "left_shift_pressed",
+                                        "type": "variable_if",
+                                        "value": 1
                                     },
+                                    {
+                                        "input_sources": [{ "input_source_id": "^com\\.apple\\.keylayout\\.US$" }],
+                                        "type": "input_source_unless"
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "left_shift",
+                                    "modifiers": { "optional": ["any"] }
+                                },
+                                "to": [
+                                    { "select_input_source": { "input_source_id": "^com\\.apple\\.keylayout\\.US$" } },
                                     {
                                         "set_variable": {
                                             "name": "left_shift_pressed",
@@ -97,6 +125,10 @@
                                         "name": "right_shift_pressed",
                                         "type": "variable_if",
                                         "value": 1
+                                    },
+                                    {
+                                        "input_sources": [{ "input_source_id": "^com\\.apple\\.keylayout\\.US$" }],
+                                        "type": "input_source_if"
                                     }
                                 ],
                                 "from": {
@@ -104,10 +136,34 @@
                                     "modifiers": { "optional": ["any"] }
                                 },
                                 "to": [
+                                    { "select_input_source": { "input_source_id": "^com\\.apple\\.keylayout\\.Russian$" } },
                                     {
-                                        "key_code": "spacebar",
-                                        "modifiers": ["left_control"]
+                                        "set_variable": {
+                                            "name": "right_shift_pressed",
+                                            "value": 0
+                                        }
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "name": "right_shift_pressed",
+                                        "type": "variable_if",
+                                        "value": 1
                                     },
+                                    {
+                                        "input_sources": [{ "input_source_id": "^com\\.apple\\.keylayout\\.US$" }],
+                                        "type": "input_source_unless"
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "right_shift",
+                                    "modifiers": { "optional": ["any"] }
+                                },
+                                "to": [
+                                    { "select_input_source": { "input_source_id": "^com\\.apple\\.keylayout\\.US$" } },
                                     {
                                         "set_variable": {
                                             "name": "right_shift_pressed",
@@ -191,6 +247,10 @@
                 {
                     "from": { "key_code": "f4" },
                     "to": [{ "key_code": "f4" }]
+                },
+                {
+                    "from": { "key_code": "f5" },
+                    "to": [{ "key_code": "f5" }]
                 }
             ],
             "name": "Default profile",
