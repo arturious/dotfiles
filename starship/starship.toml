@@ -1,0 +1,44 @@
+palette = "solarized"
+
+format = """
+$directory\
+$git_branch\
+$git_status\
+$package\
+$nodejs
+$character"""
+
+
+[nodejs]
+format = '[via](italic) [ $version](green) '
+
+[package]
+format = '[is](italic) [󰏗 $version](208) '
+
+[directory]
+
+[git_branch]
+style = "bold green"
+format = '[on](italic) [$symbol$branch]($style) '
+
+[character]
+success_symbol = "[❯](bold green)"
+error_symbol = "[❯](bold red)"
+
+[palettes.solarized]
+base03  = "#002D38"
+base02  = "#073541"
+base01  = "#586E74"
+base00  = "#647A82"
+base0   = "#9FABAD"
+base1   = "#ADB8B8"
+base2   = "#EDE7D4"
+base3   = "#FDF6E2"
+yellow  = "#B28600"
+orange  = "#CA4C16"
+red     = "#DC312E"
+magenta = "#D33682"
+violet  = "#6D72C5"
+blue    = "#278BD3"
+cyan    = "#2AA298"
+green   = "#859900"

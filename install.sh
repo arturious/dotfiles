@@ -97,9 +97,41 @@ install_vscode() {
 }
 
 # ---------------------------------------------------------------------------
+# Starship
+# ---------------------------------------------------------------------------
+install_starship() {
+  echo "==> Starship"
+
+  local src="$DOTFILES_DIR/starship/starship.toml"
+  local dest="$HOME/.config/starship.toml"
+
+  if [ ! -f "$src" ]; then
+    echo "    !! $src not found, skipping"
+    return
+  fi
+
+  if [ -L "$dest" ]; then
+    echo "    $dest is already a symlink, skipping"
+    return
+  fi
+
+  if [ -e "$dest" ]; then
+    local backup="$dest.bak.$(date +%Y%m%d%H%M%S)"
+    echo "    Existing $dest found, backing up to $backup"
+    mv "$dest" "$backup"
+  fi
+
+  mkdir -p "$HOME/.config"
+  ln -s "$src" "$dest"
+
+  echo "    Symlinked $dest -> $src"
+}
+
+# ---------------------------------------------------------------------------
 # Add new install_<app> functions below and call them here
 # ---------------------------------------------------------------------------
 
 install_iterm2
 install_karabiner
 install_vscode
+install_starship

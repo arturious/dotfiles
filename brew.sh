@@ -21,8 +21,18 @@ install_casks() {
 }
 
 # ---------------------------------------------------------------------------
+# Formulae
+# ---------------------------------------------------------------------------
+install_formulae() {
+  echo "==> Formulae"
+
+  brew install starship
+}
+
+# ---------------------------------------------------------------------------
 # Add new install_<group> functions below and call them here
 # ---------------------------------------------------------------------------
 
 install_fonts
 install_casks
+install_formulae
