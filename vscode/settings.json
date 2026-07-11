@@ -48,4 +48,10 @@
     ],
   },
   "chat.unifiedAgentsBar.enabled": true,
+  "security.workspace.trust.banner": "always",
+  "workbench.trustedDomains.promptInTrustedWorkspace": true,
+  "security.workspace.trust.startupPrompt": "always",
+  "editor.unicodeHighlight.allowedCharacters": {
+    "❯": true,
+  },
 }
