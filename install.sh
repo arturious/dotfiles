@@ -128,6 +128,49 @@ install_starship() {
 }
 
 # ---------------------------------------------------------------------------
+# Ghostty
+# ---------------------------------------------------------------------------
+install_ghostty() {
+  echo "==> Ghostty"
+
+  local src="$DOTFILES_DIR/ghostty/config.ghostty"
+  local config_dir="$HOME/.config/ghostty"
+  local dest="$config_dir/config.ghostty"
+  local default_link="$config_dir/config"
+
+  if [ ! -f "$src" ]; then
+    echo "    !! $src not found, skipping"
+    return
+  fi
+
+  mkdir -p "$config_dir"
+
+  if [ -L "$dest" ]; then
+    echo "    $dest is already a symlink, skipping"
+  else
+    if [ -e "$dest" ]; then
+      local backup="$dest.bak.$(date +%Y%m%d%H%M%S)"
+      echo "    Existing $dest found, backing up to $backup"
+      mv "$dest" "$backup"
+    fi
+    ln -s "$src" "$dest"
+    echo "    Symlinked $dest -> $src"
+  fi
+
+  if [ -L "$default_link" ]; then
+    echo "    $default_link is already a symlink, skipping"
+  else
+    if [ -e "$default_link" ]; then
+      local backup="$default_link.bak.$(date +%Y%m%d%H%M%S)"
+      echo "    Existing $default_link found, backing up to $backup"
+      mv "$default_link" "$backup"
+    fi
+    ln -s "$dest" "$default_link"
+    echo "    Symlinked $default_link -> $dest"
+  fi
+}
+
+# ---------------------------------------------------------------------------
 # Add new install_<app> functions below and call them here
 # ---------------------------------------------------------------------------
 
@@ -135,3 +178,4 @@ install_iterm2
 install_karabiner
 install_vscode
 install_starship
+install_ghostty
