@@ -5,10 +5,13 @@
             "complex_modifications": {
                 "rules": [
                     {
-                        "description": "F4 -> open/focus iTerm2 with Claude (new tab if already open)",
+                        "description": "Cmd+F4 -> open/focus iTerm2 with Claude (new tab if already open)",
                         "manipulators": [
                             {
-                                "from": { "key_code": "f4" },
+                                "from": {
+                                    "key_code": "f4",
+                                    "modifiers": { "mandatory": ["command"], "optional": ["any"] }
+                                },
                                 "to": [{ "shell_command": "osascript -e 'set wasRunning to application \"iTerm\" is running' -e 'tell application \"iTerm\" to activate' -e 'if wasRunning then' -e 'tell application \"iTerm\" to tell current window to create tab with default profile command \"/Users/arturbakhtygereyev/.local/bin/claude\"' -e 'else' -e 'repeat until (count of windows of application \"iTerm\") > 0' -e 'delay 0.1' -e 'end repeat' -e 'tell application \"iTerm\" to tell current session of current window to write text \"claude\"' -e 'end if'" }],
                                 "type": "basic"
                             }
