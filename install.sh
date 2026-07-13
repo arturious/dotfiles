@@ -11,7 +11,7 @@ DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 install_iterm2() {
   echo "==> iTerm2"
 
-  local prefs_dir="$DOTFILES_DIR/iterm2"
+  local prefs_dir="$DOTFILES_DIR"
 
   if [ ! -f "$prefs_dir/com.googlecode.iterm2.plist" ]; then
     echo "    !! $prefs_dir/com.googlecode.iterm2.plist not found, skipping"
