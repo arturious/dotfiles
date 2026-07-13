@@ -104,7 +104,7 @@ install_vscode() {
 install_starship() {
   echo "==> Starship"
 
-  local src="$DOTFILES_DIR/starship/starship.toml"
+  local src="$DOTFILES_DIR/starship.toml"
   local dest="$HOME/.config/starship.toml"
 
   if [ ! -f "$src" ]; then
