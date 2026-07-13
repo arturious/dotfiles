@@ -64,7 +64,7 @@ install_karabiner() {
 install_vscode() {
   echo "==> VS Code"
 
-  local src="$DOTFILES_DIR/vscode/settings.json"
+  local src="$DOTFILES_DIR/settings.json"
   local dest="$HOME/Library/Application Support/Code/User/settings.json"
 
   if [ ! -f "$src" ]; then
@@ -88,7 +88,7 @@ install_vscode() {
 
   echo "    Symlinked $dest -> $src"
 
-  local extensions_file="$DOTFILES_DIR/vscode/extensions.txt"
+  local extensions_file="$DOTFILES_DIR/extensions.txt"
   if command -v code >/dev/null 2>&1 && [ -f "$extensions_file" ]; then
     echo "    Installing VS Code extensions..."
     while IFS= read -r extension; do
