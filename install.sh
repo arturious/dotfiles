@@ -133,7 +133,7 @@ install_starship() {
 install_ghostty() {
   echo "==> Ghostty"
 
-  local src="$DOTFILES_DIR/ghostty/config.ghostty"
+  local src="$DOTFILES_DIR/config.ghostty"
   local config_dir="$HOME/.config/ghostty"
   local dest="$config_dir/config.ghostty"
 
