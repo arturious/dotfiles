@@ -136,7 +136,6 @@ install_ghostty() {
   local src="$DOTFILES_DIR/ghostty/config.ghostty"
   local config_dir="$HOME/.config/ghostty"
   local dest="$config_dir/config.ghostty"
-  local default_link="$config_dir/config"
 
   if [ ! -f "$src" ]; then
     echo "    !! $src not found, skipping"
@@ -147,27 +146,17 @@ install_ghostty() {
 
   if [ -L "$dest" ]; then
     echo "    $dest is already a symlink, skipping"
-  else
-    if [ -e "$dest" ]; then
-      local backup="$dest.bak.$(date +%Y%m%d%H%M%S)"
-      echo "    Existing $dest found, backing up to $backup"
-      mv "$dest" "$backup"
-    fi
-    ln -s "$src" "$dest"
-    echo "    Symlinked $dest -> $src"
+    return
   fi
 
-  if [ -L "$default_link" ]; then
-    echo "    $default_link is already a symlink, skipping"
-  else
-    if [ -e "$default_link" ]; then
-      local backup="$default_link.bak.$(date +%Y%m%d%H%M%S)"
-      echo "    Existing $default_link found, backing up to $backup"
-      mv "$default_link" "$backup"
-    fi
-    ln -s "$dest" "$default_link"
-    echo "    Symlinked $default_link -> $dest"
+  if [ -e "$dest" ]; then
+    local backup="$dest.bak.$(date +%Y%m%d%H%M%S)"
+    echo "    Existing $dest found, backing up to $backup"
+    mv "$dest" "$backup"
   fi
+
+  ln -s "$src" "$dest"
+  echo "    Symlinked $dest -> $src"
 }
 
 # ---------------------------------------------------------------------------
