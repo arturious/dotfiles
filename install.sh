@@ -31,13 +31,16 @@ install_iterm2() {
 install_karabiner() {
   echo "==> Karabiner-Elements"
 
-  local src="$DOTFILES_DIR/karabiner"
-  local dest="$HOME/.config/karabiner"
+  local src="$DOTFILES_DIR/karabiner.json"
+  local config_dir="$HOME/.config/karabiner"
+  local dest="$config_dir/karabiner.json"
 
-  if [ ! -d "$src" ]; then
+  if [ ! -f "$src" ]; then
     echo "    !! $src not found, skipping"
     return
   fi
+
+  mkdir -p "$config_dir"
 
   if [ -L "$dest" ]; then
     echo "    $dest is already a symlink, skipping"
@@ -50,7 +53,6 @@ install_karabiner() {
     mv "$dest" "$backup"
   fi
 
-  mkdir -p "$HOME/.config"
   ln -s "$src" "$dest"
 
   echo "    Symlinked $dest -> $src"
