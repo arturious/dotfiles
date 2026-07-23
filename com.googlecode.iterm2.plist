@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>AI Timeout</key>
+	<integer>300</integer>
 	<key>AIFeatureFunctionCalling</key>
 	<true/>
 	<key>AIFeatureHostedCodeInterpeter</key>
@@ -28,6 +30,10 @@
 	<true/>
 	<key>AlwaysOpenWindowAtStartup</key>
 	<false/>
+	<key>CheckTestRelease</key>
+	<true/>
+	<key>ClaudeCodeWorkgroupUpsellSuppressed</key>
+	<true/>
 	<key>ClickToSelectCommand</key>
 	<false/>
 	<key>CopyLastNewline</key>
@@ -1039,6 +1045,8 @@
 	<false/>
 	<key>DisableTransparencyForKeyWindow</key>
 	<false/>
+	<key>EnableAPIServer</key>
+	<true/>
 	<key>HTMLTabTitles</key>
 	<true/>
 	<key>HapticFeedbackForEsc</key>
@@ -1718,6 +1726,8 @@
 				<key>Red Component</key>
 				<real>0.92929404973983765</real>
 			</dict>
+			<key>Badge Text</key>
+			<string></string>
 			<key>Blink Allowed</key>
 			<true/>
 			<key>Blinking Cursor</key>
@@ -1773,6 +1783,8 @@
 			<integer>150</integer>
 			<key>Command</key>
 			<string></string>
+			<key>Cursor Blink Fade In Duration</key>
+			<real>0.20000000000000001</real>
 			<key>Cursor Boost (Dark)</key>
 			<real>0.0</real>
 			<key>Cursor Boost (Light)</key>
@@ -1853,6 +1865,8 @@
 			</dict>
 			<key>Cursor Hidden When Unfocused</key>
 			<false/>
+			<key>Cursor Smooth Blink</key>
+			<true/>
 			<key>Cursor Text Color</key>
 			<dict>
 				<key>Alpha Component</key>
@@ -2003,6 +2017,10 @@
 				<key>Red Component</key>
 				<real>0.14513972401618958</real>
 			</dict>
+			<key>Load Shell Integration Automatically</key>
+			<true/>
+			<key>Lock Window Size Automatically</key>
+			<true/>
 			<key>Match Background Color (Dark)</key>
 			<dict>
 				<key>Alpha Component</key>
@@ -2058,6 +2076,8 @@
 			<key>Progress Bar Height</key>
 			<integer>1</integer>
 			<key>Prompt Before Closing 2</key>
+			<false/>
+			<key>Prompt Path Click Opens Navigator</key>
 			<false/>
 			<key>Restrict Mouse Reporting to Alternate Screen Mode</key>
 			<true/>
@@ -2182,7 +2202,7 @@
 			<key>Thin Strokes</key>
 			<integer>3</integer>
 			<key>Title Components</key>
-			<integer>3</integer>
+			<integer>1</integer>
 			<key>Transparency</key>
 			<real>0.19637983115235758</real>
 			<key>Unicode Normalization</key>
@@ -2328,6 +2348,37 @@
 	<false/>
 	<key>WindowPlacement</key>
 	<integer>3</integer>
+	<key>Workgroups</key>
+	<data>
+	W3sibmFtZSI6IkNsYXVkZSBDb2RlIiwic2Vzc2lvbnMiOlt7ImNvbW1hbmQiOiIiLCJr
+	aW5kIjp7ImtpbmQiOiJyb290In0sIm1vZGUiOiJyZWd1bGFyIiwidG9vbGJhckl0ZW1z
+	IjpbeyJraW5kIjoibW9kZVN3aXRjaGVyIn0seyJraW5kIjoiZ2l0U3RhdHVzIn0seyJr
+	aW5kIjoiYXV0b1JlcXVlc3RSZXZpZXdXaGVuSWRsZSJ9XSwidXJsU3RyaW5nIjoiIiwi
+	dW5pcXVlSWRlbnRpZmllciI6ImJ1aWx0aW4uY2xhdWRlQ29kZS5tYWluIiwicGVyRmls
+	ZUNvbW1hbmQiOiIiLCJkaXNwbGF5TmFtZSI6IkNoYXQifSx7ImNvbW1hbmQiOiJnaXQg
+	ZGlmZnRvb2wgLXkgLXggdmltZGlmZiBcXChnaXRCYXNlKSIsImtpbmQiOnsia2luZCI6
+	InBlZXIifSwibW9kZSI6ImRpZmYiLCJwYXJlbnRJRCI6ImJ1aWx0aW4uY2xhdWRlQ29k
+	ZS5tYWluIiwidXJsU3RyaW5nIjoiIiwidG9vbGJhckl0ZW1zIjpbeyJraW5kIjoibW9k
+	ZVN3aXRjaGVyIn0seyJraW5kIjoiY2hhbmdlZEZpbGVTZWxlY3RvciJ9LHsia2luZCI6
+	ImdpdEJhc2VTZWxlY3RvciJ9LHsicmVsb2FkU2hvcnRjdXQiOnsic2VyaWFsaXplZCI6
+	IjB4NzItMHgxMDAwMDAtMHhmIn0sImtpbmQiOiJuYXZpZ2F0aW9uIiwiYmFja1Nob3J0
+	Y3V0Ijp7InNlcmlhbGl6ZWQiOiIweGY3MDItMHgzNDAwMDAtMHg3YiJ9LCJmb3J3YXJk
+	U2hvcnRjdXQiOnsic2VyaWFsaXplZCI6IjB4ZjcwMy0weDM0MDAwMC0weDdjIn19XSwi
+	dW5pcXVlSWRlbnRpZmllciI6ImJ1aWx0aW4uY2xhdWRlQ29kZS5kaWZmIiwicGVyRmls
+	ZUNvbW1hbmQiOiJnaXQgZGlmZnRvb2wgLXkgLXggdmltZGlmZiBcXChnaXRCYXNlKSAt
+	LSBcXChmaWxlKSIsImRpc3BsYXlOYW1lIjoiRGlmZiJ9LHsiY29tbWFuZCI6ImNsYXVk
+	ZSBcXChjb2RlUmV2aWV3UHJvbXB0KSAtLWFwcGVuZC1zeXN0ZW0tcHJvbXB0LWZpbGUg
+	J1xcKGNvZGVSZXZpZXdTeXN0ZW1Qcm9tcHRGaWxlKScgLS1zZXR0aW5ncyAnXFwoaXRl
+	cm0yLmFwcEJ1bmRsZVBhdGgpXC9Db250ZW50c1wvUmVzb3VyY2VzXC9jb2RlLXJldmll
+	dy1zZXR0aW5ncy50eHQnIiwia2luZCI6eyJraW5kIjoicGVlciJ9LCJtb2RlIjoiY29k
+	ZVJldmlldyIsInBhcmVudElEIjoiYnVpbHRpbi5jbGF1ZGVDb2RlLm1haW4iLCJ1cmxT
+	dHJpbmciOiIiLCJ0b29sYmFySXRlbXMiOlt7ImtpbmQiOiJtb2RlU3dpdGNoZXIifSx7
+	ImtpbmQiOiJyZWxvYWQiLCJzaG9ydGN1dCI6eyJzZXJpYWxpemVkIjoiMHg3Mi0weDEw
+	MDAwMC0weGYifX0seyJraW5kIjoiYXV0b1NlbmRDbGlwcGluZ3NXaGVuSWRsZSJ9XSwi
+	dW5pcXVlSWRlbnRpZmllciI6ImJ1aWx0aW4uY2xhdWRlQ29kZS5yZXZpZXciLCJwZXJG
+	aWxlQ29tbWFuZCI6IiIsImRpc3BsYXlOYW1lIjoiQ29kZSBSZXZpZXcifV0sInVuaXF1
+	ZUlkZW50aWZpZXIiOiJidWlsdGluLmNsYXVkZUNvZGUifV0=
+	</data>
 	<key>WrapDroppedFilenamesInQuotesWhenPasting</key>
 	<true/>
 	<key>disableMetalInLowPowerMode</key>
