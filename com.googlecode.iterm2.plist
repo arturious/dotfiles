@@ -2166,7 +2166,7 @@
 			<key>Send Idle Alert</key>
 			<false/>
 			<key>Send New Output Alert</key>
-			<true/>
+			<false/>
 			<key>Send Session Ended Alert</key>
 			<true/>
 			<key>Send Terminal Generated Alerts</key>
