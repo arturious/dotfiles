@@ -2053,6 +2053,10 @@
 			<integer>2</integer>
 			<key>Prevent Opening in a Tab</key>
 			<false/>
+			<key>Progress Bar Color Scheme</key>
+			<string>orange</string>
+			<key>Progress Bar Height</key>
+			<integer>1</integer>
 			<key>Prompt Before Closing 2</key>
 			<false/>
 			<key>Restrict Mouse Reporting to Alternate Screen Mode</key>
@@ -2141,6 +2145,8 @@
 			<string></string>
 			<key>Show Offscreen Command line</key>
 			<false/>
+			<key>Show Status Bar</key>
+			<false/>
 			<key>Silence Bell</key>
 			<false/>
 			<key>Smart Cursor Color (Dark)</key>
@@ -2149,6 +2155,22 @@
 			<false/>
 			<key>Special Font Config</key>
 			<string>{"entries":[{"start":9211,"count":4,"fontName":"UnicodeIECsymbol"},{"start":9829,"count":1,"fontName":"Octicons"},{"start":9889,"count":1,"fontName":"Octicons"},{"start":11096,"count":1,"fontName":"UnicodeIECsymbol"},{"start":57344,"count":11,"fontName":"Pomicons"},{"start":57504,"count":3,"fontName":"PowerlineSymbols"},{"start":57507,"count":1,"fontName":"PowerlineExtraSymbols"},{"start":57520,"count":4,"fontName":"PowerlineSymbols"},{"start":57524,"count":21,"fontName":"PowerlineExtraSymbols"},{"start":57546,"count":1,"fontName":"PowerlineExtraSymbols"},{"start":57548,"count":8,"fontName":"PowerlineExtraSymbols"},{"start":57344,"count":170,"fontName":"font-awesome-extension","destination":57856},{"start":61440,"count":236,"fontName":"Weather Icons Regular","destination":58112},{"start":58618,"count":177,"fontName":"Nerd Font File Types Regular","destination":58874},{"start":58880,"count":198,"fontName":"icomoon","destination":59136},{"start":60000,"count":396,"fontName":"codicon"},{"start":61440,"count":736,"fontName":"FontAwesome"},{"start":62208,"count":48,"fontName":"font-logos"},{"start":61440,"count":168,"fontName":"Octicons","destination":62464},{"start":62076,"count":1,"fontName":"Octicons","destination":62633},{"start":61609,"count":86,"fontName":"Octicons","destination":62634},{"start":61441,"count":2118,"fontName":"Material Design Icons","destination":62720},{"start":983041,"count":6896,"fontName":"Material Design Icons Desktop"}],"version":1}</string>
+			<key>Status Bar Layout</key>
+			<dict>
+				<key>advanced configuration</key>
+				<dict>
+					<key>algorithm</key>
+					<integer>0</integer>
+					<key>auto-rainbow style</key>
+					<integer>0</integer>
+					<key>font</key>
+					<string>.AppleSystemUIFont 12</string>
+					<key>remove empty components</key>
+					<false/>
+				</dict>
+				<key>components</key>
+				<array/>
+			</dict>
 			<key>Subtitle</key>
 			<string></string>
 			<key>Sync Title</key>
