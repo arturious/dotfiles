@@ -2159,10 +2159,22 @@
 				<key>Red Component</key>
 				<real>0.027450980392156862</real>
 			</dict>
+			<key>Send Bell Alert</key>
+			<true/>
 			<key>Send Code When Idle</key>
 			<false/>
+			<key>Send Idle Alert</key>
+			<false/>
+			<key>Send New Output Alert</key>
+			<true/>
+			<key>Send Session Ended Alert</key>
+			<true/>
+			<key>Send Terminal Generated Alerts</key>
+			<true/>
 			<key>Shortcut</key>
 			<string></string>
+			<key>Show Mark Indicators</key>
+			<false/>
 			<key>Show Offscreen Command line</key>
 			<false/>
 			<key>Show Status Bar</key>
@@ -2193,6 +2205,8 @@
 			</dict>
 			<key>Subtitle</key>
 			<string></string>
+			<key>Suppress Alerts in Active Session</key>
+			<true/>
 			<key>Sync Title</key>
 			<false/>
 			<key>Tags</key>
