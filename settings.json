@@ -54,4 +54,5 @@
     "❯": true,
   },
   "chat.titleBar.openInAgentsWindow.enabled": false,
+  "security.workspace.trust.untrustedFiles": "open",
 }
