@@ -1,0 +1,117 @@
+image.tab-close-button {
+    display: none !important;
+}
+
+/* Remove the fade-in transition on tooltips — ui.tooltipDelay only
+   controls the wait before showing, not the appear animation itself */
+tooltip {
+  transition: none !important;
+}
+
+#urlbar:not([usertyping], [searchmode]) > .urlbarView {
+  display: none !important;
+}
+
+#urlbar-results div.urlbarView-row[row-selectable][type="top_site"] {
+  display: none !important;
+}
+
+#urlbar[zen-newtab="true"] {
+  #identity-icon {
+    list-style-image: url("chrome://browser/skin/zen-icons/new-tab-image.svg") !important;
+    filter: opacity(0.5) !important;
+  }
+
+  &[open] #identity-icon-box::after {
+    content: "New Tab" !important;
+    filter: opacity(0.5) !important;
+    padding-left: 6px !important;
+  }
+}
+
+/* Animation smoothness: Quick Snap */
+:root {
+  --zen-animation-smoothness: all 0.15s cubic-bezier(0.175, 0.885, 0.3, 1.3),
+    filter 0.15s ease-in-out, opacity 0.2s ease-in-out !important;
+}
+
+/* Tab switch animation */
+#tabbrowser-tabpanels
+  > hbox:not([zen-split="true"]):not(:has(.zen-glance-background)) {
+  transition: var(--zen-animation-smoothness) !important;
+  scale: 0.9 !important;
+  opacity: 0;
+}
+#tabbrowser-tabpanels > hbox.deck-selected:not([zen-split="true"]) {
+  scale: 1 !important;
+  opacity: 1 !important;
+}
+
+/* URL bar zoom animation */
+#browser:not(:has(.zen-glance-background)) #tabbrowser-tabpanels {
+  transition: var(--zen-animation-smoothness) !important;
+}
+
+#browser:has(#urlbar[open][zen-floating-urlbar="true"]) #tabbrowser-tabpanels {
+  pointer-events: none;
+  scale: 1.1 !important;
+  filter: blur(10px) brightness(70%) !important;
+}
+
+#urlbar[open][zen-floating-urlbar="true"] .urlbar-background {
+  background-color: color-mix(in srgb, var(--zen-urlbar-background-base) 60%, transparent) !important;
+  border-radius: 1em !important;
+}
+
+#urlbar-input,
+.urlbar-input-container {
+  text-align: center !important;
+}
+
+#urlbar-zoom-button {
+  display: none !important;
+}
+
+.zen-current-workspace-indicator {
+  display: none !important;
+}
+
+#urlbar-container[breakout="true"] {
+  background: none !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+.urlbar-background {
+  background: none !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+/* Restore popover/popup background when widget.macos.native-popovers = false
+   (tinted, semi-transparent — no real blur-through is possible via CSS
+   for these popups, see comment below) */
+:root {
+  --panel-background: color-mix(in srgb, #000000 90%, transparent) !important;
+  --panel-color: #f2f2f2 !important;
+  --arrowpanel-background: color-mix(in srgb, #000000 90%, transparent) !important;
+  --arrowpanel-color: #f2f2f2 !important;
+  --arrowpanel-border-color: rgba(255, 255, 255, 0.14) !important;
+  --arrowpanel-border-radius: 16px !important;
+}
+
+/* Firefox 152 stopped painting a Gecko-drawn background for
+   panel[type="arrow"] since native NSPopover normally handles it.
+   With widget.macos.native-popovers=false that native backdrop is gone
+   too, so nothing paints at all — force it explicitly here.
+   backdrop-filter doesn't work on this element: it renders in its own
+   compositor surface, so there's nothing "behind" it for CSS to blur —
+   real blur-through here requires native-popovers=true instead. */
+panel[type="arrow"] {
+  -moz-appearance: none !important;
+  background-color: var(--arrowpanel-background) !important;
+  color: var(--arrowpanel-color) !important;
+  border: 1px solid var(--arrowpanel-border-color) !important;
+  border-radius: var(--arrowpanel-border-radius) !important;
+}
+

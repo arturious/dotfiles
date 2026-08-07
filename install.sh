@@ -199,6 +199,76 @@ install_fish() {
 }
 
 # ---------------------------------------------------------------------------
+# Zen Browser
+# ---------------------------------------------------------------------------
+install_zen() {
+  echo "==> Zen Browser"
+
+  local zen_dir="$HOME/Library/Application Support/zen"
+  local installs_ini="$zen_dir/installs.ini"
+
+  if [ ! -f "$installs_ini" ]; then
+    echo "    !! $installs_ini not found (run Zen once first), skipping"
+    return
+  fi
+
+  local rel_path
+  rel_path="$(awk -F= '/^Default=/{print $2; exit}' "$installs_ini")"
+
+  if [ -z "$rel_path" ]; then
+    echo "    !! Could not determine default Zen profile, skipping"
+    return
+  fi
+
+  local profile_dir="$zen_dir/$rel_path"
+  local chrome_dir="$profile_dir/chrome"
+  local src="$DOTFILES_DIR/userChrome.css"
+  local dest="$chrome_dir/userChrome.css"
+
+  if [ ! -f "$src" ]; then
+    echo "    !! $src not found, skipping"
+    return
+  fi
+
+  mkdir -p "$chrome_dir"
+
+  if [ -L "$dest" ]; then
+    echo "    $dest is already a symlink, skipping"
+  else
+    if [ -e "$dest" ]; then
+      local backup="$dest.bak.$(date +%Y%m%d%H%M%S)"
+      echo "    Existing $dest found, backing up to $backup"
+      mv "$dest" "$backup"
+    fi
+
+    ln -s "$src" "$dest"
+    echo "    Symlinked $dest -> $src"
+  fi
+
+  local user_js_src="$DOTFILES_DIR/user.js"
+  local user_js_dest="$profile_dir/user.js"
+
+  if [ -f "$user_js_src" ]; then
+    if [ -L "$user_js_dest" ]; then
+      echo "    $user_js_dest is already a symlink, skipping"
+    else
+      if [ -e "$user_js_dest" ]; then
+        local user_js_backup="$user_js_dest.bak.$(date +%Y%m%d%H%M%S)"
+        echo "    Existing $user_js_dest found, backing up to $user_js_backup"
+        mv "$user_js_dest" "$user_js_backup"
+      fi
+
+      ln -s "$user_js_src" "$user_js_dest"
+      echo "    Symlinked $user_js_dest -> $user_js_src"
+    fi
+  else
+    echo "    !! $user_js_src not found, skipping user.js symlink"
+  fi
+
+  echo "    Restart Zen for userChrome.css/user.js to take effect"
+}
+
+# ---------------------------------------------------------------------------
 # Add new install_<app> functions below and call them here
 # ---------------------------------------------------------------------------
 
@@ -206,4 +276,5 @@ install_karabiner
 install_vscode
 install_starship
 install_ghostty
+install_zen
 install_fish
