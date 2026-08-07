@@ -55,4 +55,6 @@
   },
   "chat.titleBar.openInAgentsWindow.enabled": false,
   "security.workspace.trust.untrustedFiles": "open",
+  "workbench.experimental.modernUI": true,
+  "workbench.preferredDarkColorTheme": "Solarized Kuro",
 }

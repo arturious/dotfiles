@@ -16,7 +16,6 @@ install_fonts() {
 install_casks() {
   echo "==> Casks"
 
-  brew install --cask iterm2
   brew install --cask karabiner-elements
 }
 
@@ -27,6 +26,7 @@ install_formulae() {
   echo "==> Formulae"
 
   brew install starship
+  brew install fish
 }
 
 # ---------------------------------------------------------------------------

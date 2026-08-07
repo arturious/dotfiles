@@ -6,26 +6,6 @@ DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 "$DOTFILES_DIR/brew.sh"
 
 # ---------------------------------------------------------------------------
-# iTerm2
-# ---------------------------------------------------------------------------
-install_iterm2() {
-  echo "==> iTerm2"
-
-  local prefs_dir="$DOTFILES_DIR"
-
-  if [ ! -f "$prefs_dir/com.googlecode.iterm2.plist" ]; then
-    echo "    !! $prefs_dir/com.googlecode.iterm2.plist not found, skipping"
-    return
-  fi
-
-  defaults write com.googlecode.iterm2 PrefsCustomFolder -string "$prefs_dir"
-  defaults write com.googlecode.iterm2 LoadPrefsFromCustomFolder -bool true
-
-  echo "    iTerm2 prefs now point to: $prefs_dir"
-  echo "    Restart iTerm2 (Cmd+Q) to apply the settings"
-}
-
-# ---------------------------------------------------------------------------
 # Karabiner-Elements
 # ---------------------------------------------------------------------------
 install_karabiner() {
@@ -136,7 +116,7 @@ install_ghostty() {
   echo "==> Ghostty"
 
   local src="$DOTFILES_DIR/config.ghostty"
-  local config_dir="$HOME/.config/ghostty"
+  local config_dir="$HOME/Library/Application Support/com.mitchellh.ghostty"
   local dest="$config_dir/config.ghostty"
 
   if [ ! -f "$src" ]; then
@@ -162,11 +142,68 @@ install_ghostty() {
 }
 
 # ---------------------------------------------------------------------------
+# Fish shell
+# ---------------------------------------------------------------------------
+install_fish() {
+  echo "==> Fish"
+
+  local fish_path
+  fish_path="$(command -v fish || true)"
+
+  if [ -z "$fish_path" ]; then
+    echo "    !! fish not found, skipping"
+    return
+  fi
+
+  local src="$DOTFILES_DIR/config.fish"
+  local config_dir="$HOME/.config/fish"
+  local dest="$config_dir/config.fish"
+
+  if [ -f "$src" ]; then
+    mkdir -p "$config_dir"
+
+    if [ -L "$dest" ]; then
+      echo "    $dest is already a symlink, skipping"
+    else
+      if [ -e "$dest" ]; then
+        local backup="$dest.bak.$(date +%Y%m%d%H%M%S)"
+        echo "    Existing $dest found, backing up to $backup"
+        mv "$dest" "$backup"
+      fi
+
+      ln -s "$src" "$dest"
+      echo "    Symlinked $dest -> $src"
+    fi
+  else
+    echo "    !! $src not found, skipping config symlink"
+  fi
+
+  if ! grep -qxF "$fish_path" /etc/shells 2>/dev/null; then
+    echo "    Adding $fish_path to /etc/shells (requires sudo)"
+    if ! echo "$fish_path" | sudo tee -a /etc/shells >/dev/null; then
+      echo "    !! Failed to update /etc/shells, skipping default shell change"
+      echo "    Run manually: echo \"$fish_path\" | sudo tee -a /etc/shells && chsh -s \"$fish_path\""
+      return
+    fi
+  fi
+
+  if [ "$SHELL" = "$fish_path" ]; then
+    echo "    fish is already the default shell"
+    return
+  fi
+
+  echo "    Setting fish as default shell (requires your password)"
+  if ! chsh -s "$fish_path"; then
+    echo "    !! chsh failed, run manually: chsh -s \"$fish_path\""
+  fi
+}
+
+# ---------------------------------------------------------------------------
 # Add new install_<app> functions below and call them here
 # ---------------------------------------------------------------------------
 
-install_iterm2
 install_karabiner
 install_vscode
 install_starship
 install_ghostty
+install_fish
