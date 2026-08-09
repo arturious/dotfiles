@@ -2,6 +2,17 @@ image.tab-close-button {
     display: none !important;
 }
 
+*|*:root[zen-compact-mode="false"] .titlebar-buttonbox {
+  display: none !important;
+}
+.titlebar-buttonbox-container {
+  display: none !important;
+}
+
+.zen-workspace-pinned-tabs-section {
+  display: none !important;
+}
+
 /* Remove the fade-in transition on tooltips — ui.tooltipDelay only
    controls the wait before showing, not the appear animation itself */
 tooltip {
@@ -68,6 +79,15 @@ tooltip {
   text-align: center !important;
 }
 
+/* Take the left-side identity/lock icon out of flex flow so the text field
+   spans the full bar width and centers relative to the whole bar, not just
+   the space left over after the icon. Scoped to the floating urlbar only —
+   applying this globally broke the icon position in the normal toolbar. */
+#urlbar[open][zen-floating-urlbar="true"] #identity-box {
+  position: absolute !important;
+  left: 8px !important;
+}
+
 #urlbar-zoom-button {
   display: none !important;
 }
@@ -88,30 +108,62 @@ tooltip {
   border: none !important;
 }
 
-/* Restore popover/popup background when widget.macos.native-popovers = false
-   (tinted, semi-transparent — no real blur-through is possible via CSS
-   for these popups, see comment below) */
-:root {
-  --panel-background: color-mix(in srgb, #000000 90%, transparent) !important;
-  --panel-color: #f2f2f2 !important;
-  --arrowpanel-background: color-mix(in srgb, #000000 90%, transparent) !important;
-  --arrowpanel-color: #f2f2f2 !important;
-  --arrowpanel-border-color: rgba(255, 255, 255, 0.14) !important;
-  --arrowpanel-border-radius: 16px !important;
+panel,
+menupopup,
+panelview,
+panelmultiview,
+.panel-arrowcontent,
+#appMenu-popup,
+#appMenu-popup panelview,
+#appMenu-protonMainView,
+#widget-overflow,
+#customizationui-widget-panel {
+  appearance: none !important;
+  -moz-appearance: none !important;
+  background: #000000 !important;
+  background-color: #000000 !important;
+  border-radius: 16px !important;
+  color: #f2f2f2 !important;
+  font-family: Verdana, sans-serif !important;
+  font-size: 12px !important;
+  font-weight: 400 !important;
+  overflow: hidden !important;
+  clip-path: inset(0 round 16px) !important;
 }
 
-/* Firefox 152 stopped painting a Gecko-drawn background for
-   panel[type="arrow"] since native NSPopover normally handles it.
-   With widget.macos.native-popovers=false that native backdrop is gone
-   too, so nothing paints at all — force it explicitly here.
-   backdrop-filter doesn't work on this element: it renders in its own
-   compositor surface, so there's nothing "behind" it for CSS to blur —
-   real blur-through here requires native-popovers=true instead. */
-panel[type="arrow"] {
-  -moz-appearance: none !important;
-  background-color: var(--arrowpanel-background) !important;
-  color: var(--arrowpanel-color) !important;
-  border: 1px solid var(--arrowpanel-border-color) !important;
-  border-radius: var(--arrowpanel-border-radius) !important;
+.panel-viewstack,
+.panel-subview-body,
+.panel-header,
+.panel-footer {
+  background: transparent !important;
+  border-radius: 16px !important;
 }
+
+toolbarbutton.subviewbutton:hover,
+menu[_moz-menuactive="true"],
+menuitem[_moz-menuactive="true"] {
+  background-color: rgba(255, 255, 255, 0.12) !important;
+  color: #ffffff !important;
+}
+
+panel toolbarbutton,
+panel label,
+panel description,
+menupopup menu,
+menupopup menuitem {
+  font-family: Verdana, sans-serif !important;
+  font-size: 12px !important;
+  font-weight: 400 !important;
+}
+
+/* "site.com is now full screen / Exit Full Screen (esc)" banner */
+#fullscreen-warning {
+  background-color: #000000 !important;
+  border-radius: 16px !important;
+  border: none !important;
+  font-family: Verdana, sans-serif !important;
+  font-size: 13px !important;
+  padding: 10px 16px !important;
+}
+
 

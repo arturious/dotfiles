@@ -7,3 +7,5 @@ user_pref("layout.css.backdrop-filter.enabled", true);
 user_pref("gfx.webrender.all", true);
 user_pref("ui.tooltipDelay", 0);
 user_pref("ui.prefersReducedMotion", 1);
+user_pref("zen.view.experimental-no-window-controls", true);
+user_pref("zen.view.hide-window-controls", true);
