@@ -2,6 +2,14 @@ image.tab-close-button {
     display: none !important;
 }
 
+/* Remove the top margin Zen's own zen-tabs.css adds to #navigator-toolbox
+   for macOS traffic-light space. That rule has high selector specificity
+   (multiple :not()/attribute conditions), so the ID is repeated here to
+   outweigh it rather than trying to match its exact condition chain. */
+#navigator-toolbox#navigator-toolbox#navigator-toolbox {
+  margin-top: 0px !important;
+}
+
 *|*:root[zen-compact-mode="false"] .titlebar-buttonbox {
   display: none !important;
 }
