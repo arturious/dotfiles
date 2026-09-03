@@ -27,6 +27,7 @@
                     },
                     {
                         "description": "Double tap Left or Right Shift to Switch Language (Snappy 200ms)",
+                        "enabled": false,
                         "manipulators": [
                             {
                                 "conditions": [
