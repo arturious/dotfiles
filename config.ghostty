@@ -12,7 +12,8 @@ notify-on-command-finish-action = notify
 notify-on-command-finish-after = 1s
 font-feature = ss02
 macos-window-buttons = hidden
-macos-titlebar-proxy-icon = visible
+macos-titlebar-style = hidden
+macos-titlebar-proxy-icon = hidden
 macos-icon = custom-style
 macos-icon-frame = aluminum
 macos-icon-ghost-color = #002b36
@@ -20,7 +21,13 @@ macos-icon-screen-color = #002b36
 macos-option-as-alt = left
 keybind = alt+left=unbind
 keybind = alt+right=unbind
+keybind = cmd+[=text:\x1ep
+keybind = cmd+]=text:\x1en
 
-# Cmd+T sends our tmux prefix (Ctrl+Space = NUL byte) + "c" (default
-# new-window binding) instead of opening a new Ghostty tab.
-# keybind = cmd+t=text:\x00c
+# Cmd+P sends our tmux prefix key (see tmux.conf: user-keys[2] / prefix User2)
+# instead of the OS "Print" action.
+keybind = cmd+p=text:\x1dp
+
+# Cmd+T sends our tmux new-window key (see tmux.conf: user-keys[3] / User3)
+# instead of opening a new Ghostty tab.
+keybind = cmd+t=text:\x1et

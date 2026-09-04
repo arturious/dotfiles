@@ -110,6 +110,36 @@ install_starship() {
 }
 
 # ---------------------------------------------------------------------------
+# tmux
+# ---------------------------------------------------------------------------
+install_tmux() {
+  echo "==> tmux"
+
+  local src="$DOTFILES_DIR/tmux.conf"
+  local dest="$HOME/.tmux.conf"
+
+  if [ ! -f "$src" ]; then
+    echo "    !! $src not found, skipping"
+    return
+  fi
+
+  if [ -L "$dest" ]; then
+    echo "    $dest is already a symlink, skipping"
+    return
+  fi
+
+  if [ -e "$dest" ]; then
+    local backup="$dest.bak.$(date +%Y%m%d%H%M%S)"
+    echo "    Existing $dest found, backing up to $backup"
+    mv "$dest" "$backup"
+  fi
+
+  ln -s "$src" "$dest"
+
+  echo "    Symlinked $dest -> $src"
+}
+
+# ---------------------------------------------------------------------------
 # Ghostty
 # ---------------------------------------------------------------------------
 install_ghostty() {
@@ -177,6 +207,24 @@ install_fish() {
   else
     echo "    !! $src not found, skipping config symlink"
   fi
+
+  local functions_dir="$config_dir/functions"
+  mkdir -p "$functions_dir"
+  for fn in "$DOTFILES_DIR"/functions/*.fish; do
+    [ -f "$fn" ] || continue
+    local fn_dest="$functions_dir/$(basename "$fn")"
+    if [ -L "$fn_dest" ]; then
+      echo "    $fn_dest is already a symlink, skipping"
+    else
+      if [ -e "$fn_dest" ]; then
+        local fn_backup="$fn_dest.bak.$(date +%Y%m%d%H%M%S)"
+        echo "    Existing $fn_dest found, backing up to $fn_backup"
+        mv "$fn_dest" "$fn_backup"
+      fi
+      ln -s "$fn" "$fn_dest"
+      echo "    Symlinked $fn_dest -> $fn"
+    fi
+  done
 
   if ! grep -qxF "$fish_path" /etc/shells 2>/dev/null; then
     echo "    Adding $fish_path to /etc/shells (requires sudo)"
@@ -275,6 +323,7 @@ install_zen() {
 install_karabiner
 install_vscode
 install_starship
+install_tmux
 install_ghostty
 install_zen
 install_fish

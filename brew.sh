@@ -27,6 +27,8 @@ install_formulae() {
 
   brew install starship
   brew install fish
+  brew install tmux
+  brew install fzf
 }
 
 # ---------------------------------------------------------------------------
