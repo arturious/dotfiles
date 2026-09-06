@@ -172,6 +172,59 @@ install_ghostty() {
 }
 
 # ---------------------------------------------------------------------------
+# lazygit
+# ---------------------------------------------------------------------------
+install_lazygit() {
+  echo "==> lazygit"
+
+  local config_src="$DOTFILES_DIR/lazygit-config.yml"
+  local config_dir="$HOME/Library/Application Support/lazygit"
+  local config_dest="$config_dir/config.yml"
+
+  if [ -f "$config_src" ]; then
+    mkdir -p "$config_dir"
+
+    if [ -L "$config_dest" ]; then
+      echo "    $config_dest is already a symlink, skipping"
+    else
+      if [ -e "$config_dest" ]; then
+        local config_backup="$config_dest.bak.$(date +%Y%m%d%H%M%S)"
+        echo "    Existing $config_dest found, backing up to $config_backup"
+        mv "$config_dest" "$config_backup"
+      fi
+
+      ln -s "$config_src" "$config_dest"
+      echo "    Symlinked $config_dest -> $config_src"
+    fi
+  else
+    echo "    !! $config_src not found, skipping config symlink"
+  fi
+
+  local script_src="$DOTFILES_DIR/lazygit-ai-commit-msg"
+  local bin_dir="$HOME/.local/bin"
+  local script_dest="$bin_dir/lazygit-ai-commit-msg"
+
+  if [ -f "$script_src" ]; then
+    mkdir -p "$bin_dir"
+
+    if [ -L "$script_dest" ]; then
+      echo "    $script_dest is already a symlink, skipping"
+    else
+      if [ -e "$script_dest" ]; then
+        local script_backup="$script_dest.bak.$(date +%Y%m%d%H%M%S)"
+        echo "    Existing $script_dest found, backing up to $script_backup"
+        mv "$script_dest" "$script_backup"
+      fi
+
+      ln -s "$script_src" "$script_dest"
+      echo "    Symlinked $script_dest -> $script_src"
+    fi
+  else
+    echo "    !! $script_src not found, skipping script symlink"
+  fi
+}
+
+# ---------------------------------------------------------------------------
 # Fish shell
 # ---------------------------------------------------------------------------
 install_fish() {
@@ -325,5 +378,6 @@ install_vscode
 install_starship
 install_tmux
 install_ghostty
+install_lazygit
 install_zen
 install_fish

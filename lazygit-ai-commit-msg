@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# Generates a one-line commit message from the staged diff, for lazygit's
+# Ctrl+A custom command (see ~/Library/Application Support/lazygit/config.yml).
+# Must print exactly one line: lazygit's `runCommand` template function
+# errors out if the output has more than one line.
+set -euo pipefail
+
+if git diff --cached --quiet; then
+    echo "(nothing staged - stage changes first)"
+    exit 0
+fi
+
+git diff --cached | claude -p "Write ONE single-line git commit message for this diff, following the Conventional Commits format (type(scope): summary). No body, no newlines, no code fences, no surrounding quotes - output ONLY that single line." | head -1
