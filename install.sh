@@ -140,6 +140,25 @@ install_tmux() {
 }
 
 # ---------------------------------------------------------------------------
+# TPM (tmux plugin manager) - only used for tmux-claude-session-manager;
+# everything else in tmux.conf is hand-written, no plugin manager needed.
+# ---------------------------------------------------------------------------
+install_tpm() {
+  echo "==> TPM"
+
+  local tpm_dir="$HOME/.tmux/plugins/tpm"
+
+  if [ -d "$tpm_dir" ]; then
+    echo "    $tpm_dir already exists, skipping clone"
+  else
+    git clone --depth 1 https://github.com/tmux-plugins/tpm "$tpm_dir"
+  fi
+
+  echo "    Installing plugins declared in tmux.conf..."
+  "$tpm_dir/bin/install_plugins"
+}
+
+# ---------------------------------------------------------------------------
 # Ghostty
 # ---------------------------------------------------------------------------
 install_ghostty() {
@@ -377,6 +396,7 @@ install_karabiner
 install_vscode
 install_starship
 install_tmux
+install_tpm
 install_ghostty
 install_lazygit
 install_zen

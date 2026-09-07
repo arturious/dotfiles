@@ -24,9 +24,13 @@ keybind = alt+right=unbind
 keybind = cmd+[=text:\x1ep
 keybind = cmd+]=text:\x1en
 
-# Cmd+P sends our tmux prefix key (see tmux.conf: user-keys[2] / prefix User2)
-# instead of the OS "Print" action.
-keybind = cmd+p=text:\x1dp
+# Cmd+P sends our tmux prefix key (see tmux.conf: prefix C-]) instead of the
+# OS "Print" action. Single byte (0x1D, i.e. literal Ctrl+]), not the old
+# 2-byte user-key sequence (\x1dp) - multi-byte user-keys stop registering
+# once an interactive tmux popup (e.g. tmux-claude-session-manager's) grabs
+# input, while a single control byte like this keeps working (confirmed by
+# testing prefix2 'C-]' in that exact stuck state).
+keybind = cmd+p=text:\x1d
 
 # Cmd+T sends our tmux new-window key (see tmux.conf: user-keys[3] / User3)
 # instead of opening a new Ghostty tab.
