@@ -10,4 +10,4 @@ if git diff --cached --quiet; then
     exit 0
 fi
 
-git diff --cached | claude -p "Write ONE single-line git commit message for this diff, following the Conventional Commits format (type(scope): summary). No body, no newlines, no code fences, no surrounding quotes - output ONLY that single line." | head -1
+git diff --cached | claude --model haiku -p "Write ONE single-line git commit message for this diff, following the Conventional Commits format (type(scope): summary). No body, no newlines, no code fences, no surrounding quotes - output ONLY that single line." | head -1

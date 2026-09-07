@@ -13,6 +13,8 @@ if status is-interactive
 
     set -g fish_autosuggestion_enabled 0
 
+    alias ll 'eza -la -F --icons=auto --hyperlink=auto --sort=date --reverse --no-filesize --no-time --no-user --git --git-repos'
+
     set -gx FORCE_COLOR 3
     set -gx CLAUDE_CODE_TMUX_TRUECOLOR 1
     set -gx FZF_DEFAULT_OPTS "--tmux 90%,70% --border"
