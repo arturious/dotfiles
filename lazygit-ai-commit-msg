@@ -1,13 +1,53 @@
-#!/usr/bin/env bash
-# Generates a one-line commit message from the staged diff, for lazygit's
-# Ctrl+A custom command (see ~/Library/Application Support/lazygit/config.yml).
-# Must print exactly one line: lazygit's `runCommand` template function
-# errors out if the output has more than one line.
-set -euo pipefail
+#!/usr/bin/env zsh
+# Ctrl+A custom command for lazygit (see ~/Library/Application Support/lazygit/config.yml),
+# run inside a tmux popup (border/title come from tmux, styled in tmux.conf)
+# rather than lazygit's own `output: terminal` (which leaves a hardcoded
+# blue "+ <command>" line before running anything - not configurable, see
+# pkg/gui/gui.go's runSubprocess) or its `prompts` system (which blocks with
+# no loading indicator while initialValue's runCommand computes - confirmed
+# by reading its Go source).
+#
+# zsh, not bash: editing needs a prefilled, in-place-editable prompt. bash's
+# `read -i` (which does that) needs bash 4+, but macOS ships bash 3.2 (last
+# GPLv2 release) as /bin/bash with no `-i` support. zsh's builtin `vared`
+# does the same job without that dependency.
+set -e
+setopt pipefail
 
 if git diff --cached --quiet; then
-    echo "(nothing staged - stage changes first)"
+    echo "Nothing staged - stage changes first."
+    read -k 1 -s "?Press any key to close..."
+    echo
     exit 0
 fi
 
-git diff --cached | claude --model haiku -p "Write ONE single-line git commit message for this diff, following the Conventional Commits format (type(scope): summary). No body, no newlines, no code fences, no surrounding quotes - output ONLY that single line." | head -1
+msg_file=$(mktemp)
+trap 'rm -f "$msg_file"' EXIT
+
+git diff --cached | claude --model haiku -p "Write ONE single-line git commit message for this diff, following the Conventional Commits format (type(scope): summary). No body, no newlines, no code fences, no surrounding quotes - output ONLY that single line." >"$msg_file" &
+pid=$!
+
+# Same frame set/order as gui.spinner in lazygit-config.yml: 0,1,2,3,4,5,5,4,3,2,1,0.
+frames=('·' '✢' '✳' '✶' '✻' '✽' '✽' '✻' '✶' '✳' '✢' '·')
+n=0
+while kill -0 "$pid" 2>/dev/null; do
+    idx=$(( (n % ${#frames[@]}) + 1 ))
+    printf '\r%s Generating commit message...' "${frames[idx]}"
+    n=$((n + 1))
+    sleep 0.12
+done
+wait "$pid"
+printf '\r\033[K'
+
+msg=$(head -1 "$msg_file")
+
+vared -p "Commit message: " msg
+
+if [ -z "$msg" ]; then
+    echo "Empty message - commit aborted."
+    read -k 1 -s "?Press any key to close..."
+    echo
+    exit 0
+fi
+
+git commit -m "$msg"
