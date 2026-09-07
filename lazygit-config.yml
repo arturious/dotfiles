@@ -23,5 +23,8 @@ customCommands:
   - key: '<c-a>'
     context: 'files'
     description: 'AI: generate commit message (Claude)'
-    command: 'tmux display-popup -E -d "#{pane_current_path}" -w 70% -h 30% -T " AI Commit Message " -- /Users/r/.local/bin/lazygit-ai-commit-msg'
+    # Border + title in Claude/Anthropic's brand orange (#d97757), just for
+    # this popup - not the global popup-border-style in tmux.conf, which
+    # would also recolor the fzf popups.
+    command: 'tmux display-popup -E -d "#{pane_current_path}" -w 70% -h 30% -S "fg=#d97757" -T " AI Commit Message " -- /Users/r/.local/bin/lazygit-ai-commit-msg'
     output: none

@@ -24,24 +24,64 @@ fi
 msg_file=$(mktemp)
 trap 'rm -f "$msg_file"' EXIT
 
-git diff --cached | claude --model haiku -p "Write ONE single-line git commit message for this diff, following the Conventional Commits format (type(scope): summary). No body, no newlines, no code fences, no surrounding quotes - output ONLY that single line." >"$msg_file" &
+# Paint "Esc to cancel" once, bottom-right, then leave the cursor where it
+# was (tmux's popup only supports one title - on the top border - so this
+# is content, not a real border label, but it stays put while everything
+# above it redraws via \r).
+hint="Esc to cancel"
+printf '\0337\033[%d;%dH%s\0338' "$(tput lines)" "$(( $(tput cols) - ${#hint} - 1 ))" "$hint"
+
+# --safe-mode: skips CLAUDE.md/skills/plugins/hooks/MCP servers, none of
+# which this one-line generation needs - shaves a few seconds off startup
+# without touching auth (unlike --bare, which needs an API key and breaks
+# the OAuth/subscription login this account uses).
+git diff --cached | claude --model haiku --safe-mode -p "Write ONE single-line git commit message for this diff, following the Conventional Commits format (type(scope): summary). No body, no newlines, no code fences, no surrounding quotes - output ONLY that single line." >"$msg_file" &
 pid=$!
 
 # Same frame set/order as gui.spinner in lazygit-config.yml: 0,1,2,3,4,5,5,4,3,2,1,0.
 frames=('·' '✢' '✳' '✶' '✻' '✽' '✽' '✻' '✶' '✳' '✢' '·')
 n=0
+cancelled=0
 while kill -0 "$pid" 2>/dev/null; do
     idx=$(( (n % ${#frames[@]}) + 1 ))
     printf '\r%s Generating commit message...' "${frames[idx]}"
     n=$((n + 1))
-    sleep 0.12
+    if read -t 0.12 -k 1 key 2>/dev/null && [[ "$key" == $'\e' ]]; then
+        kill "$pid" 2>/dev/null || true
+        cancelled=1
+        break
+    fi
 done
+
+if [ "$cancelled" -eq 1 ]; then
+    printf '\r\033[KCancelled.\n'
+    exit 0
+fi
 wait "$pid"
 printf '\r\033[K'
 
 msg=$(head -1 "$msg_file")
 
+# Bind Esc, during vared only, to abort editing without committing.
+# `zle send-break` (Ctrl-C's usual widget) looks like the obvious choice
+# here, but it unwinds the whole script - even past `set -e`/`|| true` -
+# instead of just making vared return non-zero. Clearing the buffer and
+# accepting it is a clean way to make vared return normally instead.
+cancel_edit() {
+    cancelled=1
+    BUFFER=""
+    zle accept-line
+}
+zle -N cancel_edit
+bindkey '\e' cancel_edit
+
 vared -p "Commit message: " msg
+bindkey -r '\e'
+
+if [ "$cancelled" -eq 1 ]; then
+    echo "Cancelled."
+    exit 0
+fi
 
 if [ -z "$msg" ]; then
     echo "Empty message - commit aborted."
