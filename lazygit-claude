@@ -1,11 +1,13 @@
 #!/usr/bin/env zsh
-# Ctrl+A custom command for lazygit (see ~/Library/Application Support/lazygit/config.yml),
-# run inside a tmux popup (border/title come from tmux, styled in tmux.conf)
-# rather than lazygit's own `output: terminal` (which leaves a hardcoded
-# blue "+ <command>" line before running anything - not configurable, see
-# pkg/gui/gui.go's runSubprocess) or its `prompts` system (which blocks with
-# no loading indicator while initialValue's runCommand computes - confirmed
-# by reading its Go source).
+# Ctrl+A custom command for lazygit (see ~/Library/Application Support/lazygit/config.yml).
+# Runs with output: terminal (not a tmux popup - tmux can't stack a second,
+# independent popup on top of an existing one, e.g. lazygit opened via
+# prefix+g; it just modifies that same popup instead, ignoring -w/-h/-d).
+# Suspending to the actual pane works regardless of how lazygit was opened,
+# and lets us draw our own animated spinner and an editable prompt, neither
+# of which lazygit's own `prompts` system supports (its initialValue/
+# runCommand blocks the UI with no loading indicator - confirmed by reading
+# its Go source).
 #
 # zsh, not bash: editing needs a prefilled, in-place-editable prompt. bash's
 # `read -i` (which does that) needs bash 4+, but macOS ships bash 3.2 (last
@@ -13,6 +15,15 @@
 # does the same job without that dependency.
 set -e
 setopt pipefail
+
+# lazygit itself hardcodes a blue "+ <command>" line before running any
+# output: terminal command (pkg/gui/gui.go, runSubprocess) - not something
+# we can suppress via config. Clearing the screen first wipes it.
+clear
+
+label=$'\033[38;2;217;119;87m'
+reset=$'\033[0m'
+printf '%sAI Commit Message%s\n\n' "$label" "$reset"
 
 if git diff --cached --quiet; then
     echo "Nothing staged - stage changes first."
@@ -25,9 +36,7 @@ msg_file=$(mktemp)
 trap 'rm -f "$msg_file"' EXIT
 
 # Paint "Esc to cancel" once, bottom-right, then leave the cursor where it
-# was (tmux's popup only supports one title - on the top border - so this
-# is content, not a real border label, but it stays put while everything
-# above it redraws via \r).
+# was - it stays put while everything above it redraws via \r.
 hint="Esc to cancel"
 printf '\0337\033[%d;%dH%s\0338' "$(tput lines)" "$(( $(tput cols) - ${#hint} - 1 ))" "$hint"
 
@@ -44,7 +53,7 @@ n=0
 cancelled=0
 while kill -0 "$pid" 2>/dev/null; do
     idx=$(( (n % ${#frames[@]}) + 1 ))
-    printf '\r%s Generating commit message...' "${frames[idx]}"
+    printf '\r%s%s Generating commit message...%s' "$label" "${frames[idx]}" "$reset"
     n=$((n + 1))
     if read -t 0.12 -k 1 key 2>/dev/null && [[ "$key" == $'\e' ]]; then
         kill "$pid" 2>/dev/null || true

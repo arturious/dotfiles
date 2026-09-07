@@ -200,9 +200,9 @@ install_lazygit() {
     echo "    !! $config_src not found, skipping config symlink"
   fi
 
-  local script_src="$DOTFILES_DIR/lazygit-ai-commit-msg"
+  local script_src="$DOTFILES_DIR/lazygit-claude"
   local bin_dir="$HOME/.local/bin"
-  local script_dest="$bin_dir/lazygit-ai-commit-msg"
+  local script_dest="$bin_dir/lazygit-claude"
 
   if [ -f "$script_src" ]; then
     mkdir -p "$bin_dir"

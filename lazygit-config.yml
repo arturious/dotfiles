@@ -1,8 +1,7 @@
 gui:
   # Custom loading-spinner animation: 0,1,2,3,4,5,5,4,3,2,1,0 through the
   # glyphs below. Kept for lazygit's own spinner elsewhere; the Ctrl+A
-  # command below draws its own copy of this sequence itself inside the
-  # tmux popup it opens.
+  # command below draws its own copy of this sequence itself.
   spinner:
     frames:
       - '·'
@@ -23,8 +22,11 @@ customCommands:
   - key: '<c-a>'
     context: 'files'
     description: 'AI: generate commit message (Claude)'
-    # Border + title in Claude/Anthropic's brand orange (#d97757), just for
-    # this popup - not the global popup-border-style in tmux.conf, which
-    # would also recolor the fzf popups.
-    command: 'tmux display-popup -E -d "#{pane_current_path}" -w 70% -h 30% -S "fg=#d97757" -T " AI Commit Message " -- /Users/r/.local/bin/lazygit-ai-commit-msg'
-    output: none
+    # output: terminal, not a tmux popup - tmux can't stack a second,
+    # independent popup on top of an existing one (if this command is run
+    # from inside an existing popup - e.g. lazygit opened via prefix+g -
+    # tmux just modifies that same popup instead, ignoring -w/-h/-d and
+    # leaving the old content behind). Suspending to the actual pane avoids
+    # that conflict entirely, regardless of how lazygit itself was opened.
+    command: '/Users/r/.local/bin/lazygit-claude'
+    output: terminal
