@@ -244,6 +244,39 @@ install_lazygit() {
 }
 
 # ---------------------------------------------------------------------------
+# Neovim (LazyVim) - config.nvim is a copy of the LazyVim starter template
+# (github.com/LazyVim/starter) with its own .git removed, tracked here like
+# every other dotfile.
+# ---------------------------------------------------------------------------
+install_nvim() {
+  echo "==> Neovim (LazyVim)"
+
+  local src="$DOTFILES_DIR/nvim"
+  local dest="$HOME/.config/nvim"
+
+  if [ ! -d "$src" ]; then
+    echo "    !! $src not found, skipping"
+    return
+  fi
+
+  if [ -L "$dest" ]; then
+    echo "    $dest is already a symlink, skipping"
+    return
+  fi
+
+  if [ -e "$dest" ]; then
+    local backup="$dest.bak.$(date +%Y%m%d%H%M%S)"
+    echo "    Existing $dest found, backing up to $backup"
+    mv "$dest" "$backup"
+  fi
+
+  mkdir -p "$HOME/.config"
+  ln -s "$src" "$dest"
+
+  echo "    Symlinked $dest -> $src"
+}
+
+# ---------------------------------------------------------------------------
 # Fish shell
 # ---------------------------------------------------------------------------
 install_fish() {
@@ -399,5 +432,6 @@ install_tmux
 install_tpm
 install_ghostty
 install_lazygit
+install_nvim
 install_zen
 install_fish

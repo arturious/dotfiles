@@ -14,34 +14,13 @@ if status is-interactive
     set -g fish_autosuggestion_enabled 0
 
     alias ll 'eza -la -F --icons=auto --hyperlink=auto --sort=date --reverse --no-filesize --no-time --no-user --git --git-repos'
+    alias vim nvim
 
     set -gx FORCE_COLOR 3
     set -gx CLAUDE_CODE_TMUX_TRUECOLOR 1
     set -gx FZF_DEFAULT_OPTS "--tmux 90%,70% --border"
     source /opt/homebrew/opt/fzf/shell/key-bindings.fish
     fzf_key_bindings
-
-    # Show Ghostty's OSC 9;4 progress bar (indeterminate) for any command
-    # still running after 1s (matches config.ghostty's
-    # notify-on-command-finish-after). Skip `claude` — it drives its own
-    # progress bar per-turn (terminalProgressBarEnabled) and would otherwise
-    # look permanently "busy" for the whole session, since fish sees it as
-    # one long-running command.
-    function __progress_preexec --on-event fish_preexec
-        if string match -qr '^\s*claude(\s|$)' -- $argv[1]
-            return
-        end
-        set -g __progress_token (date +%s%N)
-        set -l marker /tmp/.fish-progress-$fish_pid
-        echo $__progress_token >$marker
-        fish -c "sleep 1; if test -f $marker; and test (cat $marker) = $__progress_token; printf '\033]9;4;3;\007'; end" &
-        disown
-    end
-
-    function __progress_postexec --on-event fish_postexec
-        rm -f /tmp/.fish-progress-$fish_pid
-        printf '\033]9;4;0;0\007'
-    end
 
     # Tab completion as an fzf popup (bordered, via $FZF_DEFAULT_OPTS above)
     # instead of fish's plain inline pager. 0 or 1 match: behave like normal

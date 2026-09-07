@@ -31,6 +31,9 @@ install_formulae() {
   brew install fzf
   brew install eza
   brew install lazygit
+  brew install neovim
+  brew install ripgrep
+  brew install fd
 }
 
 # ---------------------------------------------------------------------------
