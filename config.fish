@@ -56,3 +56,7 @@ if status is-interactive
     bind \t __fzf_tab_complete
 end
 export PATH="$HOME/.local/bin:$PATH"
+
+
+# Added by Antigravity CLI installer
+set -gx PATH "/Users/r/.local/bin" $PATH
