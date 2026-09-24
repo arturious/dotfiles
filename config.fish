@@ -60,3 +60,4 @@ export PATH="$HOME/.local/bin:$PATH"
 
 # Added by Antigravity CLI installer
 set -gx PATH "/Users/r/.local/bin" $PATH
+set -gx PATH /opt/homebrew/opt/rustup/bin $PATH
