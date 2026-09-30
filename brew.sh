@@ -17,6 +17,7 @@ install_casks() {
   echo "==> Casks"
 
   brew install --cask karabiner-elements
+  brew install --cask hammerspoon
 }
 
 # ---------------------------------------------------------------------------

@@ -422,6 +422,41 @@ install_zen() {
 }
 
 # ---------------------------------------------------------------------------
+# Hammerspoon - config lives in hammerspoon.lua instead of the default
+# init.lua, so point Hammerspoon at it via the MJConfigFile preference.
+# ---------------------------------------------------------------------------
+install_hammerspoon() {
+  echo "==> Hammerspoon"
+
+  local src="$DOTFILES_DIR/hammerspoon.lua"
+  local config_dir="$HOME/.hammerspoon"
+  local dest="$config_dir/hammerspoon.lua"
+
+  if [ ! -f "$src" ]; then
+    echo "    !! $src not found, skipping"
+    return
+  fi
+
+  mkdir -p "$config_dir"
+
+  if [ -L "$dest" ]; then
+    echo "    $dest is already a symlink, skipping"
+  else
+    if [ -e "$dest" ]; then
+      local backup="$dest.bak.$(date +%Y%m%d%H%M%S)"
+      echo "    Existing $dest found, backing up to $backup"
+      mv "$dest" "$backup"
+    fi
+
+    ln -s "$src" "$dest"
+    echo "    Symlinked $dest -> $src"
+  fi
+
+  defaults write org.hammerspoon.Hammerspoon MJConfigFile "~/.hammerspoon/hammerspoon.lua"
+  echo "    Set MJConfigFile to ~/.hammerspoon/hammerspoon.lua (restart Hammerspoon to apply)"
+}
+
+# ---------------------------------------------------------------------------
 # Add new install_<app> functions below and call them here
 # ---------------------------------------------------------------------------
 
@@ -434,4 +469,5 @@ install_ghostty
 install_lazygit
 install_nvim
 install_zen
+install_hammerspoon
 install_fish
