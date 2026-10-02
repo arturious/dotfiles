@@ -3,6 +3,7 @@
   "base": "dark",
   "overrides": {
     "promptBorder": "#D77757",
-    "subtle": "#708285"
+    "subtle": "#708285",
+    "claude": "#D77757"
   }
 }

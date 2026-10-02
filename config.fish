@@ -1,5 +1,12 @@
 set -g fish_greeting
 
+# Not inside `if status is-interactive` on purpose: tmux runs a popup/pane's
+# command as `fish -c "..."`, which is non-interactive, so anything in that
+# block (e.g. tmux-claude-hatch's popups) would never see these. Harmless to
+# set unconditionally either way.
+set -gx FORCE_COLOR 3
+set -gx CLAUDE_CODE_TMUX_TRUECOLOR 1
+
 if status is-interactive
     starship init fish | source
 
@@ -11,13 +18,72 @@ if status is-interactive
         end
     end
 
+    # Terminal/pane title (#T in the tmux tab pills): same as fish's built-in
+    # fish_title, but only the last folder name instead of prompt_pwd's
+    # "~/dev" - just "dev" (still "~" at home).
+    function fish_title
+        set -l dir (path basename -- $PWD)
+        test "$PWD" = "$HOME"; and set dir '~'
+        set -l command $argv[1]
+        if not set -q argv[1]
+            set command (status current-command)
+            test "$command" = fish; and set command
+        end
+        echo -- (string sub -l 20 -- $command) $dir
+    end
+
+    # `c` alone opens interactive claude; `c how do I undo a commit` runs a
+    # one-shot `claude -p "..."` with all the words joined into one prompt.
+    function c
+        if not set -q argv[1]
+            claude
+            return
+        end
+        # No spinner when stderr isn't a terminal (e.g. `c ... 2>log`).
+        if not isatty stderr
+            claude -p "$argv"
+            return
+        end
+
+        set -l out (mktemp)
+        set -l rc (mktemp)
+        # Run via sh + disown rather than a plain fish `&` job, so fish
+        # doesn't print "Job 1 has ended" once it finishes; the exit code
+        # comes back through $rc instead of `wait`.
+        sh -c 'claude -p "$1" >"$2" 2>&1; echo $? >"$3"' _ "$argv" $out $rc &
+        set -l pid $last_pid
+        disown $pid
+
+        # Ctrl+C stops the spinner loop - kill claude too, not just the loop.
+        function __c_cancel --on-signal SIGINT --inherit-variable pid --inherit-variable out --inherit-variable rc
+            kill $pid 2>/dev/null
+            printf '\r\e[K' >&2
+            rm -f $out $rc
+            functions -e __c_cancel
+        end
+
+        set -l frames · ✢ ✳ ✶ ✻ ✽ ✽ ✻ ✶ ✳ ✢ ·
+        set -l i 1
+        while kill -0 $pid 2>/dev/null
+            printf '\r\e[38;2;215;119;87m%s\e[0m' $frames[$i] >&2
+            set i (math "$i % "(count $frames)" + 1")
+            sleep 0.12
+        end
+        printf '\r\e[K' >&2
+        functions -e __c_cancel
+
+        cat $out
+        set -l code (cat $rc 2>/dev/null; or echo 1)
+        rm -f $out $rc
+        return $code
+    end
     set -g fish_autosuggestion_enabled 0
 
     alias ll 'eza -la -F --icons=auto --hyperlink=auto --sort=date --reverse --no-filesize --no-time --no-user --git --git-repos'
     alias vim nvim
+    alias cc 'claude --continue'
+    alias cr 'claude --resume'
 
-    set -gx FORCE_COLOR 3
-    set -gx CLAUDE_CODE_TMUX_TRUECOLOR 1
     set -gx FZF_DEFAULT_OPTS "--tmux 90%,70% --border"
     source /opt/homebrew/opt/fzf/shell/key-bindings.fish
     fzf_key_bindings
