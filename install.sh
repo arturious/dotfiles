@@ -115,7 +115,7 @@ install_starship() {
 install_tmux() {
   echo "==> tmux"
 
-  local src="$DOTFILES_DIR/tmux.conf"
+  local src="$DOTFILES_DIR/tmux/tmux.conf"
   local dest="$HOME/.tmux.conf"
 
   if [ ! -f "$src" ]; then

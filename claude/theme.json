@@ -4,6 +4,9 @@
   "overrides": {
     "promptBorder": "#D77757",
     "subtle": "#708285",
-    "claude": "#D77757"
+    "claude": "#D77757",
+    "userMessageBackground": "#02232B",
+    "userMessageBackgroundHover": "#04313B",
+    "inactive": "#278BD2"
   }
 }
