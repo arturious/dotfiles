@@ -422,22 +422,20 @@ install_zen() {
 }
 
 # ---------------------------------------------------------------------------
-# Hammerspoon - config lives in hammerspoon.lua instead of the default
-# init.lua, so point Hammerspoon at it via the MJConfigFile preference.
+# Hammerspoon - the whole ~/.hammerspoon dir is a symlink to
+# dotfiles/hammerspoon (init.lua + one .lua file per tool, loaded via
+# require), so a new tool is just a new file there.
 # ---------------------------------------------------------------------------
 install_hammerspoon() {
   echo "==> Hammerspoon"
 
-  local src="$DOTFILES_DIR/hammerspoon.lua"
-  local config_dir="$HOME/.hammerspoon"
-  local dest="$config_dir/hammerspoon.lua"
+  local src="$DOTFILES_DIR/hammerspoon"
+  local dest="$HOME/.hammerspoon"
 
-  if [ ! -f "$src" ]; then
+  if [ ! -d "$src" ]; then
     echo "    !! $src not found, skipping"
     return
   fi
-
-  mkdir -p "$config_dir"
 
   if [ -L "$dest" ]; then
     echo "    $dest is already a symlink, skipping"
@@ -452,8 +450,49 @@ install_hammerspoon() {
     echo "    Symlinked $dest -> $src"
   fi
 
-  defaults write org.hammerspoon.Hammerspoon MJConfigFile "~/.hammerspoon/hammerspoon.lua"
-  echo "    Set MJConfigFile to ~/.hammerspoon/hammerspoon.lua (restart Hammerspoon to apply)"
+  # Older setups pointed Hammerspoon at hammerspoon.lua via MJConfigFile;
+  # drop it so the default ~/.hammerspoon/init.lua is used.
+  defaults delete org.hammerspoon.Hammerspoon MJConfigFile 2>/dev/null || true
+}
+
+# ---------------------------------------------------------------------------
+# Claude Code - files from dotfiles/claude symlinked into ~/.claude:
+# settings.json, statusline.py (its statusLine command) and theme.json
+# (as themes/custom.json, i.e. "theme": "custom:custom").
+# ---------------------------------------------------------------------------
+install_claude() {
+  echo "==> Claude Code"
+
+  local src_dir="$DOTFILES_DIR/claude"
+  local dest_dir="$HOME/.claude"
+
+  if [ ! -d "$src_dir" ]; then
+    echo "    !! $src_dir not found, skipping"
+    return
+  fi
+
+  mkdir -p "$dest_dir/themes"
+
+  # "src:dest" pairs, relative to dotfiles/claude and ~/.claude
+  for pair in settings.json:settings.json statusline.py:statusline.py theme.json:themes/custom.json; do
+    local src="$src_dir/${pair%%:*}"
+    local dest="$dest_dir/${pair#*:}"
+    [ -e "$src" ] || continue
+
+    if [ -L "$dest" ]; then
+      echo "    $dest is already a symlink, skipping"
+      continue
+    fi
+
+    if [ -e "$dest" ]; then
+      local backup="$dest.bak.$(date +%Y%m%d%H%M%S)"
+      echo "    Existing $dest found, backing up to $backup"
+      mv "$dest" "$backup"
+    fi
+
+    ln -s "$src" "$dest"
+    echo "    Symlinked $dest -> $src"
+  done
 }
 
 # ---------------------------------------------------------------------------
@@ -470,4 +509,5 @@ install_lazygit
 install_nvim
 install_zen
 install_hammerspoon
+install_claude
 install_fish

@@ -1,0 +1,38 @@
+{
+  "permissions": {
+    "defaultMode": "bypassPermissions"
+  },
+  "worktree": {
+    "baseRef": "fresh"
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "/Users/r/.claude/statusline.py"
+  },
+  "enabledPlugins": {
+    "swift-lsp@claude-plugins-official": true,
+    "vercel@claude-plugins-official": true,
+    "tmux-claude-hatch@tmux-claude-hatch": true
+  },
+  "extraKnownMarketplaces": {
+    "tmux-claude-hatch": {
+      "source": {
+        "source": "github",
+        "repo": "craftzdog/tmux-claude-hatch"
+      }
+    }
+  },
+  "language": "Russian",
+  "feedbackDrafts": "off",
+  "spinnerTipsEnabled": false,
+  "tui": "fullscreen",
+  "timeFormat": "24-hour-utc",
+  "skipDangerousModePermissionPrompt": true,
+  "theme": "custom:custom",
+  "editorMode": "normal",
+  "preferredNotifChannel": "ghostty",
+  "showTurnDuration": false,
+  "terminalProgressBarEnabled": true,
+  "inputNeededNotifEnabled": true,
+  "agentPushNotifEnabled": true
+}
