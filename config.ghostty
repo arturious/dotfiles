@@ -23,6 +23,10 @@ keybind = alt+left=unbind
 keybind = alt+right=unbind
 keybind = cmd+[=text:\x1ep
 keybind = cmd+]=text:\x1en
+# Cmd+Shift+[ / Cmd+Shift+] move the current tmux window left/right (see
+# tmux.conf: user-keys[4]/[5] / User4/User5).
+keybind = cmd+shift+bracket_left=text:\x1eP
+keybind = cmd+shift+bracket_right=text:\x1eN
 
 # Cmd+P sends our tmux prefix key (see tmux.conf: prefix C-]) instead of the
 # OS "Print" action. Single byte (0x1D, i.e. literal Ctrl+]), not the old

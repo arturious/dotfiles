@@ -375,7 +375,7 @@ install_zen() {
 
   local profile_dir="$zen_dir/$rel_path"
   local chrome_dir="$profile_dir/chrome"
-  local src="$DOTFILES_DIR/userChrome.css"
+  local src="$DOTFILES_DIR/zen/userChrome.css"
   local dest="$chrome_dir/userChrome.css"
 
   if [ ! -f "$src" ]; then
@@ -398,7 +398,7 @@ install_zen() {
     echo "    Symlinked $dest -> $src"
   fi
 
-  local user_js_src="$DOTFILES_DIR/user.js"
+  local user_js_src="$DOTFILES_DIR/zen/user.js"
   local user_js_dest="$profile_dir/user.js"
 
   if [ -f "$user_js_src" ]; then
