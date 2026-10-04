@@ -418,7 +418,42 @@ install_zen() {
     echo "    !! $user_js_src not found, skipping user.js symlink"
   fi
 
-  echo "    Restart Zen for userChrome.css/user.js to take effect"
+  # Boosts: CSS dir is symlinked; the jsonlz4 index (site -> boost id) is
+  # copied, since Zen rewrites it atomically and would replace a symlink.
+  # After changing boosts in Zen, copy the index back:
+  #   cp "<profile>/zen-boosts.jsonlz4" ~/dotfiles/zen/zen-boosts.jsonlz4
+  local boosts_src="$DOTFILES_DIR/zen/boosts"
+  local boosts_dest="$profile_dir/zen-boosts"
+
+  if [ -d "$boosts_src" ]; then
+    if [ -L "$boosts_dest" ]; then
+      echo "    $boosts_dest is already a symlink, skipping"
+    else
+      if [ -e "$boosts_dest" ]; then
+        local boosts_backup="$boosts_dest.bak.$(date +%Y%m%d%H%M%S)"
+        echo "    Existing $boosts_dest found, backing up to $boosts_backup"
+        mv "$boosts_dest" "$boosts_backup"
+      fi
+
+      ln -s "$boosts_src" "$boosts_dest"
+      echo "    Symlinked $boosts_dest -> $boosts_src"
+    fi
+
+    local boosts_index_src="$DOTFILES_DIR/zen/zen-boosts.jsonlz4"
+    local boosts_index_dest="$profile_dir/zen-boosts.jsonlz4"
+
+    if [ -f "$boosts_index_src" ]; then
+      if [ -e "$boosts_index_dest" ]; then
+        cp "$boosts_index_dest" "$boosts_index_dest.bak.$(date +%Y%m%d%H%M%S)"
+      fi
+      cp "$boosts_index_src" "$boosts_index_dest"
+      echo "    Copied $boosts_index_src -> $boosts_index_dest"
+    fi
+  else
+    echo "    !! $boosts_src not found, skipping boosts"
+  fi
+
+  echo "    Restart Zen for userChrome.css/user.js/boosts to take effect"
 }
 
 # ---------------------------------------------------------------------------
