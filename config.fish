@@ -10,7 +10,11 @@ set -gx CLAUDE_CODE_TMUX_TRUECOLOR 1
 if status is-interactive
     starship init fish | source
 
-    if not set -q TMUX
+    # Only in Ghostty: VS Code resolves the environment by running an
+    # interactive login fish without a terminal, where exec tmux fails
+    # ("not a terminal") and VS Code reports "Unable to resolve your shell
+    # environment". Its integrated terminal stays plain fish too.
+    if not set -q TMUX; and test "$TERM_PROGRAM" = ghostty
         if tmux has-session -t main 2>/dev/null
             exec tmux new-session -t main \; new-window
         else
