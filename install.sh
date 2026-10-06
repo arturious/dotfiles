@@ -419,8 +419,8 @@ install_zen() {
   fi
 
   # Boosts: CSS dir is symlinked; the jsonlz4 index (site -> boost id) is
-  # copied, since Zen rewrites it atomically and would replace a symlink.
-  # After changing boosts in Zen, copy the index back:
+  # copied - Zen saves it by replacing the file, which turns a symlink back
+  # into a plain file (tested). After adding/renaming boosts, copy it back:
   #   cp "<profile>/zen-boosts.jsonlz4" ~/dotfiles/zen/zen-boosts.jsonlz4
   local boosts_src="$DOTFILES_DIR/zen/boosts"
   local boosts_dest="$profile_dir/zen-boosts"

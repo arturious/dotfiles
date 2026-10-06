@@ -23,6 +23,31 @@ local PHASE_BEGAN, PHASE_ENDED, PHASE_CANCELLED, PHASE_MAY_BEGIN = 1, 4, 8, 128
 
 local gesture = nil
 
+-- Прямоугольник Dock (AXList у процесса Dock). Кэшируем и пересчитываем
+-- только после запуска/завершения приложений, смены мониторов или раз в
+-- минуту (размер Dock), чтобы на скролл вне Dock не делать ни одного
+-- Accessibility-запроса.
+local dockFrame, dockDirty = nil, true
+
+local function refreshDockFrame()
+  dockDirty = false
+  dockFrame = nil
+  local dock = hs.application.applicationsForBundleID("com.apple.dock")[1]
+  local el = dock and hs.axuielement.applicationElement(dock)
+  for _, c in ipairs(el and el:attributeValue("AXChildren") or {}) do
+    if c:attributeValue("AXRole") == "AXList" then
+      dockFrame = c:attributeValue("AXFrame")
+      return
+    end
+  end
+end
+
+local function overDock(p)
+  if dockDirty then refreshDockFrame() end
+  local f = dockFrame
+  return f ~= nil and p.x >= f.x and p.x <= f.x + f.w and p.y >= f.y and p.y <= f.y + f.h
+end
+
 local function defaultsRead(args)
   local out, ok = hs.execute("defaults read " .. args .. " 2>/dev/null")
   return ok and (out:gsub("%s+$", "")) or nil
@@ -65,14 +90,17 @@ local function quit(bundleID)
 end
 
 local function onScroll(e)
+  local phase = e:getProperty(props.scrollWheelEventScrollPhase)
+  -- вне жеста интересует только его начало: всё остальное отбрасываем сразу
+  if not gesture and phase ~= PHASE_MAY_BEGIN and phase ~= PHASE_BEGAN then return false end
+
   -- только трекпад (точные дельты) и без инерции после отпускания пальцев
   if e:getProperty(props.scrollWheelEventIsContinuous) == 0 then return false end
   if e:getProperty(props.scrollWheelEventMomentumPhase) ~= 0 then return false end
 
-  local phase = e:getProperty(props.scrollWheelEventScrollPhase)
-
-  if not gesture and (phase == PHASE_MAY_BEGIN or phase == PHASE_BEGAN) then
+  if not gesture then
     local loc = e:location()
+    if not overDock(loc) then return false end
     local id = bundleIDAt(loc)
     if id then
       gesture = {
@@ -110,6 +138,15 @@ end
 
 function M.start()
   M.tap = hs.eventtap.new({ hs.eventtap.event.types.scrollWheel }, onScroll):start()
+
+  local function markDirty() dockDirty = true end
+  M.appWatcher = hs.application.watcher.new(function(_, event)
+    if event == hs.application.watcher.launched or event == hs.application.watcher.terminated then
+      markDirty()
+    end
+  end):start()
+  M.screenWatcher = hs.screen.watcher.new(markDirty):start()
+  M.dockTimer = hs.timer.doEvery(60, markDirty)
   return M
 end
 
