@@ -31,7 +31,7 @@ end
 
 local function trackWindow(entry, win)
   if not isRealWindow(win) or indexOf(entry.windows, win) then return end
-  entry.observer:addWatcher(win, "AXUIElementDestroyed")
+  if not pcall(entry.observer.addWatcher, entry.observer, win, "AXUIElementDestroyed") then return end
   table.insert(entry.windows, win)
 end
 
@@ -60,7 +60,22 @@ local function quitIfStillWindowless(pid)
   end)
 end
 
-local function observe(app)
+local observe
+
+-- Приложение, которое ещё грузится или зависло, отвечает на Accessibility
+-- ошибкой "Messaging failed" - пробуем подписаться позже, а не падать.
+local RETRY_DELAYS = { 2, 5, 15, 60 }
+
+local function retryLater(app, attempt)
+  local delay = RETRY_DELAYS[attempt]
+  if not delay then return end
+  hs.timer.doAfter(delay, function()
+    if app:isRunning() and eligible(app) then observe(app, attempt + 1) end
+  end)
+end
+
+observe = function(app, attempt)
+  attempt = attempt or 1
   local pid = app:pid()
   if apps[pid] then return end
 
@@ -79,7 +94,10 @@ local function observe(app)
       end
     end
   end)
-  entry.observer:addWatcher(appEl, "AXWindowCreated")
+  if not pcall(entry.observer.addWatcher, entry.observer, appEl, "AXWindowCreated") then
+    retryLater(app, attempt)
+    return
+  end
 
   local function sync()
     for _, win in ipairs(appEl:attributeValue("AXWindows") or {}) do
