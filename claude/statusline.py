@@ -51,9 +51,12 @@ else:
 ctx = (payload.get("context_window") or {}).get("used_percentage")
 rate_limits = payload.get("rate_limits") or {}
 
-parts = [color("D77757", model)]
+# Line 1: model | directory. Line 2: context % | 5h | 7d.
+top = [color("D77757", model)]
 if cwd_display:
-    parts.append(color("2AA298", cwd_display))
+    top.append(color("2AA298", cwd_display))
+
+parts = []
 if ctx is not None:
     parts.append(color("859900", f"{ctx:g}%"))
 
@@ -68,4 +71,6 @@ for label, key in (("5h", "five_hour"), ("7d", "seven_day")):
         text += f" (resets in {when})"
     parts.append(color("B28500", text))
 
-print(" | ".join(parts))
+print(" | ".join(top))
+if parts:
+    print(" | ".join(parts))
