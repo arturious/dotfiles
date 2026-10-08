@@ -11,21 +11,23 @@ DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 install_karabiner() {
   echo "==> Karabiner-Elements"
 
-  local src="$DOTFILES_DIR/karabiner.json"
-  local config_dir="$HOME/.config/karabiner"
-  local dest="$config_dir/karabiner.json"
+  # The whole directory, not just karabiner.json: Karabiner watches
+  # ~/.config/karabiner for changes, and edits to a symlinked file's target
+  # never show up there, so the config wouldn't reload on its own.
+  local src="$DOTFILES_DIR/karabiner"
+  local dest="$HOME/.config/karabiner"
 
-  if [ ! -f "$src" ]; then
+  if [ ! -d "$src" ]; then
     echo "    !! $src not found, skipping"
     return
   fi
-
-  mkdir -p "$config_dir"
 
   if [ -L "$dest" ]; then
     echo "    $dest is already a symlink, skipping"
     return
   fi
+
+  mkdir -p "$(dirname "$dest")"
 
   if [ -e "$dest" ]; then
     local backup="$dest.bak.$(date +%Y%m%d%H%M%S)"
