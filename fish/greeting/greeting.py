@@ -130,7 +130,8 @@ def warp_logo_contains(x, y):
 # расстоянии EXTRUSION_DEPTH, а по краям строк — «стежки» из точек.
 # Нет файла — крутится логотип Warp.
 ART_RIGHT_MARGIN = 2  # отступ рисунка от правого края, в колонках
-SHAPE_FILE = os.path.expanduser("~/dotfiles/ascii/logo.txt")
+# logo.txt лежит рядом со скриптом (realpath - на случай запуска через симлинк)
+SHAPE_FILE = os.path.join(os.path.dirname(os.path.realpath(__file__)), "logo.txt")
 try:
     with open(SHAPE_FILE) as f:
         SHAPE = f.read()

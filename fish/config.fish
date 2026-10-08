@@ -1,4 +1,7 @@
-set -g fish_greeting
+# rustup's toolchain, then our own scripts (lazygit-claude) in
+# ~/.local/bin. fish_add_path skips entries already in $PATH, so no
+# duplicates however many times this file is sourced.
+fish_add_path --global --path /opt/homebrew/opt/rustup/bin ~/.local/bin
 
 # Not inside `if status is-interactive` on purpose: tmux runs a popup/pane's
 # command as `fish -c "..."`, which is non-interactive, so anything in that
@@ -22,16 +25,8 @@ if status is-interactive
         end
     end
 
-    # Warp-style welcome screen in every new tmux window (Ghostty launch and
-    # Cmd+T both land here), but not in splits: only when this pane is the
-    # window's only one. Absolute path: PATH gets ~/.local/bin only at the
-    # bottom of this file.
-    if set -q TMUX; and test (tmux display -p -t "$TMUX_PANE" '#{window_panes}') = 1
-        test -x ~/.local/bin/welcome; and ~/.local/bin/welcome
-    end
-
-    # Functions (c, fish_title, __fzf_tab_complete) live one per file in
-    # functions/, autoloaded on first use.
+    # Functions (c, fish_greeting, fish_title, __fzf_tab_complete) live one
+    # per file in functions/, autoloaded on first use.
     set -g fish_autosuggestion_enabled 0
 
     alias ll 'eza -la -F --icons=auto --hyperlink=auto --sort=date --reverse --no-filesize --no-time --no-user --git --git-repos'
@@ -46,9 +41,3 @@ if status is-interactive
     # Tab completion as an fzf popup (functions/__fzf_tab_complete.fish).
     bind \t __fzf_tab_complete
 end
-export PATH="$HOME/.local/bin:$PATH"
-
-
-# Added by Antigravity CLI installer
-set -gx PATH "/Users/r/.local/bin" $PATH
-set -gx PATH /opt/homebrew/opt/rustup/bin $PATH

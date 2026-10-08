@@ -7,7 +7,7 @@
   },
   "statusLine": {
     "type": "command",
-    "command": "/Users/r/.claude/statusline.py"
+    "command": "~/.claude/statusline.py"
   },
   "enabledPlugins": {
     "swift-lsp@claude-plugins-official": true,

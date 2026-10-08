@@ -64,7 +64,6 @@ link starship/starship.toml    "$HOME/.config/starship.toml"
 link tmux                      "$HOME/.config/tmux"
 link vscode/settings.json      "$APP_SUPPORT/Code/User/settings.json"
 
-link bin/welcome               "$HOME/.local/bin/welcome"
 link bin/lazygit-claude        "$HOME/.local/bin/lazygit-claude"
 
 # ---------------------------------------------------------------------------

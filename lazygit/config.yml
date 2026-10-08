@@ -28,5 +28,5 @@ customCommands:
     # tmux just modifies that same popup instead, ignoring -w/-h/-d and
     # leaving the old content behind). Suspending to the actual pane avoids
     # that conflict entirely, regardless of how lazygit itself was opened.
-    command: '/Users/r/.local/bin/lazygit-claude'
+    command: '~/.local/bin/lazygit-claude'
     output: terminal
