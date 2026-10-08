@@ -47,7 +47,7 @@ printf '\0337\033[%d;%dH%s\0338' "$(tput lines)" "$(( $(tput cols) - ${#hint} - 
 git diff --cached | claude --model haiku --safe-mode -p "Write ONE single-line git commit message for this diff, following the Conventional Commits format (type(scope): summary). No body, no newlines, no code fences, no surrounding quotes - output ONLY that single line." >"$msg_file" &
 pid=$!
 
-# Same frame set/order as gui.spinner in lazygit-config.yml: 0,1,2,3,4,5,5,4,3,2,1,0.
+# Same frame set/order as gui.spinner in lazygit/config.yml: 0,1,2,3,4,5,5,4,3,2,1,0.
 frames=('·' '✢' '✳' '✶' '✻' '✽' '✽' '✻' '✶' '✳' '✢' '·')
 n=0
 cancelled=0

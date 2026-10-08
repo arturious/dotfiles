@@ -1,584 +1,122 @@
 #!/usr/bin/env bash
+# One folder per app; this file maps each one to where the app reads it.
+# Safe to re-run: existing symlinks are left alone, real files are backed up.
 set -euo pipefail
 
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+APP_SUPPORT="$HOME/Library/Application Support"
 
-"$DOTFILES_DIR/brew.sh"
+# link <path in dotfiles> <destination>
+link() {
+  local src="$DOTFILES_DIR/$1" dest="$2"
 
-# ---------------------------------------------------------------------------
-# Karabiner-Elements
-# ---------------------------------------------------------------------------
-install_karabiner() {
-  echo "==> Karabiner-Elements"
-
-  # The whole directory, not just karabiner.json: Karabiner watches
-  # ~/.config/karabiner for changes, and edits to a symlinked file's target
-  # never show up there, so the config wouldn't reload on its own.
-  local src="$DOTFILES_DIR/karabiner"
-  local dest="$HOME/.config/karabiner"
-
-  if [ ! -d "$src" ]; then
+  if [ ! -e "$src" ]; then
     echo "    !! $src not found, skipping"
     return
   fi
-
-  if [ -L "$dest" ]; then
-    echo "    $dest is already a symlink, skipping"
+  if [ -L "$dest" ] && [ "$(readlink "$dest")" = "$src" ]; then
     return
   fi
 
   mkdir -p "$(dirname "$dest")"
-
-  if [ -e "$dest" ]; then
+  if [ -L "$dest" ]; then
+    rm "$dest"                       # stale symlink (e.g. an old dotfiles path)
+  elif [ -e "$dest" ]; then
     local backup="$dest.bak.$(date +%Y%m%d%H%M%S)"
-    echo "    Existing $dest found, backing up to $backup"
+    echo "    Backing up $dest -> $backup"
     mv "$dest" "$backup"
   fi
 
   ln -s "$src" "$dest"
-
-  echo "    Symlinked $dest -> $src"
+  echo "    $dest -> $src"
 }
 
 # ---------------------------------------------------------------------------
-# VS Code
+# Homebrew packages
 # ---------------------------------------------------------------------------
-install_vscode() {
-  echo "==> VS Code"
-
-  local src="$DOTFILES_DIR/settings.json"
-  local dest="$HOME/Library/Application Support/Code/User/settings.json"
-
-  if [ ! -f "$src" ]; then
-    echo "    !! $src not found, skipping"
-    return
-  fi
-
-  if [ -L "$dest" ]; then
-    echo "    $dest is already a symlink, skipping"
-    return
-  fi
-
-  if [ -e "$dest" ]; then
-    local backup="$dest.bak.$(date +%Y%m%d%H%M%S)"
-    echo "    Existing $dest found, backing up to $backup"
-    mv "$dest" "$backup"
-  fi
-
-  mkdir -p "$HOME/Library/Application Support/Code/User"
-  ln -s "$src" "$dest"
-
-  echo "    Symlinked $dest -> $src"
-
-  local extensions_file="$DOTFILES_DIR/extensions.txt"
-  if command -v code >/dev/null 2>&1 && [ -f "$extensions_file" ]; then
-    echo "    Installing VS Code extensions..."
-    while IFS= read -r extension; do
-      [ -z "$extension" ] && continue
-      code --install-extension "$extension"
-    done < "$extensions_file"
-  fi
-}
+echo "==> Homebrew"
+brew bundle --file "$DOTFILES_DIR/Brewfile"
 
 # ---------------------------------------------------------------------------
-# Starship
+# Symlinks
 # ---------------------------------------------------------------------------
-install_starship() {
-  echo "==> Starship"
+echo "==> Symlinks"
 
-  local src="$DOTFILES_DIR/starship.toml"
-  local dest="$HOME/.config/starship.toml"
+# Claude Code (theme.json is the "custom:custom" theme)
+link claude/settings.json      "$HOME/.claude/settings.json"
+link claude/statusline.py      "$HOME/.claude/statusline.py"
+link claude/theme.json         "$HOME/.claude/themes/custom.json"
 
-  if [ ! -f "$src" ]; then
-    echo "    !! $src not found, skipping"
-    return
-  fi
+link fish/config.fish          "$HOME/.config/fish/config.fish"
+# One file per function, not the whole dir: fisher keeps its own files there.
+for fn in "$DOTFILES_DIR"/fish/functions/*.fish; do
+  link "fish/functions/${fn##*/}" "$HOME/.config/fish/functions/${fn##*/}"
+done
+link ghostty/config.ghostty    "$APP_SUPPORT/com.mitchellh.ghostty/config.ghostty"
+link hammerspoon               "$HOME/.hammerspoon"
+# The whole directory, not just karabiner.json: Karabiner watches
+# ~/.config/karabiner, and edits to a symlinked file's target never show up
+# there, so the config wouldn't reload on its own.
+link karabiner                 "$HOME/.config/karabiner"
+link lazygit/config.yml        "$APP_SUPPORT/lazygit/config.yml"
+link nvim                      "$HOME/.config/nvim"
+link starship/starship.toml    "$HOME/.config/starship.toml"
+link tmux                      "$HOME/.config/tmux"
+link vscode/settings.json      "$APP_SUPPORT/Code/User/settings.json"
 
-  if [ -L "$dest" ]; then
-    echo "    $dest is already a symlink, skipping"
-    return
-  fi
-
-  if [ -e "$dest" ]; then
-    local backup="$dest.bak.$(date +%Y%m%d%H%M%S)"
-    echo "    Existing $dest found, backing up to $backup"
-    mv "$dest" "$backup"
-  fi
-
-  mkdir -p "$HOME/.config"
-  ln -s "$src" "$dest"
-
-  echo "    Symlinked $dest -> $src"
-}
-
-# ---------------------------------------------------------------------------
-# tmux
-# ---------------------------------------------------------------------------
-install_tmux() {
-  echo "==> tmux"
-
-  local src="$DOTFILES_DIR/tmux/tmux.conf"
-  local dest="$HOME/.tmux.conf"
-
-  if [ ! -f "$src" ]; then
-    echo "    !! $src not found, skipping"
-    return
-  fi
-
-  if [ -L "$dest" ]; then
-    echo "    $dest is already a symlink, skipping"
-    return
-  fi
-
-  if [ -e "$dest" ]; then
-    local backup="$dest.bak.$(date +%Y%m%d%H%M%S)"
-    echo "    Existing $dest found, backing up to $backup"
-    mv "$dest" "$backup"
-  fi
-
-  ln -s "$src" "$dest"
-
-  echo "    Symlinked $dest -> $src"
-}
+link bin/welcome               "$HOME/.local/bin/welcome"
+link bin/lazygit-claude        "$HOME/.local/bin/lazygit-claude"
 
 # ---------------------------------------------------------------------------
-# TPM (tmux plugin manager) - only used for tmux-claude-session-manager;
-# everything else in tmux.conf is hand-written, no plugin manager needed.
+# Special cases
 # ---------------------------------------------------------------------------
-install_tpm() {
-  echo "==> TPM"
 
-  local tpm_dir="$HOME/.tmux/plugins/tpm"
+# tmux: ~/.tmux.conf would win over ~/.config/tmux/tmux.conf, drop the old link.
+if [ -L "$HOME/.tmux.conf" ]; then
+  rm "$HOME/.tmux.conf"
+fi
 
-  if [ -d "$tpm_dir" ]; then
-    echo "    $tpm_dir already exists, skipping clone"
-  else
-    git clone --depth 1 https://github.com/tmux-plugins/tpm "$tpm_dir"
-  fi
+# TPM (tmux plugin manager) - only used for tmux-claude-hatch.
+echo "==> TPM"
+tpm_dir="$HOME/.tmux/plugins/tpm"
+if [ ! -d "$tpm_dir" ]; then
+  git clone --depth 1 https://github.com/tmux-plugins/tpm "$tpm_dir"
+fi
+"$tpm_dir/bin/install_plugins"
 
-  echo "    Installing plugins declared in tmux.conf..."
-  "$tpm_dir/bin/install_plugins"
-}
+# Hammerspoon: older setups pointed it at hammerspoon.lua via MJConfigFile;
+# drop it so the default ~/.hammerspoon/init.lua is used.
+defaults delete org.hammerspoon.Hammerspoon MJConfigFile 2>/dev/null || true
 
-# ---------------------------------------------------------------------------
-# Ghostty
-# ---------------------------------------------------------------------------
-install_ghostty() {
-  echo "==> Ghostty"
+# Zen Browser: the profile folder has a random name, read it from installs.ini.
+echo "==> Zen Browser"
+zen_dir="$APP_SUPPORT/zen"
+profile="$(awk -F= '/^Default=/{print $2; exit}' "$zen_dir/installs.ini" 2>/dev/null || true)"
+if [ -z "$profile" ]; then
+  echo "    !! Zen profile not found (run Zen once first), skipping"
+else
+  profile_dir="$zen_dir/$profile"
+  link zen/userChrome.css      "$profile_dir/chrome/userChrome.css"
+  link zen/user.js             "$profile_dir/user.js"
+  link zen/boosts              "$profile_dir/zen-boosts"
 
-  local src="$DOTFILES_DIR/config.ghostty"
-  local config_dir="$HOME/Library/Application Support/com.mitchellh.ghostty"
-  local dest="$config_dir/config.ghostty"
-
-  if [ ! -f "$src" ]; then
-    echo "    !! $src not found, skipping"
-    return
-  fi
-
-  mkdir -p "$config_dir"
-
-  if [ -L "$dest" ]; then
-    echo "    $dest is already a symlink, skipping"
-    return
-  fi
-
-  if [ -e "$dest" ]; then
-    local backup="$dest.bak.$(date +%Y%m%d%H%M%S)"
-    echo "    Existing $dest found, backing up to $backup"
-    mv "$dest" "$backup"
-  fi
-
-  ln -s "$src" "$dest"
-  echo "    Symlinked $dest -> $src"
-}
-
-# ---------------------------------------------------------------------------
-# lazygit
-# ---------------------------------------------------------------------------
-install_lazygit() {
-  echo "==> lazygit"
-
-  local config_src="$DOTFILES_DIR/lazygit-config.yml"
-  local config_dir="$HOME/Library/Application Support/lazygit"
-  local config_dest="$config_dir/config.yml"
-
-  if [ -f "$config_src" ]; then
-    mkdir -p "$config_dir"
-
-    if [ -L "$config_dest" ]; then
-      echo "    $config_dest is already a symlink, skipping"
-    else
-      if [ -e "$config_dest" ]; then
-        local config_backup="$config_dest.bak.$(date +%Y%m%d%H%M%S)"
-        echo "    Existing $config_dest found, backing up to $config_backup"
-        mv "$config_dest" "$config_backup"
-      fi
-
-      ln -s "$config_src" "$config_dest"
-      echo "    Symlinked $config_dest -> $config_src"
-    fi
-  else
-    echo "    !! $config_src not found, skipping config symlink"
-  fi
-
-  local script_src="$DOTFILES_DIR/lazygit-claude"
-  local bin_dir="$HOME/.local/bin"
-  local script_dest="$bin_dir/lazygit-claude"
-
-  if [ -f "$script_src" ]; then
-    mkdir -p "$bin_dir"
-
-    if [ -L "$script_dest" ]; then
-      echo "    $script_dest is already a symlink, skipping"
-    else
-      if [ -e "$script_dest" ]; then
-        local script_backup="$script_dest.bak.$(date +%Y%m%d%H%M%S)"
-        echo "    Existing $script_dest found, backing up to $script_backup"
-        mv "$script_dest" "$script_backup"
-      fi
-
-      ln -s "$script_src" "$script_dest"
-      echo "    Symlinked $script_dest -> $script_src"
-    fi
-  else
-    echo "    !! $script_src not found, skipping script symlink"
-  fi
-}
-
-# ---------------------------------------------------------------------------
-# Neovim (LazyVim) - config.nvim is a copy of the LazyVim starter template
-# (github.com/LazyVim/starter) with its own .git removed, tracked here like
-# every other dotfile.
-# ---------------------------------------------------------------------------
-install_nvim() {
-  echo "==> Neovim (LazyVim)"
-
-  local src="$DOTFILES_DIR/nvim"
-  local dest="$HOME/.config/nvim"
-
-  if [ ! -d "$src" ]; then
-    echo "    !! $src not found, skipping"
-    return
-  fi
-
-  if [ -L "$dest" ]; then
-    echo "    $dest is already a symlink, skipping"
-    return
-  fi
-
-  if [ -e "$dest" ]; then
-    local backup="$dest.bak.$(date +%Y%m%d%H%M%S)"
-    echo "    Existing $dest found, backing up to $backup"
-    mv "$dest" "$backup"
-  fi
-
-  mkdir -p "$HOME/.config"
-  ln -s "$src" "$dest"
-
-  echo "    Symlinked $dest -> $src"
-}
-
-# ---------------------------------------------------------------------------
-# Fish shell
-# ---------------------------------------------------------------------------
-install_fish() {
-  echo "==> Fish"
-
-  local fish_path
-  fish_path="$(command -v fish || true)"
-
-  if [ -z "$fish_path" ]; then
-    echo "    !! fish not found, skipping"
-    return
-  fi
-
-  local src="$DOTFILES_DIR/config.fish"
-  local config_dir="$HOME/.config/fish"
-  local dest="$config_dir/config.fish"
-
-  if [ -f "$src" ]; then
-    mkdir -p "$config_dir"
-
-    if [ -L "$dest" ]; then
-      echo "    $dest is already a symlink, skipping"
-    else
-      if [ -e "$dest" ]; then
-        local backup="$dest.bak.$(date +%Y%m%d%H%M%S)"
-        echo "    Existing $dest found, backing up to $backup"
-        mv "$dest" "$backup"
-      fi
-
-      ln -s "$src" "$dest"
-      echo "    Symlinked $dest -> $src"
-    fi
-  else
-    echo "    !! $src not found, skipping config symlink"
-  fi
-
-  local functions_dir="$config_dir/functions"
-  mkdir -p "$functions_dir"
-  for fn in "$DOTFILES_DIR"/functions/*.fish; do
-    [ -f "$fn" ] || continue
-    local fn_dest="$functions_dir/$(basename "$fn")"
-    if [ -L "$fn_dest" ]; then
-      echo "    $fn_dest is already a symlink, skipping"
-    else
-      if [ -e "$fn_dest" ]; then
-        local fn_backup="$fn_dest.bak.$(date +%Y%m%d%H%M%S)"
-        echo "    Existing $fn_dest found, backing up to $fn_backup"
-        mv "$fn_dest" "$fn_backup"
-      fi
-      ln -s "$fn" "$fn_dest"
-      echo "    Symlinked $fn_dest -> $fn"
-    fi
-  done
-
-  if ! grep -qxF "$fish_path" /etc/shells 2>/dev/null; then
-    echo "    Adding $fish_path to /etc/shells (requires sudo)"
-    if ! echo "$fish_path" | sudo tee -a /etc/shells >/dev/null; then
-      echo "    !! Failed to update /etc/shells, skipping default shell change"
-      echo "    Run manually: echo \"$fish_path\" | sudo tee -a /etc/shells && chsh -s \"$fish_path\""
-      return
-    fi
-  fi
-
-  if [ "$SHELL" = "$fish_path" ]; then
-    echo "    fish is already the default shell"
-    return
-  fi
-
-  echo "    Setting fish as default shell (requires your password)"
-  if ! chsh -s "$fish_path"; then
-    echo "    !! chsh failed, run manually: chsh -s \"$fish_path\""
-  fi
-}
-
-# ---------------------------------------------------------------------------
-# Zen Browser
-# ---------------------------------------------------------------------------
-install_zen() {
-  echo "==> Zen Browser"
-
-  local zen_dir="$HOME/Library/Application Support/zen"
-  local installs_ini="$zen_dir/installs.ini"
-
-  if [ ! -f "$installs_ini" ]; then
-    echo "    !! $installs_ini not found (run Zen once first), skipping"
-    return
-  fi
-
-  local rel_path
-  rel_path="$(awk -F= '/^Default=/{print $2; exit}' "$installs_ini")"
-
-  if [ -z "$rel_path" ]; then
-    echo "    !! Could not determine default Zen profile, skipping"
-    return
-  fi
-
-  local profile_dir="$zen_dir/$rel_path"
-  local chrome_dir="$profile_dir/chrome"
-  local src="$DOTFILES_DIR/zen/userChrome.css"
-  local dest="$chrome_dir/userChrome.css"
-
-  if [ ! -f "$src" ]; then
-    echo "    !! $src not found, skipping"
-    return
-  fi
-
-  mkdir -p "$chrome_dir"
-
-  if [ -L "$dest" ]; then
-    echo "    $dest is already a symlink, skipping"
-  else
-    if [ -e "$dest" ]; then
-      local backup="$dest.bak.$(date +%Y%m%d%H%M%S)"
-      echo "    Existing $dest found, backing up to $backup"
-      mv "$dest" "$backup"
-    fi
-
-    ln -s "$src" "$dest"
-    echo "    Symlinked $dest -> $src"
-  fi
-
-  local user_js_src="$DOTFILES_DIR/zen/user.js"
-  local user_js_dest="$profile_dir/user.js"
-
-  if [ -f "$user_js_src" ]; then
-    if [ -L "$user_js_dest" ]; then
-      echo "    $user_js_dest is already a symlink, skipping"
-    else
-      if [ -e "$user_js_dest" ]; then
-        local user_js_backup="$user_js_dest.bak.$(date +%Y%m%d%H%M%S)"
-        echo "    Existing $user_js_dest found, backing up to $user_js_backup"
-        mv "$user_js_dest" "$user_js_backup"
-      fi
-
-      ln -s "$user_js_src" "$user_js_dest"
-      echo "    Symlinked $user_js_dest -> $user_js_src"
-    fi
-  else
-    echo "    !! $user_js_src not found, skipping user.js symlink"
-  fi
-
-  # Boosts: CSS dir is symlinked; the jsonlz4 index (site -> boost id) is
-  # copied - Zen saves it by replacing the file, which turns a symlink back
-  # into a plain file (tested). After adding/renaming boosts, copy it back:
+  # The boosts index (site -> boost id) is copied, not linked: Zen saves it by
+  # replacing the file, which turns a symlink back into a plain file. After
+  # adding/renaming boosts, copy it back:
   #   cp "<profile>/zen-boosts.jsonlz4" ~/dotfiles/zen/zen-boosts.jsonlz4
-  local boosts_src="$DOTFILES_DIR/zen/boosts"
-  local boosts_dest="$profile_dir/zen-boosts"
-
-  if [ -d "$boosts_src" ]; then
-    if [ -L "$boosts_dest" ]; then
-      echo "    $boosts_dest is already a symlink, skipping"
-    else
-      if [ -e "$boosts_dest" ]; then
-        local boosts_backup="$boosts_dest.bak.$(date +%Y%m%d%H%M%S)"
-        echo "    Existing $boosts_dest found, backing up to $boosts_backup"
-        mv "$boosts_dest" "$boosts_backup"
-      fi
-
-      ln -s "$boosts_src" "$boosts_dest"
-      echo "    Symlinked $boosts_dest -> $boosts_src"
+  if [ -f "$DOTFILES_DIR/zen/zen-boosts.jsonlz4" ]; then
+    if [ -e "$profile_dir/zen-boosts.jsonlz4" ]; then
+      cp "$profile_dir/zen-boosts.jsonlz4" "$profile_dir/zen-boosts.jsonlz4.bak.$(date +%Y%m%d%H%M%S)"
     fi
-
-    local boosts_index_src="$DOTFILES_DIR/zen/zen-boosts.jsonlz4"
-    local boosts_index_dest="$profile_dir/zen-boosts.jsonlz4"
-
-    if [ -f "$boosts_index_src" ]; then
-      if [ -e "$boosts_index_dest" ]; then
-        cp "$boosts_index_dest" "$boosts_index_dest.bak.$(date +%Y%m%d%H%M%S)"
-      fi
-      cp "$boosts_index_src" "$boosts_index_dest"
-      echo "    Copied $boosts_index_src -> $boosts_index_dest"
-    fi
-  else
-    echo "    !! $boosts_src not found, skipping boosts"
+    cp "$DOTFILES_DIR/zen/zen-boosts.jsonlz4" "$profile_dir/zen-boosts.jsonlz4"
   fi
-
   echo "    Restart Zen for userChrome.css/user.js/boosts to take effect"
-}
+fi
 
-# ---------------------------------------------------------------------------
-# Hammerspoon - the whole ~/.hammerspoon dir is a symlink to
-# dotfiles/hammerspoon (init.lua + one .lua file per tool, loaded via
-# require), so a new tool is just a new file there.
-# ---------------------------------------------------------------------------
-install_hammerspoon() {
-  echo "==> Hammerspoon"
-
-  local src="$DOTFILES_DIR/hammerspoon"
-  local dest="$HOME/.hammerspoon"
-
-  if [ ! -d "$src" ]; then
-    echo "    !! $src not found, skipping"
-    return
-  fi
-
-  if [ -L "$dest" ]; then
-    echo "    $dest is already a symlink, skipping"
-  else
-    if [ -e "$dest" ]; then
-      local backup="$dest.bak.$(date +%Y%m%d%H%M%S)"
-      echo "    Existing $dest found, backing up to $backup"
-      mv "$dest" "$backup"
-    fi
-
-    ln -s "$src" "$dest"
-    echo "    Symlinked $dest -> $src"
-  fi
-
-  # Older setups pointed Hammerspoon at hammerspoon.lua via MJConfigFile;
-  # drop it so the default ~/.hammerspoon/init.lua is used.
-  defaults delete org.hammerspoon.Hammerspoon MJConfigFile 2>/dev/null || true
-}
-
-# ---------------------------------------------------------------------------
-# Claude Code - files from dotfiles/claude symlinked into ~/.claude:
-# settings.json, statusline.py (its statusLine command) and theme.json
-# (as themes/custom.json, i.e. "theme": "custom:custom").
-# ---------------------------------------------------------------------------
-install_claude() {
-  echo "==> Claude Code"
-
-  local src_dir="$DOTFILES_DIR/claude"
-  local dest_dir="$HOME/.claude"
-
-  if [ ! -d "$src_dir" ]; then
-    echo "    !! $src_dir not found, skipping"
-    return
-  fi
-
-  mkdir -p "$dest_dir/themes"
-
-  # "src:dest" pairs, relative to dotfiles/claude and ~/.claude
-  for pair in settings.json:settings.json statusline.py:statusline.py theme.json:themes/custom.json; do
-    local src="$src_dir/${pair%%:*}"
-    local dest="$dest_dir/${pair#*:}"
-    [ -e "$src" ] || continue
-
-    if [ -L "$dest" ]; then
-      echo "    $dest is already a symlink, skipping"
-      continue
-    fi
-
-    if [ -e "$dest" ]; then
-      local backup="$dest.bak.$(date +%Y%m%d%H%M%S)"
-      echo "    Existing $dest found, backing up to $backup"
-      mv "$dest" "$backup"
-    fi
-
-    ln -s "$src" "$dest"
-    echo "    Symlinked $dest -> $src"
-  done
-}
-
-# ---------------------------------------------------------------------------
-# Welcome screen (Warp-style rotating ASCII art, run from config.fish in every
-# new tmux window). The art itself is ascii/logo.txt, read in place.
-# ---------------------------------------------------------------------------
-install_welcome() {
-  echo "==> welcome"
-
-  local src="$DOTFILES_DIR/welcome"
-  local bin_dir="$HOME/.local/bin"
-  local dest="$bin_dir/welcome"
-
-  if [ ! -f "$src" ]; then
-    echo "    !! $src not found, skipping"
-    return
-  fi
-
-  mkdir -p "$bin_dir"
-
-  if [ -L "$dest" ]; then
-    echo "    $dest is already a symlink, skipping"
-    return
-  fi
-
-  if [ -e "$dest" ]; then
-    local backup="$dest.bak.$(date +%Y%m%d%H%M%S)"
-    echo "    Existing $dest found, backing up to $backup"
-    mv "$dest" "$backup"
-  fi
-
-  ln -s "$src" "$dest"
-  echo "    Symlinked $dest -> $src"
-}
-
-# ---------------------------------------------------------------------------
-# Add new install_<app> functions below and call them here
-# ---------------------------------------------------------------------------
-
-install_karabiner
-install_vscode
-install_starship
-install_tmux
-install_tpm
-install_ghostty
-install_lazygit
-install_nvim
-install_zen
-install_hammerspoon
-install_claude
-install_fish
-install_welcome
+# fish as the login shell.
+echo "==> fish"
+fish_path="$(command -v fish || true)"
+if [ -n "$fish_path" ] && [ "$SHELL" != "$fish_path" ]; then
+  grep -qxF "$fish_path" /etc/shells || echo "$fish_path" | sudo tee -a /etc/shells >/dev/null
+  chsh -s "$fish_path" || echo "    !! chsh failed, run manually: chsh -s \"$fish_path\""
+fi
