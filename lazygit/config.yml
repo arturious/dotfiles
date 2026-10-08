@@ -22,11 +22,6 @@ customCommands:
   - key: '<c-a>'
     context: 'files'
     description: 'AI: generate commit message (Claude)'
-    # output: terminal, not a tmux popup - tmux can't stack a second,
-    # independent popup on top of an existing one (if this command is run
-    # from inside an existing popup - e.g. lazygit opened via prefix+g -
-    # tmux just modifies that same popup instead, ignoring -w/-h/-d and
-    # leaving the old content behind). Suspending to the actual pane avoids
-    # that conflict entirely, regardless of how lazygit itself was opened.
+    # output: terminal, not a tmux popup - see bin/lazygit-claude for why.
     command: '~/.local/bin/lazygit-claude'
     output: terminal

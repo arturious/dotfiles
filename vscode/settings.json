@@ -1,7 +1,6 @@
 {
   "workbench.tips.enabled": false,
   "editor.guides.bracketPairs": true,
-  "editor.accessibilitySupport": "on",
   "editor.fontSize": 14,
   "editor.fontFamily": "JetBrainsMono Nerd Font Mono, Menlo, Monaco, 'Courier New', monospace",
   "editor.minimap.enabled": false,
@@ -18,11 +17,7 @@
   "workbench.colorTheme": "Solarized Kuro",
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": true,
-  "notebook.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnPaste": true,
-  "notebook.formatOnCellExecution": true,
-  "notebook.formatOnSave.enabled": true,
-  "prettier.documentSelectors": [""],
 
   "[html]": {
     "editor.defaultFormatter": "vscode.html-language-features",
@@ -56,5 +51,4 @@
   "chat.titleBar.openInAgentsWindow.enabled": false,
   "security.workspace.trust.untrustedFiles": "open",
   "workbench.experimental.modernUI": true,
-  "workbench.preferredDarkColorTheme": "Solarized Kuro",
 }

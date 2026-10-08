@@ -23,20 +23,41 @@ local PHASE_BEGAN, PHASE_ENDED, PHASE_CANCELLED, PHASE_MAY_BEGIN = 1, 4, 8, 128
 
 local gesture = nil
 
--- Прямоугольник Dock (AXList у процесса Dock). Кэшируем и пересчитываем
--- только после запуска/завершения приложений, смены мониторов или раз в
--- минуту (размер Dock), чтобы на скролл вне Dock не делать ни одного
--- Accessibility-запроса.
-local dockFrame, dockDirty = nil, true
+-- Прямоугольник Dock (AXList у процесса Dock) и край экрана, где он стоит.
+-- Кэшируем и пересчитываем только после запуска/завершения приложений,
+-- смены мониторов или раз в минуту (размер и положение Dock), чтобы на
+-- скролл вне Dock не делать ни одного Accessibility-запроса.
+local dockFrame, dockEdge, dockDirty = nil, "bottom", true
+local natural = true
+
+-- Аналог NSEvent.isDirectionInvertedFromDevice: включён ли natural scrolling.
+-- Ключа нет, пока его ни разу не меняли, а по умолчанию natural включён
+-- (hs.mouse.scrollDirection() в этом случае ошибочно отвечает "normal").
+-- defaults read - внешний процесс, поэтому читаем вместе с кэшем Dock,
+-- а не на каждый жест.
+local function readNaturalScrolling()
+  local out, ok = hs.execute("defaults read -g com.apple.swipescrolldirection 2>/dev/null")
+  return not (ok and out:match("^%s*0"))
+end
 
 local function refreshDockFrame()
   dockDirty = false
+  natural = readNaturalScrolling()
   dockFrame = nil
   local dock = hs.application.applicationsForBundleID("com.apple.dock")[1]
   local el = dock and hs.axuielement.applicationElement(dock)
   for _, c in ipairs(el and el:attributeValue("AXChildren") or {}) do
     if c:attributeValue("AXRole") == "AXList" then
-      dockFrame = c:attributeValue("AXFrame")
+      local f = c:attributeValue("AXFrame")
+      dockFrame = f
+      -- горизонтальный Dock - снизу; вертикальный - у ближнего края экрана
+      if f and f.w < f.h then
+        local screen = hs.mouse.getCurrentScreen() or hs.screen.primaryScreen()
+        local full = screen:fullFrame()
+        dockEdge = (f.x - full.x < full.x + full.w - (f.x + f.w)) and "left" or "right"
+      else
+        dockEdge = "bottom"
+      end
       return
     end
   end
@@ -46,23 +67,6 @@ local function overDock(p)
   if dockDirty then refreshDockFrame() end
   local f = dockFrame
   return f ~= nil and p.x >= f.x and p.x <= f.x + f.w and p.y >= f.y and p.y <= f.y + f.h
-end
-
-local function defaultsRead(args)
-  local out, ok = hs.execute("defaults read " .. args .. " 2>/dev/null")
-  return ok and (out:gsub("%s+$", "")) or nil
-end
-
-local function dockEdge()
-  local v = defaultsRead("com.apple.dock orientation")
-  if v == "left" or v == "right" then return v end
-  return "bottom"
-end
-
--- аналог NSEvent.isDirectionInvertedFromDevice: включён ли natural scrolling
--- (ключа нет, пока его ни разу не меняли, а по умолчанию natural включён)
-local function naturalScrolling()
-  return defaultsRead("-g com.apple.swipescrolldirection") ~= "0"
 end
 
 local function bundleIDAt(point)
@@ -104,8 +108,8 @@ local function onScroll(e)
     local id = bundleIDAt(loc)
     if id then
       gesture = {
-        id = id, start = loc, edge = dockEdge(),
-        mult = naturalScrolling() and -1 or 1, sum = 0, fired = false,
+        id = id, start = loc, edge = dockEdge,
+        mult = natural and -1 or 1, sum = 0, fired = false,
       }
     end
   end

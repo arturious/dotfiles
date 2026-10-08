@@ -1,4 +1,4 @@
-# Tab completion as an fzf popup (bordered, via $FZF_DEFAULT_OPTS above)
+# Tab completion as an fzf popup (bordered, via $FZF_DEFAULT_OPTS in config.fish)
 # instead of fish's plain inline pager. 0 or 1 match: behave like normal
 # Tab. 2+: pick from the fzf popup.
 function __fzf_tab_complete
@@ -22,10 +22,14 @@ function __fzf_tab_complete
     # Patched (config.ghostty): cyan #259286, comment #475b62 — bg forced
     # to pure black instead of the theme's own dark-teal background.
     set -l display (printf '%s\n' $sorted | awk -F'\t' '{printf "%-28s\t\033[38;2;71;91;98m%s\033[0m\n", $1, $2}')
-    set -l choice (printf '%s\n' $display | fzf --layout=reverse --ansi --delimiter '\t' --nth 1 --tiebreak=index --preview-window hidden --info hidden \
+    set -l choice (printf '%s\n' $display | fzf --layout=reverse --ansi --delimiter '\t' --nth 1 --tiebreak=index --info hidden \
         --color 'fg:#259286,bg:#000000,hl:#a57706,fg+:#819090,bg+:#002831,hl+:#c61c6f,border:#475b62,label:#259286,prompt:#738a05,pointer:#d11c24,marker:#738a05,info:#475b62,query:#708284')
     if test -n "$choice"
-        commandline -t -- (string trim -- (string split -m1 \t -- $choice)[1])
+        # complete -C gives raw values ("Application Support"); escape them
+        # like fish's own pager does, except a leading ~ or $ (home, variables).
+        set -l value (string trim -- (string split -m1 \t -- $choice)[1])
+        set value (string escape --no-quoted -- $value | string replace -r '^\\\\([~$])' '$1')
+        commandline -t -- $value
     end
     commandline -f repaint
 end

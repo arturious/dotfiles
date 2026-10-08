@@ -65,11 +65,14 @@ local observe
 -- Приложение, которое ещё грузится или зависло, отвечает на Accessibility
 -- ошибкой "Messaging failed" - пробуем подписаться позже, а не падать.
 local RETRY_DELAYS = { 2, 5, 15, 60 }
+local retries = {}         -- pid -> таймер повтора (ссылка, чтобы его не собрал GC)
 
 local function retryLater(app, attempt)
   local delay = RETRY_DELAYS[attempt]
   if not delay then return end
-  hs.timer.doAfter(delay, function()
+  local pid = app:pid()
+  retries[pid] = hs.timer.doAfter(delay, function()
+    retries[pid] = nil
     if app:isRunning() and eligible(app) then observe(app, attempt + 1) end
   end)
 end
@@ -121,7 +124,12 @@ local function forget(pid)
   local entry = apps[pid]
   if entry then
     entry.observer:stop()
+    for _, t in ipairs(entry.resync) do t:stop() end
     apps[pid] = nil
+  end
+  if retries[pid] then
+    retries[pid]:stop()
+    retries[pid] = nil
   end
 end
 
@@ -139,6 +147,9 @@ function M.start()
       -- pid у завершённого приложения может быть уже недоступен, поэтому
       -- просто убираем всех, кого больше нет среди запущенных
       for pid in pairs(apps) do
+        if not hs.application.applicationForPID(pid) then forget(pid) end
+      end
+      for pid in pairs(retries) do
         if not hs.application.applicationForPID(pid) then forget(pid) end
       end
     end

@@ -35,6 +35,15 @@ link() {
 # Homebrew packages
 # ---------------------------------------------------------------------------
 echo "==> Homebrew"
+# bash doesn't read fish's PATH, so on a fresh Mac brew isn't found by name.
+if ! command -v brew >/dev/null 2>&1; then
+  if [ -x /opt/homebrew/bin/brew ]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+  else
+    echo "    !! Homebrew not installed, see https://brew.sh" >&2
+    exit 1
+  fi
+fi
 brew bundle --file "$DOTFILES_DIR/Brewfile"
 
 # ---------------------------------------------------------------------------
@@ -82,10 +91,6 @@ if [ ! -d "$tpm_dir" ]; then
   git clone --depth 1 https://github.com/tmux-plugins/tpm "$tpm_dir"
 fi
 "$tpm_dir/bin/install_plugins"
-
-# Hammerspoon: older setups pointed it at hammerspoon.lua via MJConfigFile;
-# drop it so the default ~/.hammerspoon/init.lua is used.
-defaults delete org.hammerspoon.Hammerspoon MJConfigFile 2>/dev/null || true
 
 # Zen Browser: the profile folder has a random name, read it from installs.ini.
 echo "==> Zen Browser"

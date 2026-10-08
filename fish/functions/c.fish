@@ -21,7 +21,9 @@ function c
     disown $pid
 
     # Ctrl+C stops the spinner loop - kill claude too, not just the loop.
+    # $pid is the sh wrapper; claude is its child and wouldn't get the signal.
     function __c_cancel --on-signal SIGINT --inherit-variable pid --inherit-variable out --inherit-variable rc
+        pkill -P $pid 2>/dev/null
         kill $pid 2>/dev/null
         printf '\r\e[K' >&2
         rm -f $out $rc

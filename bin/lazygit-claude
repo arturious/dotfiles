@@ -1,5 +1,5 @@
 #!/usr/bin/env zsh
-# Ctrl+A custom command for lazygit (see ~/Library/Application Support/lazygit/config.yml).
+# Ctrl+A custom command for lazygit (see lazygit/config.yml).
 # Runs with output: terminal (not a tmux popup - tmux can't stack a second,
 # independent popup on top of an existing one, e.g. lazygit opened via
 # prefix+g; it just modifies that same popup instead, ignoring -w/-h/-d).

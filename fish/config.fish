@@ -25,8 +25,6 @@ if status is-interactive
         end
     end
 
-    # Functions (c, fish_greeting, fish_title, __fzf_tab_complete) live one
-    # per file in functions/, autoloaded on first use.
     set -g fish_autosuggestion_enabled 0
 
     alias ll 'eza -la -F --icons=auto --hyperlink=auto --sort=date --reverse --no-filesize --no-time --no-user --git --git-repos'
@@ -35,9 +33,9 @@ if status is-interactive
     alias cr 'claude --resume'
 
     set -gx FZF_DEFAULT_OPTS "--tmux 90%,70% --border"
-    source /opt/homebrew/opt/fzf/shell/key-bindings.fish
-    fzf_key_bindings
+    fzf --fish | source
 
-    # Tab completion as an fzf popup (functions/__fzf_tab_complete.fish).
+    # Tab completion as an fzf popup. Functions (c, fish_greeting, fish_title,
+    # __fzf_tab_complete) live one per file in functions/, autoloaded on use.
     bind \t __fzf_tab_complete
 end

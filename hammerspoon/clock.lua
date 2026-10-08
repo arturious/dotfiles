@@ -17,7 +17,7 @@ local function tick()
 end
 
 function M.start()
-  M.canvas = hs.canvas.new(frameFor(hs.screen.mainScreen()))
+  M.canvas = hs.canvas.new(frameFor(hs.screen.primaryScreen()))
   -- выше строки меню и её значков, чтобы перекрывать системные часы
   M.canvas:level(hs.canvas.windowLevels.overlay)
   M.canvas:behavior({ "canJoinAllSpaces", "stationary", "fullScreenAuxiliary" })
@@ -48,7 +48,7 @@ function M.start()
 
   -- переставляем часы при смене мониторов
   M.watcher = hs.screen.watcher.new(function()
-    M.canvas:frame(frameFor(hs.screen.mainScreen()))
+    M.canvas:frame(frameFor(hs.screen.primaryScreen()))
   end):start()
 
   return M

@@ -15,15 +15,9 @@ format = '[via](italic) [ $version](green) '
 [package]
 format = '[is](italic) [󰏗 $version](208) '
 
-[directory]
-
 [git_branch]
 style = "bold green"
 format = '[on](italic) [$symbol$branch]($style) '
-
-[character]
-success_symbol = "[❯](bold green)"
-error_symbol = "[❯](bold red)"
 
 [palettes.solarized]
 base03  = "#002D38"

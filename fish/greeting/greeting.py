@@ -10,6 +10,7 @@ import math
 import os
 import select
 import shutil
+import signal
 import sys
 import termios
 import time
@@ -69,16 +70,12 @@ PRIMARY = rgb(236, 236, 236)
 MUTED = rgb(150, 150, 150)
 DIM = rgb(150, 150, 150, "2")
 BRAND_PRIMARY_BOLD = rgb(204, 170, 255, "1")
-BRAND_ACCENT = rgb(236, 236, 236)
-BRAND_ACCENT_BOLD = rgb(232, 255, 214, "1")
-LINK_UNDERLINED = rgb(236, 236, 236, "4")
-LINK = rgb(236, 236, 236)
 ACCENT = rgb(200, 186, 255)  # front: cyan темы, на скриншоте — лавандовый
 
 STYLE_FRONT, STYLE_BACK, STYLE_SIDE = ACCENT, PRIMARY, DIM
 STYLE_STARS = MUTED
 
-# --- текст (ui.rs: signed_out_welcome) -------------------------------------
+# --- текст -----------------------------------------------------------------
 CONTENT = [
     [("Welcome back, ARTHUR :3", BRAND_PRIMARY_BOLD)],
 ]
@@ -346,12 +343,14 @@ def for_each_star(width, height, elapsed, center_x):
 
 
 # --- раскладка (ui.rs: auth_layout) ----------------------------------------
-def render(projector, elapsed):
+def render(projector, elapsed, prev):
+    """Рисует кадр и возвращает его сетку; prev — сетка прошлого кадра."""
     width, height = shutil.get_terminal_size((80, 24))
     grid = [[(" ", None)] * width for _ in range(height)]
+    own_art = hasattr(projector, "panel_width")
 
     # слой 2 считается первым: от его положения зависит центр звёзд
-    if hasattr(projector, "panel_width"):
+    if own_art:
         # свой рисунок прижат к правому краю экрана
         anim_w = min(width, projector.panel_width)
         anim_x = max(0, width - anim_w - ART_RIGHT_MARGIN)
@@ -376,7 +375,7 @@ def render(projector, elapsed):
     # своим рисунком — ещё и по центру свободного места слева от него.
     text_w = max(sum(len(t) for t, _ in spans) for spans in CONTENT)
     left = CONTENT_PADDING_LEFT
-    if hasattr(projector, "panel_width"):
+    if own_art:
         art_left = anim_x + (anim_w - projector.width) // 2
         left = max(CONTENT_PADDING_LEFT, (art_left - text_w) // 2)
     top = max(0, (height - len(CONTENT)) // 2)
@@ -394,46 +393,57 @@ def render(projector, elapsed):
                     grid[y][x] = (ch, style)
                 x += 1
 
-    out = [ESC + "H"]
+    # Пишем только изменившиеся клетки (кадр меняется местами, а полный
+    # экран 200x50 — это ~19 КБ escape-кодов 15 раз в секунду). После
+    # смены размера терминала — весь экран заново.
+    if prev is None or len(prev) != height or len(prev[0]) != width:
+        prev = None
+    out = [] if prev is not None else [ESC + "2J"]
     last = None
     for r, row in enumerate(grid):
-        for ch, style in row:
+        cursor = None  # колонка, где сейчас курсор в этой строке
+        for c, cell in enumerate(row):
+            if prev is not None and prev[r][c] == cell:
+                continue
+            if cursor != c:
+                out.append(f"{ESC}{r + 1};{c + 1}H")
+            ch, style = cell
             if style != last:
                 out.append(RESET)
                 if style:
                     out.append(style)
                 last = style
             out.append(ch)
-        if r < height - 1:
-            out.append("\r\n")
-    out.append(RESET)
-    sys.stdout.write("".join(out))
-    sys.stdout.flush()
+            cursor = c + 1
+    if out:
+        out.append(RESET)
+        sys.stdout.write("".join(out))
+        sys.stdout.flush()
+    return grid
 
 
 def main():
-    limit = None
-    if len(sys.argv) > 2 and sys.argv[1] == "--once":
-        limit = float(sys.argv[2])
     if not sys.stdout.isatty() or not sys.stdin.isatty():
         return
 
     fd = sys.stdin.fileno()
     old = termios.tcgetattr(fd)
-    projector = ArtProjector(SHAPE) if SHAPE else LogoProjector()
+    projector = ArtProjector(SHAPE) if SHAPE and SHAPE.strip() else LogoProjector()
     pressed = b""
     # Заголовок панели (#T во вкладках tmux) — «*», пока открыт экран;
     # после выхода fish сам вернёт свой заголовок через fish_title.
     sys.stdout.write("\x1b]2;*\x1b\\")
     sys.stdout.write(ESC + "?1049h" + ESC + "?25l" + ESC + "2J")
+    # Закрытие вкладки (SIGHUP) или kill (SIGTERM) - тоже через finally, иначе
+    # терминал остаётся в cbreak, на альтернативном экране и без курсора.
+    for sig in (signal.SIGTERM, signal.SIGHUP):
+        signal.signal(sig, lambda *_: sys.exit(0))
     try:
         tty.setcbreak(fd)
         start = time.monotonic()
+        grid = None
         while True:
-            elapsed = time.monotonic() - start
-            if limit is not None and elapsed >= limit:
-                break
-            render(projector, elapsed)
+            grid = render(projector, time.monotonic() - start, grid)
             ready, _, _ = select.select([sys.stdin], [], [], REPAINT_INTERVAL)
             if ready:
                 pressed = os.read(fd, 64)
