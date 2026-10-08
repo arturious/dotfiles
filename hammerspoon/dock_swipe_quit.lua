@@ -33,8 +33,8 @@ local natural = true
 -- Аналог NSEvent.isDirectionInvertedFromDevice: включён ли natural scrolling.
 -- Ключа нет, пока его ни разу не меняли, а по умолчанию natural включён
 -- (hs.mouse.scrollDirection() в этом случае ошибочно отвечает "normal").
--- defaults read - внешний процесс, поэтому читаем вместе с кэшем Dock,
--- а не на каждый жест.
+-- defaults read - внешний процесс, поэтому читаем при старте и потом только
+-- по уведомлению macOS о переключении настройки (см. M.start).
 local function readNaturalScrolling()
   local out, ok = hs.execute("defaults read -g com.apple.swipescrolldirection 2>/dev/null")
   return not (ok and out:match("^%s*0"))
@@ -42,7 +42,6 @@ end
 
 local function refreshDockFrame()
   dockDirty = false
-  natural = readNaturalScrolling()
   dockFrame = nil
   local dock = hs.application.applicationsForBundleID("com.apple.dock")[1]
   local el = dock and hs.axuielement.applicationElement(dock)
@@ -142,6 +141,11 @@ end
 
 function M.start()
   M.tap = hs.eventtap.new({ hs.eventtap.event.types.scrollWheel }, onScroll):start()
+
+  natural = readNaturalScrolling()
+  M.scrollWatcher = hs.distributednotifications.new(function()
+    natural = readNaturalScrolling()
+  end, "SwipeScrollDirectionDidChangeNotification"):start()
 
   local function markDirty() dockDirty = true end
   M.appWatcher = hs.application.watcher.new(function(_, event)
