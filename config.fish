@@ -22,6 +22,14 @@ if status is-interactive
         end
     end
 
+    # Warp-style welcome screen in every new tmux window (Ghostty launch and
+    # Cmd+T both land here), but not in splits: only when this pane is the
+    # window's only one. Absolute path: PATH gets ~/.local/bin only at the
+    # bottom of this file.
+    if set -q TMUX; and test (tmux display -p -t "$TMUX_PANE" '#{window_panes}') = 1
+        test -x ~/.local/bin/welcome; and ~/.local/bin/welcome
+    end
+
     # Terminal/pane title (#T in the tmux tab pills): same as fish's built-in
     # fish_title, but only the last folder name instead of prompt_pwd's
     # "~/dev" - just "dev" (still "~" at home).
