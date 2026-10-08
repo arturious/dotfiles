@@ -533,6 +533,39 @@ install_claude() {
 }
 
 # ---------------------------------------------------------------------------
+# Welcome screen (Warp-style rotating ASCII art, run from config.fish in every
+# new tmux window). The art itself is ascii/logo.txt, read in place.
+# ---------------------------------------------------------------------------
+install_welcome() {
+  echo "==> welcome"
+
+  local src="$DOTFILES_DIR/welcome"
+  local bin_dir="$HOME/.local/bin"
+  local dest="$bin_dir/welcome"
+
+  if [ ! -f "$src" ]; then
+    echo "    !! $src not found, skipping"
+    return
+  fi
+
+  mkdir -p "$bin_dir"
+
+  if [ -L "$dest" ]; then
+    echo "    $dest is already a symlink, skipping"
+    return
+  fi
+
+  if [ -e "$dest" ]; then
+    local backup="$dest.bak.$(date +%Y%m%d%H%M%S)"
+    echo "    Existing $dest found, backing up to $backup"
+    mv "$dest" "$backup"
+  fi
+
+  ln -s "$src" "$dest"
+  echo "    Symlinked $dest -> $src"
+}
+
+# ---------------------------------------------------------------------------
 # Add new install_<app> functions below and call them here
 # ---------------------------------------------------------------------------
 
@@ -548,3 +581,4 @@ install_zen
 install_hammerspoon
 install_claude
 install_fish
+install_welcome
