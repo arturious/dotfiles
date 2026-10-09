@@ -28,11 +28,9 @@ keybind = cmd+]=text:\x1en
 keybind = cmd+shift+[=text:\x1eP
 keybind = cmd+shift+]=text:\x1eN
 
-# Cmd+P sends our tmux prefix key (see tmux/settings.conf: prefix C-]) instead of the
-# OS "Print" action. A single byte (0x1D, i.e. literal Ctrl+]): multi-byte
-# user-keys stop registering once an interactive tmux popup (e.g.
-# tmux-claude-hatch's) grabs input, a single control byte keeps working.
-keybind = cmd+p=text:\x1d
+# tmux prefix: Caps Lock tapped on its own sends F12 (Karabiner rule, Ghostty
+# only; held, Caps Lock is Control), which tmux uses as its prefix directly
+# (see tmux/settings.conf) - nothing to bind here.
 
 # Cmd+T sends our tmux new-window key (see tmux/settings.conf: User2)
 # instead of opening a new Ghostty tab.

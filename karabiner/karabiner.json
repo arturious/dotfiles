@@ -5,27 +5,6 @@
             "complex_modifications": {
                 "rules": [
                     {
-                        "description": "Shift + Escape to Ctrl + C",
-                        "manipulators": [
-                            {
-                                "from": {
-                                    "key_code": "escape",
-                                    "modifiers": {
-                                        "mandatory": ["shift"],
-                                        "optional": ["any"]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "key_code": "c",
-                                        "modifiers": ["left_control"]
-                                    }
-                                ],
-                                "type": "basic"
-                            }
-                        ]
-                    },
-                    {
                         "description": "Double tap Left or Right Shift to Switch Language (Snappy 200ms)",
                         "enabled": false,
                         "manipulators": [
@@ -201,9 +180,7 @@
                                     "key_code": "f1",
                                     "modifiers": { "mandatory": ["left_command"] }
                                 },
-                                "to": [
-                                    { "key_code": "illumination_decrement" }
-                                ],
+                                "to": [{ "key_code": "illumination_decrement" }],
                                 "type": "basic"
                             },
                             {
@@ -211,9 +188,7 @@
                                     "key_code": "f2",
                                     "modifiers": { "mandatory": ["left_command"] }
                                 },
-                                "to": [
-                                    { "key_code": "illumination_increment" }
-                                ],
+                                "to": [{ "key_code": "illumination_increment" }],
                                 "type": "basic"
                             }
                         ]
@@ -239,6 +214,33 @@
                                         "modifiers": ["left_option", "left_shift"]
                                     }
                                 ],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "description": "Ghostty: Caps Lock tap = F12 (tmux prefix), hold = Control",
+                        "manipulators": [
+                            {
+                                "conditions": [
+                                    {
+                                        "bundle_identifiers": [
+                                            "^com\\.mitchellh\\.ghostty$"
+                                        ],
+                                        "type": "frontmost_application_if"
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "caps_lock",
+                                    "modifiers": { "optional": ["any"] }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "left_control",
+                                        "lazy": true
+                                    }
+                                ],
+                                "to_if_alone": [{ "key_code": "f12", "modifiers": ["fn"] }],
                                 "type": "basic"
                             }
                         ]
