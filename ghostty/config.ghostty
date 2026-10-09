@@ -6,6 +6,9 @@ font-family = "JetBrainsMono Nerd Font"
 font-size = 14
 shell-integration-features = no-cursor
 cursor-style-blink = true
+# No "close this terminal?" prompt: the process running inside is always
+# tmux, and closing Ghostty only detaches it - the windows stay in "main".
+confirm-close-surface = false
 notify-on-command-finish = unfocused
 notify-on-command-finish-action = notify
 notify-on-command-finish-after = 1s
@@ -20,17 +23,17 @@ keybind = alt+right=unbind
 keybind = cmd+[=text:\x1ep
 keybind = cmd+]=text:\x1en
 # Cmd+Shift+[ / Cmd+Shift+] move the current tmux window left/right (see
-# tmux.conf: User3/User4). Written as [ and ], not bracket_left/right: only
+# tmux/settings.conf: User3/User4). Written as [ and ], not bracket_left/right: only
 # the same spelling replaces Ghostty's default previous_tab/next_tab.
 keybind = cmd+shift+[=text:\x1eP
 keybind = cmd+shift+]=text:\x1eN
 
-# Cmd+P sends our tmux prefix key (see tmux.conf: prefix C-]) instead of the
+# Cmd+P sends our tmux prefix key (see tmux/settings.conf: prefix C-]) instead of the
 # OS "Print" action. A single byte (0x1D, i.e. literal Ctrl+]): multi-byte
 # user-keys stop registering once an interactive tmux popup (e.g.
 # tmux-claude-hatch's) grabs input, a single control byte keeps working.
 keybind = cmd+p=text:\x1d
 
-# Cmd+T sends our tmux new-window key (see tmux.conf: User2)
+# Cmd+T sends our tmux new-window key (see tmux/settings.conf: User2)
 # instead of opening a new Ghostty tab.
 keybind = cmd+t=text:\x1et
