@@ -3,6 +3,7 @@
 
 import json
 import os
+import subprocess
 import sys
 from datetime import datetime
 from pathlib import Path
@@ -40,6 +41,17 @@ except Exception:
 model = (payload.get("model") or {}).get("display_name") or "Claude Code"
 
 cwd = payload.get("cwd") or ""
+
+# Claude's working directory, for tmux: the process itself stays in the dir
+# claude was started from, so pane_current_path doesn't follow it. Stored as
+# a pane option (@claude_cwd), read by prefix+g in tmux/settings.conf.
+pane = os.environ.get("TMUX_PANE")
+if pane and cwd:
+    try:
+        subprocess.run(["tmux", "set-option", "-p", "-t", pane, "@claude_cwd", cwd],
+                       stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=1)
+    except Exception:
+        pass
 home = str(Path.home())
 if cwd == home:
     cwd_display = "~"
