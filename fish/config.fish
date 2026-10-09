@@ -18,11 +18,10 @@ if status is-interactive
     # ("not a terminal") and VS Code reports "Unable to resolve your shell
     # environment". Its integrated terminal stays plain fish too.
     if not set -q TMUX; and test "$TERM_PROGRAM" = ghostty
-        if tmux has-session -t main 2>/dev/null
-            exec tmux new-session -t main \; new-window
-        else
-            exec tmux new-session -s main
-        end
+        # Attach to the one session "main" (or create it): closing Ghostty
+        # only detaches, so its windows - and the window you were on - are
+        # back on the next launch.
+        exec tmux new-session -A -s main
     end
 
     set -g fish_autosuggestion_enabled 0
