@@ -6,7 +6,7 @@
 # only when this pane is the window's only one.
 function fish_greeting
     set -q TMUX; or return
-    test (tmux display -p -t "$TMUX_PANE" '#{window_panes}') = 1; or return
+    test "$(tmux display -p -t "$TMUX_PANE" '#{window_panes}' 2>/dev/null)" = 1; or return
 
     # This file is symlinked into ~/.config/fish/functions; resolve it to find
     # greeting/ next to it in dotfiles.

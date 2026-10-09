@@ -26,6 +26,10 @@ if status is-interactive
 
     set -g fish_autosuggestion_enabled 0
 
+    # Existing paths in the command line (e.g. after cd) are bold instead of
+    # fish's default underline.
+    set -g fish_color_valid_path --bold
+
     alias ll 'eza -la -F --icons=auto --hyperlink=auto --sort=date --reverse --no-filesize --no-time --no-user --git --git-repos'
     alias vim nvim
     alias cc 'claude --continue'
@@ -34,7 +38,16 @@ if status is-interactive
     set -gx FZF_DEFAULT_OPTS "--tmux 90%,70% --border"
     fzf --fish | source
 
-    # Tab completion as an fzf popup. Functions (c, fish_greeting, fish_title,
-    # __fzf_tab_complete) live one per file in functions/, autoloaded on use.
-    bind \t __fzf_tab_complete
+    # Functions (c, fish_greeting, fish_title) live one per file in
+    # functions/, autoloaded on use.
+end
+
+# inshellisense: IDE-style completion list under the cursor while typing
+# (config: inshellisense/rc.toml). It runs this shell inside itself, so it
+# must stay the last thing here; the outer fish waits for it and exits with it.
+# Skipped outside tmux (Ghostty's first fish execs tmux above anyway) and by
+# its own ISTERM check inside the session it starts.
+if status is-interactive; and set -q TMUX
+    test -f ~/.local/share/inshellisense/init/fish/init.fish
+    and source ~/.local/share/inshellisense/init/fish/init.fish
 end

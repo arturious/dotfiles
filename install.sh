@@ -70,6 +70,7 @@ link karabiner                 "$HOME/.config/karabiner"
 link lazygit/config.yml        "$APP_SUPPORT/lazygit/config.yml"
 link nvim                      "$HOME/.config/nvim"
 link starship/starship.toml    "$HOME/.config/starship.toml"
+link inshellisense/rc.toml     "$HOME/.config/inshellisense/rc.toml"
 link tmux                      "$HOME/.config/tmux"
 link vscode/settings.json      "$APP_SUPPORT/Code/User/settings.json"
 
@@ -115,6 +116,18 @@ else
     cp "$DOTFILES_DIR/zen/zen-boosts.jsonlz4" "$profile_dir/zen-boosts.jsonlz4"
   fi
   echo "    Restart Zen for userChrome.css/user.js/boosts to take effect"
+fi
+
+# inshellisense (IDE-style completion while typing, see fish/config.fish).
+# Its fish integration joins a multi-line prompt with '\n' in single quotes -
+# a literal backslash-n in fish - so the two-line starship prompt showed "\n".
+# Patched after every install, since (re)installing rewrites the file.
+echo "==> inshellisense"
+if command -v npm >/dev/null 2>&1; then
+  npm install -g @microsoft/inshellisense >/dev/null
+  is_fish="$HOME/.local/share/inshellisense/shell/shellIntegration.fish"
+  [ -f "$is_fish" ] || is reinit >/dev/null
+  sed -i '' "s/(string join '\\\\n' \$__user_prompt_lines)/(string join \\\\n \$__user_prompt_lines)/" "$is_fish"
 fi
 
 # fish as the login shell.
