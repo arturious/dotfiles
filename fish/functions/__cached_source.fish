@@ -1,6 +1,6 @@
 # __cached_source NAME COMMAND ARGS... - source the fish code COMMAND prints
 # (starship / fzf / carapace init), from a cache file instead of running it on
-# every shell start: each run took 10-40ms, delaying the greeting on Cmd+T.
+# every shell start: each run took 10-40ms, delaying the prompt.
 # The cache is rebuilt when the command's binary changes - keyed on its
 # resolved path (/opt/homebrew/Cellar/<name>/<version>/...), not its mtime,
 # since Homebrew bottles keep their build-time mtimes.

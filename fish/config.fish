@@ -10,12 +10,10 @@ fish_add_path --global --path /opt/homebrew/opt/rustup/bin ~/.local/bin
 set -gx FORCE_COLOR 3
 set -gx CLAUDE_CODE_TMUX_TRUECOLOR 1
 
-if status is-interactive
-    # Greeting first, before the rest of this file: fish would show it only
-    # after all of config.fish, and the rest loads while it's on screen.
-    # (fish's own call before the first prompt then finds nothing to do.)
-    fish_greeting
+# No "Welcome to fish" greeting.
+set -g fish_greeting
 
+if status is-interactive
     # Only in Ghostty: VS Code resolves the environment by running an
     # interactive login fish without a terminal, where exec tmux fails
     # ("not a terminal") and VS Code reports "Unable to resolve your shell
@@ -23,16 +21,13 @@ if status is-interactive
     if not set -q TMUX; and test "$TERM_PROGRAM" = ghostty
         # Attach to the one session "main" (or create it): closing Ghostty
         # only detaches, so its windows - and the window you were on - are
-        # back on the next launch. TMUX_GREET: greet in a newly created first
-        # window (ignored when attaching); -e also puts it in the session's
-        # environment, which every later split would inherit - so drop it
-        # from there right away.
-        exec tmux new-session -A -s main -e TMUX_GREET=1 \; set-environment -u TMUX_GREET
+        # back on the next launch.
+        exec tmux new-session -A -s main
     end
 
     # Init code of these tools comes from a cache (functions/__cached_source),
     # rebuilt when the tool is upgraded - generating it on every start took
-    # ~70ms before the greeting showed up.
+    # ~70ms before the prompt showed up.
     __cached_source starship starship init fish --print-full-init
 
     # Completions for 1000+ commands, with descriptions, in fish's own Tab
@@ -51,6 +46,6 @@ if status is-interactive
     set -gx FZF_DEFAULT_OPTS "--tmux 90%,70% --border"
     __cached_source fzf fzf --fish
 
-    # Functions (c, fish_greeting, fish_title) live one per file in
+    # Functions (c, fish_title) live one per file in
     # functions/, autoloaded on use.
 end
