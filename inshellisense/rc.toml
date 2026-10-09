@@ -1,8 +1,0 @@
-# inshellisense: IDE-style completion list under the cursor while typing
-# (started from fish/config.fish). Only these few looks can be set - the
-# rest (border, text) comes from the terminal's palette, i.e. Ghostty's
-# Solarized theme.
-useNerdFont = true                          # icons: JetBrainsMono Nerd Font
-boxBorderStyle = "rounded"
-maxSuggestions = 8
-activeSuggestionBackgroundColor = "#073541" # Solarized base02
