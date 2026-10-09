@@ -429,10 +429,11 @@ def main():
     fd = sys.stdin.fileno()
     old = termios.tcgetattr(fd)
     projector = ArtProjector(SHAPE) if SHAPE and SHAPE.strip() else LogoProjector()
-    pressed = b""
     # Заголовок панели (#T во вкладках tmux) — «*», пока открыт экран;
     # после выхода fish сам вернёт свой заголовок через fish_title.
     sys.stdout.write("\x1b]2;*\x1b\\")
+
+    pressed = b""
     sys.stdout.write(ESC + "?1049h" + ESC + "?25l" + ESC + "2J")
     # Закрытие вкладки (SIGHUP) или kill (SIGTERM) - тоже через finally, иначе
     # терминал остаётся в cbreak, на альтернативном экране и без курсора.

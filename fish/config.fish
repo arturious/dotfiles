@@ -11,7 +11,10 @@ set -gx FORCE_COLOR 3
 set -gx CLAUDE_CODE_TMUX_TRUECOLOR 1
 
 if status is-interactive
-    starship init fish | source
+    # Greeting first, before the rest of this file: fish would show it only
+    # after all of config.fish, and the rest loads while it's on screen.
+    # (fish's own call before the first prompt then finds nothing to do.)
+    fish_greeting
 
     # Only in Ghostty: VS Code resolves the environment by running an
     # interactive login fish without a terminal, where exec tmux fails
@@ -20,11 +23,21 @@ if status is-interactive
     if not set -q TMUX; and test "$TERM_PROGRAM" = ghostty
         # Attach to the one session "main" (or create it): closing Ghostty
         # only detaches, so its windows - and the window you were on - are
-        # back on the next launch.
-        exec tmux new-session -A -s main
+        # back on the next launch. TMUX_GREET: greet in a newly created first
+        # window (ignored when attaching); -e also puts it in the session's
+        # environment, which every later split would inherit - so drop it
+        # from there right away.
+        exec tmux new-session -A -s main -e TMUX_GREET=1 \; set-environment -u TMUX_GREET
     end
 
-    set -g fish_autosuggestion_enabled 0
+    # Init code of these tools comes from a cache (functions/__cached_source),
+    # rebuilt when the tool is upgraded - generating it on every start took
+    # ~70ms before the greeting showed up.
+    __cached_source starship starship init fish --print-full-init
+
+    # Completions for 1000+ commands, with descriptions, in fish's own Tab
+    # list (carapace). Commands it doesn't know keep fish's own completions.
+    __cached_source carapace carapace _carapace fish
 
     # Existing paths in the command line (e.g. after cd) are bold instead of
     # fish's default underline.
@@ -36,18 +49,8 @@ if status is-interactive
     alias cr 'claude --resume'
 
     set -gx FZF_DEFAULT_OPTS "--tmux 90%,70% --border"
-    fzf --fish | source
+    __cached_source fzf fzf --fish
 
     # Functions (c, fish_greeting, fish_title) live one per file in
     # functions/, autoloaded on use.
-end
-
-# inshellisense: IDE-style completion list under the cursor while typing
-# (config: inshellisense/rc.toml). It runs this shell inside itself, so it
-# must stay the last thing here; the outer fish waits for it and exits with it.
-# Skipped outside tmux (Ghostty's first fish execs tmux above anyway) and by
-# its own ISTERM check inside the session it starts.
-if status is-interactive; and set -q TMUX
-    test -f ~/.local/share/inshellisense/init/fish/init.fish
-    and source ~/.local/share/inshellisense/init/fish/init.fish
 end
