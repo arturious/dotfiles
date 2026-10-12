@@ -51,4 +51,14 @@
   "chat.titleBar.openInAgentsWindow.enabled": false,
   "security.workspace.trust.untrustedFiles": "open",
   "workbench.experimental.modernUI": true,
+  "chat.tools.terminal.autoApprove": {
+    "/^command -v swift \\|\\| true; command -v xcodebuild \\|\\| true; command -v xcodegen \\|\\| true; swift --version 2>/dev/null \\|\\| true$/": {
+      "approve": true,
+      "matchCommandLine": true,
+    },
+    "/^git status --short && printf '\\\\n--- top-level ---\\\\n' && find \\. -maxdepth 2 -type f \\| sort \\| sed -n '1,160p'$/": {
+      "approve": true,
+      "matchCommandLine": true,
+    },
+  },
 }
