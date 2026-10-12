@@ -50,7 +50,7 @@
   },
   "chat.titleBar.openInAgentsWindow.enabled": false,
   "security.workspace.trust.untrustedFiles": "open",
-  "workbench.experimental.modernUI": true,
+  "workbench.experimental.modernUI": false,
   "chat.tools.terminal.autoApprove": {
     "/^command -v swift \\|\\| true; command -v xcodebuild \\|\\| true; command -v xcodegen \\|\\| true; swift --version 2>/dev/null \\|\\| true$/": {
       "approve": true,
