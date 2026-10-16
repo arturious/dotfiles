@@ -1,19 +1,20 @@
 theme = Solarized Dark Patched
-background-opacity = 0.9
-background-blur-radius = 20
+background-opacity = 0.8
+background-blur = 100
 background = #000000
 font-family = "JetBrainsMono Nerd Font"
 font-size = 14
 shell-integration-features = no-cursor
 cursor-style-blink = true
-# No "close this terminal?" prompt: the process running inside is always
-# tmux, and closing Ghostty only detaches it - the windows stay in "main".
 confirm-close-surface = false
 notify-on-command-finish = unfocused
 notify-on-command-finish-action = notify
 notify-on-command-finish-after = 1s
 font-feature = ss02
-macos-titlebar-style = hidden
+macos-titlebar-proxy-icon = hidden
+title = " "
+macos-window-buttons = hidden
+macos-titlebar-style = transparent
 macos-icon = custom-style
 macos-icon-ghost-color = #002b36
 macos-icon-screen-color = #002b36
