@@ -228,7 +228,7 @@
                         ]
                     },
                     {
-                        "description": "Ghostty: Caps Lock tap = F12 (tmux prefix), hold = Control",
+                        "description": "Ghostty: Caps Lock tap = F18 (Ghostty turns it into F12, the tmux prefix), hold = Control",
                         "manipulators": [
                             {
                                 "conditions": [
@@ -255,10 +255,7 @@
                                 ],
                                 "to_if_alone": [
                                     {
-                                        "key_code": "f12",
-                                        "modifiers": [
-                                            "fn"
-                                        ]
+                                        "key_code": "f18"
                                     }
                                 ],
                                 "type": "basic"

@@ -13,7 +13,6 @@ notify-on-command-finish-after = 1s
 font-feature = ss02
 macos-titlebar-proxy-icon = hidden
 title = " "
-macos-window-buttons = hidden
 macos-titlebar-style = transparent
 macos-icon = custom-style
 macos-icon-ghost-color = #002b36
@@ -29,9 +28,13 @@ keybind = cmd+]=text:\x1en
 keybind = cmd+shift+[=text:\x1eP
 keybind = cmd+shift+]=text:\x1eN
 
-# tmux prefix: Caps Lock tapped on its own sends F12 (Karabiner rule, Ghostty
-# only; held, Caps Lock is Control), which tmux uses as its prefix directly
-# (see tmux/settings.conf) - nothing to bind here.
+# tmux prefix: Caps Lock tapped on its own sends F18 (Karabiner rule, Ghostty
+# only; held, Caps Lock is Control), turned here into F12's escape sequence -
+# the prefix tmux sees (see tmux/settings.conf). Not F12 straight from
+# Karabiner: on a Mac keyboard that's volume up unless sent with Fn, and the
+# Fn press set off whatever listens for Fn (Superwhisper's push-to-talk).
+# Not F18 as the prefix itself: tmux only takes F1-F12.
+keybind = f18=text:\x1b[24~
 
 # Cmd+T sends our tmux new-window key (see tmux/settings.conf: User2)
 # instead of opening a new Ghostty tab.
