@@ -3,14 +3,15 @@
 
 local M = {}
 
-local W, H     = 58, 23         -- размер плашки
-local MARGIN_R = 8              -- отступ от правого края экрана
+local W, H     = 60, 24         -- размер плашки: узкая, чтобы зазор до Control Center был как у Itsycal
+local MARGIN_R = 8             -- отступ от правого края экрана
 local MENU_H   = 33             -- высота строки меню (с вырезом)
+local OFFSET_Y = 2              -- ниже центра: на одной линии со значками строки меню
 
--- правый верхний угол, по центру высоты строки меню
+-- правый верхний угол, по высоте - вровень со значками строки меню
 local function frameFor(screen)
   local full = screen:fullFrame()
-  return { x = full.x + full.w - W - MARGIN_R, y = full.y + (MENU_H - H) / 2, w = W, h = H }
+  return { x = full.x + full.w - W - MARGIN_R, y = full.y + (MENU_H - H) / 2 + OFFSET_Y, w = W, h = H }
 end
 
 local function tick()
@@ -28,13 +29,13 @@ function M.start()
   M.canvas[1] = {                     -- фон
     type = "rectangle",
     action = "fill",
-    roundedRectRadii = { xRadius = 5, yRadius = 5 },
+    roundedRectRadii = { xRadius = 10, yRadius = 10 },
     fillColor = { red = 0.16, green = 0.16, blue = 0.16, alpha = 1 },
   }
-  M.canvas[2] = {                     -- время
+  M.canvas[2] = {                     -- время (окно ставится по целым точкам, поэтому ещё +0.5 тут)
     type = "text",
     text = "",
-    frame = { x = 0, y = 3, w = W, h = H },
+    frame = { x = 0, y = 3.5, w = W, h = H },
     textAlignment = "center",
     textColor = { white = 0.82, alpha = 1 },
     textFont = ".AppleSystemUIFont",
