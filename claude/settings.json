@@ -12,7 +12,8 @@
   "enabledPlugins": {
     "swift-lsp@claude-plugins-official": true,
     "vercel@claude-plugins-official": true,
-    "tmux-claude-hatch@tmux-claude-hatch": true
+    "tmux-claude-hatch@tmux-claude-hatch": true,
+    "rust-analyzer-lsp@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
     "tmux-claude-hatch": {
