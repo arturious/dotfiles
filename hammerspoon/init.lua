@@ -8,7 +8,6 @@ require("hs.ipc")  -- для управления через CLI `hs`
 -- одном не должна оставить остальные без ссылки в _G.tools.
 _G.tools = {}
 for name, module in pairs({
-  clock           = "clock",
   dockSwipeQuit   = "dock_swipe_quit",
   windowCloseQuit = "window_close_quit",
 }) do
