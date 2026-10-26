@@ -61,4 +61,8 @@
       "matchCommandLine": true,
     },
   },
+  "chat.editor.fontSize": 13,
+  "workbench.panel.showLabels": false,
+  "terminal.integrated.fontFamily": "JetBrains Mono Nerd Font",
+  "terminal.integrated.fontSize": 13,
 }
