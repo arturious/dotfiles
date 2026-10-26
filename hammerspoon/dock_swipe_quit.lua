@@ -25,7 +25,7 @@ local gesture = nil
 
 -- Прямоугольник Dock (AXList у процесса Dock) и край экрана, где он стоит.
 -- Кэшируем и пересчитываем только после запуска/завершения приложений,
--- смены мониторов или раз в минуту (размер и положение Dock), чтобы на
+-- смены мониторов или Space, или раз в минуту (размер и положение Dock), чтобы на
 -- скролл вне Dock не делать ни одного Accessibility-запроса.
 local dockFrame, dockEdge, dockDirty = nil, "bottom", true
 local natural = true
@@ -40,6 +40,23 @@ local function readNaturalScrolling()
   return not (ok and out:match("^%s*0"))
 end
 
+-- Dock спрятан за краем экрана (в полноэкранном Space он выезжает только по
+-- наведению): такой прямоугольник не кэшируем, иначе после возврата в обычный
+-- Space свайп не срабатывал бы, пока кэш не обновится. Пока он спрятан,
+-- перечитываем его только когда курсор у его края - там, где он выезжает.
+local EDGE_ZONE = 100      -- px от края экрана с Dock (выехавший Dock ~50-60 px)
+local dockHidden = false
+
+local function onAnyScreen(f)
+  for _, s in ipairs(hs.screen.allScreens()) do
+    local full = s:fullFrame()
+    if f.x < full.x + full.w and f.x + f.w > full.x and f.y < full.y + full.h and f.y + f.h > full.y then
+      return true
+    end
+  end
+  return false
+end
+
 local function refreshDockFrame()
   dockDirty = false
   dockFrame = nil
@@ -48,8 +65,8 @@ local function refreshDockFrame()
   for _, c in ipairs(el and el:attributeValue("AXChildren") or {}) do
     if c:attributeValue("AXRole") == "AXList" then
       local f = c:attributeValue("AXFrame")
-      dockFrame = f
       -- горизонтальный Dock - снизу; вертикальный - у ближнего края экрана
+      -- (считается и по спрятанному: он лежит сразу за своим краем)
       if f and f.w < f.h then
         local screen = hs.mouse.getCurrentScreen() or hs.screen.primaryScreen()
         local full = screen:fullFrame()
@@ -57,12 +74,28 @@ local function refreshDockFrame()
       else
         dockEdge = "bottom"
       end
+      dockHidden = f ~= nil and not onAnyScreen(f)
+      if dockHidden then
+        dockDirty = true   -- перечитаем, когда курсор будет у края и Dock выедет
+      else
+        dockFrame = f
+      end
       return
     end
   end
 end
 
+local function nearDockEdge(p)
+  local screen = hs.mouse.getCurrentScreen() or hs.screen.primaryScreen()
+  local full = screen:fullFrame()
+  if dockEdge == "left" then return p.x - full.x <= EDGE_ZONE end
+  if dockEdge == "right" then return full.x + full.w - p.x <= EDGE_ZONE end
+  return full.y + full.h - p.y <= EDGE_ZONE
+end
+
 local function overDock(p)
+  -- спрятанный Dock: без Accessibility-запроса, пока курсор не у его края
+  if dockDirty and dockHidden and not nearDockEdge(p) then return false end
   if dockDirty then refreshDockFrame() end
   local f = dockFrame
   return f ~= nil and p.x >= f.x and p.x <= f.x + f.w and p.y >= f.y and p.y <= f.y + f.h
@@ -154,6 +187,7 @@ function M.start()
     end
   end):start()
   M.screenWatcher = hs.screen.watcher.new(markDirty):start()
+  M.spaceWatcher = hs.spaces.watcher.new(markDirty):start()   -- в другом Space Dock мог быть спрятан
   M.dockTimer = hs.timer.doEvery(60, markDirty)
   return M
 end
