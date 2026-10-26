@@ -102,19 +102,7 @@ else
   profile_dir="$zen_dir/$profile"
   link zen/userChrome.css      "$profile_dir/chrome/userChrome.css"
   link zen/user.js             "$profile_dir/user.js"
-  link zen/boosts              "$profile_dir/zen-boosts"
-
-  # The boosts index (site -> boost id) is copied, not linked: Zen saves it by
-  # replacing the file, which turns a symlink back into a plain file. After
-  # adding/renaming boosts, copy it back:
-  #   cp "<profile>/zen-boosts.jsonlz4" ~/dotfiles/zen/zen-boosts.jsonlz4
-  if [ -f "$DOTFILES_DIR/zen/zen-boosts.jsonlz4" ]; then
-    if [ -e "$profile_dir/zen-boosts.jsonlz4" ]; then
-      cp "$profile_dir/zen-boosts.jsonlz4" "$profile_dir/zen-boosts.jsonlz4.bak.$(date +%Y%m%d%H%M%S)"
-    fi
-    cp "$DOTFILES_DIR/zen/zen-boosts.jsonlz4" "$profile_dir/zen-boosts.jsonlz4"
-  fi
-  echo "    Restart Zen for userChrome.css/user.js/boosts to take effect"
+  echo "    Restart Zen for userChrome.css/user.js to take effect"
 fi
 
 # fish as the login shell.
