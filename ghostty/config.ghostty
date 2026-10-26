@@ -1,6 +1,6 @@
 theme = Solarized Dark Patched
-background-opacity = 0.9
-background-blur = 100
+background-opacity = 0.8
+background-blur = 20
 background = #000000
 font-family = "JetBrainsMono Nerd Font"
 font-size = 14
