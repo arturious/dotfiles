@@ -54,5 +54,10 @@ if status is-interactive
     alias cc 'claude --continue'
     alias cr 'claude --resume'
 
+    # Cloudflare WARP SOCKS5 proxy via wireproxy
+    function warp
+        cd ~/warp; and ./wireproxy -c wgcf-profile.conf
+    end
+
     # Functions (c, fish_title, __carapace_tab) live one per file in functions/.
 end
