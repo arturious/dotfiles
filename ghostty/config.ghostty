@@ -1,16 +1,16 @@
 theme = Solarized Dark Patched
 background-opacity = 0.8
-background-blur = 40
+background-blur = 60
 background = #000000
 font-family = "JetBrainsMono Nerd Font"
-font-size = 13
+font-size = 13.5
+font-feature = calt,cv02,cv03,cv04,cv05,cv06,cv07,cv11,cv14,cv16,cv17,cv18,cv19
 shell-integration-features = no-cursor
 cursor-style-blink = true
 confirm-close-surface = false
 notify-on-command-finish = unfocused
 notify-on-command-finish-action = notify
 notify-on-command-finish-after = 1s
-font-feature = ss02
 macos-titlebar-proxy-icon = hidden
 macos-titlebar-style = transparent
 macos-icon = custom-style
@@ -19,16 +19,7 @@ macos-icon-screen-color = #002b36
 macos-option-as-alt = left
 keybind = alt+left=unbind
 keybind = alt+right=unbind
-
-# tmux prefix: Caps Lock tapped on its own sends F18 (Karabiner rule, in every
-# app; held, Caps Lock is Control), turned here into F12's escape sequence -
-# the prefix tmux sees (see tmux/settings.conf). Not F12 straight from
-# Karabiner: on a Mac keyboard that's volume up unless sent with Fn, and the
-# Fn press set off whatever listens for Fn (Superwhisper's push-to-talk).
-# Not F18 as the prefix itself: tmux only takes F1-F12.
 keybind = f18=text:\x1b[24~
-
 keybind = cmd+[=previous_tab
 keybind = cmd+]=next_tab
-
 undo-timeout = 1s
