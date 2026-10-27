@@ -92,19 +92,6 @@ if [ ! -d "$tpm_dir" ]; then
 fi
 "$tpm_dir/bin/install_plugins"
 
-# Zen Browser: the profile folder has a random name, read it from installs.ini.
-echo "==> Zen Browser"
-zen_dir="$APP_SUPPORT/zen"
-profile="$(awk -F= '/^Default=/{print $2; exit}' "$zen_dir/installs.ini" 2>/dev/null || true)"
-if [ -z "$profile" ]; then
-  echo "    !! Zen profile not found (run Zen once first), skipping"
-else
-  profile_dir="$zen_dir/$profile"
-  link zen/userChrome.css      "$profile_dir/chrome/userChrome.css"
-  link zen/user.js             "$profile_dir/user.js"
-  echo "    Restart Zen for userChrome.css/user.js to take effect"
-fi
-
 # fish as the login shell.
 echo "==> fish"
 fish_path="$(command -v fish || true)"
