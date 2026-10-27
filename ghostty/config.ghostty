@@ -1,9 +1,9 @@
 theme = Solarized Dark Patched
-background-opacity = 0.8
+background-opacity = 0.6
 background-blur = macos-glass-regular
 background = #000000
 font-family = "JetBrainsMono Nerd Font"
-font-size = 13.5
+font-size = 13
 font-feature = calt,cv02,cv03,cv04,cv05,cv06,cv07,cv11,cv14,cv16,cv17,cv18,cv19
 shell-integration-features = no-cursor
 cursor-style-blink = true
