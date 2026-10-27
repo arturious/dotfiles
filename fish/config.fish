@@ -61,3 +61,5 @@ if status is-interactive
 
     # Functions (c, fish_title, __carapace_tab) live one per file in functions/.
 end
+
+zoxide init fish | source
