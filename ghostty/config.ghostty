@@ -1,6 +1,6 @@
 theme = Solarized Dark Patched
 background-opacity = 0.8
-background-blur = 60
+background-blur = macos-glass-regular
 background = #000000
 font-family = "JetBrainsMono Nerd Font"
 font-size = 13.5
@@ -12,7 +12,8 @@ notify-on-command-finish = unfocused
 notify-on-command-finish-action = notify
 notify-on-command-finish-after = 1s
 macos-titlebar-proxy-icon = hidden
-macos-titlebar-style = transparent
+macos-titlebar-style = tabs
+macos-window-buttons = hidden
 macos-icon = custom-style
 macos-icon-ghost-color = #002b36
 macos-icon-screen-color = #002b36
@@ -22,4 +23,6 @@ keybind = alt+right=unbind
 keybind = f18=text:\x1b[24~
 keybind = cmd+[=previous_tab
 keybind = cmd+]=next_tab
+copy-on-select = clipboard
 undo-timeout = 1s
+
