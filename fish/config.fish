@@ -13,12 +13,12 @@ if status is-interactive
     # Prompt.
     starship init fish | source
 
-    # Ghostty: attach to the one tmux session "main" (or create it). Closing
-    # Ghostty only detaches, so its windows are back on the next launch.
+    # Ghostty: every Ghostty tab gets its own tmux session (Cmd+T is a native
+    # Ghostty tab again). destroy-unattached: closing the tab kills its session.
     # Only in Ghostty - VS Code runs an interactive fish without a terminal
     # to read the environment, and exec tmux would fail there.
     if not set -q TMUX; and test "$TERM_PROGRAM" = ghostty
-        exec tmux new-session -A -s main
+        exec tmux new-session \; set-option destroy-unattached on
     end
 
     # Tab completions with descriptions for 1000+ commands (carapace), loaded

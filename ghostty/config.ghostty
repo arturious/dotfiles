@@ -12,7 +12,6 @@ notify-on-command-finish-action = notify
 notify-on-command-finish-after = 1s
 font-feature = ss02
 macos-titlebar-proxy-icon = hidden
-title = " "
 macos-titlebar-style = transparent
 macos-icon = custom-style
 macos-icon-ghost-color = #002b36
@@ -20,13 +19,6 @@ macos-icon-screen-color = #002b36
 macos-option-as-alt = left
 keybind = alt+left=unbind
 keybind = alt+right=unbind
-keybind = cmd+[=text:\x1ep
-keybind = cmd+]=text:\x1en
-# Cmd+Shift+[ / Cmd+Shift+] move the current tmux window left/right (see
-# tmux/settings.conf: User3/User4). Written as [ and ], not bracket_left/right: only
-# the same spelling replaces Ghostty's default previous_tab/next_tab.
-keybind = cmd+shift+[=text:\x1eP
-keybind = cmd+shift+]=text:\x1eN
 
 # tmux prefix: Caps Lock tapped on its own sends F18 (Karabiner rule, in every
 # app; held, Caps Lock is Control), turned here into F12's escape sequence -
@@ -36,6 +28,7 @@ keybind = cmd+shift+]=text:\x1eN
 # Not F18 as the prefix itself: tmux only takes F1-F12.
 keybind = f18=text:\x1b[24~
 
-# Cmd+T sends our tmux new-window key (see tmux/settings.conf: User2)
-# instead of opening a new Ghostty tab.
-keybind = cmd+t=text:\x1et
+keybind = cmd+[=previous_tab
+keybind = cmd+]=next_tab
+
+undo-timeout = 1s
