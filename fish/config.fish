@@ -63,3 +63,6 @@ if status is-interactive
 end
 
 zoxide init fish | source
+
+# fx CLI
+set -gx PATH /Users/arturious/.local/bin $PATH
