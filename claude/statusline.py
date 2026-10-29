@@ -42,9 +42,8 @@ model = (payload.get("model") or {}).get("display_name") or "Claude Code"
 
 cwd = payload.get("cwd") or ""
 
-# Claude's working directory, for tmux: the process itself stays in the dir
-# claude was started from, so pane_current_path doesn't follow it. Stored as
-# a pane option (@claude_cwd), read by prefix+g in tmux/settings.conf.
+# For prefix+g in tmux/settings.conf: pane_current_path doesn't follow
+# Claude's cwd, so expose it as the @claude_cwd pane option.
 pane = os.environ.get("TMUX_PANE")
 if pane and cwd:
     try:
@@ -63,7 +62,6 @@ else:
 ctx = (payload.get("context_window") or {}).get("used_percentage")
 rate_limits = payload.get("rate_limits") or {}
 
-# Line 1: model | directory. Line 2: context % | 5h | 7d.
 top = [color("D77757", model)]
 if cwd_display:
     top.append(color("2AA298", cwd_display))

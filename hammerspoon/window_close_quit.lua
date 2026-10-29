@@ -1,7 +1,6 @@
--- Закрыл последнее окно приложения, и оно завершается целиком, а не остаётся
--- висеть в Dock. Порт WindowCloseQuitManager.swift из github.com/arturious/q.
--- Окна каждого приложения отслеживаются через Accessibility (AXWindowCreated,
--- AXUIElementDestroyed). Нужно разрешение Accessibility для Hammerspoon.
+-- Закрыл последнее окно приложения - оно завершается целиком.
+-- Порт WindowCloseQuitManager.swift из github.com/arturious/q.
+-- Нужно разрешение Accessibility для Hammerspoon.
 
 local M = {}
 
@@ -22,9 +21,8 @@ local function indexOf(list, el)
   end
 end
 
--- Считаем только обычные окна: у некоторых приложений (Things) есть невидимое
--- служебное окно с subrole AXUnknown, которое не закрывается никогда - из-за
--- него последнее настоящее окно никогда не было бы «последним».
+-- Только обычные окна: у Things есть невидимое служебное окно (AXUnknown),
+-- которое никогда не закрывается.
 local function isRealWindow(win)
   return win and win:attributeValue("AXSubrole") == "AXStandardWindow"
 end
@@ -41,10 +39,8 @@ local function quitIfStillWindowless(pid)
     local app = hs.application.applicationForPID(pid)
     if not (entry and #entry.windows == 0 and eligible(app)) then return end
 
-    -- Доп. проверка, которой нет в Swift-оригинале: AXWindows не видит окна
-    -- в других Spaces и полноэкранные (у Ghostty здесь бывает 0 окон, хотя
-    -- окно открыто), так что «все отслеживаемые закрылись» ещё не значит
-    -- «окон нет». Не закрываем, если у приложения ещё есть фокус/главное окно.
+    -- AXWindows не видит окна в других Spaces и полноэкранные (Ghostty),
+    -- поэтому проверяем ещё фокусное и главное окно.
     local appEl = hs.axuielement.applicationElement(app)
     if appEl then
       if isRealWindow(appEl:attributeValue("AXFocusedWindow"))
@@ -56,7 +52,7 @@ local function quitIfStillWindowless(pid)
       end
     end
 
-    app:kill()   -- обычное завершение, как NSRunningApplication.terminate()
+    app:kill()
   end)
 end
 
@@ -112,8 +108,7 @@ observe = function(app, attempt)
   entry.observer:start()
   apps[pid] = entry
 
-  -- Первое окно у только что запущенного приложения часто появляется
-  -- чуть позже, уже после sync() и мимо AXWindowCreated - досинхронизируем.
+  -- Первое окно новых приложений иногда приходит мимо AXWindowCreated.
   entry.resync = {
     hs.timer.doAfter(1, sync),
     hs.timer.doAfter(3, sync),
@@ -144,8 +139,7 @@ function M.start()
         if eligible(app) then observe(app) end
       end)
     elseif event == hs.application.watcher.terminated then
-      -- pid у завершённого приложения может быть уже недоступен, поэтому
-      -- просто убираем всех, кого больше нет среди запущенных
+      -- pid завершённого приложения может быть уже недоступен
       for pid in pairs(apps) do
         if not hs.application.applicationForPID(pid) then forget(pid) end
       end

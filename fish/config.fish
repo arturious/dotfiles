@@ -1,49 +1,32 @@
-# PATH: rustup's toolchain and our own scripts (lazygit-claude).
 fish_add_path --global --path /opt/homebrew/opt/rustup/bin ~/.local/bin
 
-# Outside the interactive block on purpose: tmux runs popup commands as
-# `fish -c "..."` (non-interactive), and those need these too.
+# Outside is-interactive: tmux popups run `fish -c` and need these too.
 set -gx FORCE_COLOR 3
 set -gx CLAUDE_CODE_TMUX_TRUECOLOR 1
 
-# No "Welcome to fish" greeting.
 set -g fish_greeting
 
 if status is-interactive
-    # Prompt.
     starship init fish | source
 
-    # Ghostty: every Ghostty tab gets its own tmux session (Cmd+T is a native
-    # Ghostty tab again). destroy-unattached: closing the tab kills its session.
-    # Only in Ghostty - VS Code runs an interactive fish without a terminal
-    # to read the environment, and exec tmux would fail there.
+    # One tmux session per Ghostty tab, killed when the tab closes.
+    # Ghostty only: VS Code's interactive fish has no terminal for tmux.
     if not set -q TMUX; and test "$TERM_PROGRAM" = ghostty
         exec tmux new-session \; set-option destroy-unattached on
     end
 
-    # Tab completions with descriptions for 1000+ commands (carapace), loaded
-    # on the first Tab rather than at start (functions/__carapace_tab).
     bind tab __carapace_tab
 
-    # fzf: Ctrl+R history, Ctrl+T files.
     set -gx FZF_DEFAULT_OPTS "--tmux 90%,70% --border"
     fzf --fish | source
 
-    # No gray inline suggestions while typing - Tab (carapace) instead.
     set -g fish_autosuggestion_enabled 0
-
-    # Existing paths in the command line are bold, not underlined.
     set -g fish_color_valid_path --bold
 
-    # Tab list (carapace's completions, drawn by fish): options cyan, not bold,
-    # so they look like the arguments in the command line (named "cyan" =
-    # Ghostty's palette, the same shade); the part already typed bold cyan
-    # instead of bold underlined; "…and N more" in calm gray.
+    # Completion pager: "cyan" is Ghostty's palette color, same as arguments.
     set -g fish_pager_color_prefix --bold cyan
     set -g fish_pager_color_completion cyan
     set -g fish_pager_color_progress 586E75
-    # Selected row: dark background instead of inverted
-    # colors, text as in the other rows.
     set -g fish_pager_color_selected_background --background=02232B
     set -g fish_pager_color_selected_prefix --bold cyan
     set -g fish_pager_color_selected_completion cyan
@@ -54,15 +37,10 @@ if status is-interactive
     alias cc 'claude --continue'
     alias cr 'claude --resume'
 
-    # Cloudflare WARP SOCKS5 proxy via wireproxy
+    # Cloudflare WARP SOCKS5 proxy
     function warp
         cd ~/warp; and ./wireproxy -c wgcf-profile.conf
     end
-
-    # Functions (c, fish_title, __carapace_tab) live one per file in functions/.
 end
 
 zoxide init fish | source
-
-# fx CLI
-set -gx PATH /Users/arturious/.local/bin $PATH

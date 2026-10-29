@@ -8,7 +8,7 @@ local M = {}
 local SWIPE_THRESHOLD  = 45   -- сколько надо «проскроллить» к краю, чтобы закрыть
 local MAX_POINTER_MOVE = 18   -- если курсор уехал дальше, это не свайп по иконке
 
--- общий список и для window_close_quit.lua
+-- используется и в window_close_quit.lua
 local PROTECTED = {
   ["com.apple.dock"] = true,
   ["com.apple.finder"] = true,
@@ -23,27 +23,20 @@ local PHASE_BEGAN, PHASE_ENDED, PHASE_CANCELLED, PHASE_MAY_BEGIN = 1, 4, 8, 128
 
 local gesture = nil
 
--- Прямоугольник Dock (AXList у процесса Dock) и край экрана, где он стоит.
--- Кэшируем и пересчитываем только после запуска/завершения приложений,
--- смены мониторов или Space, или раз в минуту (размер и положение Dock), чтобы на
--- скролл вне Dock не делать ни одного Accessibility-запроса.
+-- Кэш прямоугольника Dock: на скролл вне Dock - ни одного Accessibility-запроса.
+-- Сбрасывается при запуске/завершении приложений, смене мониторов/Space и раз в минуту.
 local dockFrame, dockEdge, dockDirty = nil, "bottom", true
 local natural = true
 
--- Аналог NSEvent.isDirectionInvertedFromDevice: включён ли natural scrolling.
--- Ключа нет, пока его ни разу не меняли, а по умолчанию natural включён
--- (hs.mouse.scrollDirection() в этом случае ошибочно отвечает "normal").
--- defaults read - внешний процесс, поэтому читаем при старте и потом только
--- по уведомлению macOS о переключении настройки (см. M.start).
+-- Natural scrolling. Ключа нет, пока настройку не меняли (по умолчанию включено),
+-- и hs.mouse.scrollDirection() тогда ошибочно отвечает "normal".
 local function readNaturalScrolling()
   local out, ok = hs.execute("defaults read -g com.apple.swipescrolldirection 2>/dev/null")
   return not (ok and out:match("^%s*0"))
 end
 
--- Dock спрятан за краем экрана (в полноэкранном Space он выезжает только по
--- наведению): такой прямоугольник не кэшируем, иначе после возврата в обычный
--- Space свайп не срабатывал бы, пока кэш не обновится. Пока он спрятан,
--- перечитываем его только когда курсор у его края - там, где он выезжает.
+-- Спрятанный Dock (полноэкранный Space) не кэшируем, а перечитываем,
+-- когда курсор подходит к его краю.
 local EDGE_ZONE = 100      -- px от края экрана с Dock (выехавший Dock ~50-60 px)
 local dockHidden = false
 
@@ -65,8 +58,7 @@ local function refreshDockFrame()
   for _, c in ipairs(el and el:attributeValue("AXChildren") or {}) do
     if c:attributeValue("AXRole") == "AXList" then
       local f = c:attributeValue("AXFrame")
-      -- горизонтальный Dock - снизу; вертикальный - у ближнего края экрана
-      -- (считается и по спрятанному: он лежит сразу за своим краем)
+      -- вертикальный Dock - у ближнего края (и спрятанный тоже)
       if f and f.w < f.h then
         local screen = hs.mouse.getCurrentScreen() or hs.screen.primaryScreen()
         local full = screen:fullFrame()
@@ -76,7 +68,7 @@ local function refreshDockFrame()
       end
       dockHidden = f ~= nil and not onAnyScreen(f)
       if dockHidden then
-        dockDirty = true   -- перечитаем, когда курсор будет у края и Dock выедет
+        dockDirty = true
       else
         dockFrame = f
       end
@@ -94,7 +86,6 @@ local function nearDockEdge(p)
 end
 
 local function overDock(p)
-  -- спрятанный Dock: без Accessibility-запроса, пока курсор не у его края
   if dockDirty and dockHidden and not nearDockEdge(p) then return false end
   if dockDirty then refreshDockFrame() end
   local f = dockFrame
@@ -127,7 +118,6 @@ end
 
 local function onScroll(e)
   local phase = e:getProperty(props.scrollWheelEventScrollPhase)
-  -- вне жеста интересует только его начало: всё остальное отбрасываем сразу
   if not gesture and phase ~= PHASE_MAY_BEGIN and phase ~= PHASE_BEGAN then return false end
 
   -- только трекпад (точные дельты) и без инерции после отпускания пальцев
@@ -169,7 +159,7 @@ local function onScroll(e)
   end
 
   if phase == PHASE_ENDED or phase == PHASE_CANCELLED then gesture = nil end
-  return false   -- событие не глотаем, скролл работает как обычно
+  return false
 end
 
 function M.start()
@@ -187,7 +177,7 @@ function M.start()
     end
   end):start()
   M.screenWatcher = hs.screen.watcher.new(markDirty):start()
-  M.spaceWatcher = hs.spaces.watcher.new(markDirty):start()   -- в другом Space Dock мог быть спрятан
+  M.spaceWatcher = hs.spaces.watcher.new(markDirty):start()
   M.dockTimer = hs.timer.doEvery(60, markDirty)
   return M
 end

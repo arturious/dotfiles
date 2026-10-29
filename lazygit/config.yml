@@ -1,7 +1,4 @@
 gui:
-  # Custom loading-spinner animation: 0,1,2,3,4,5,5,4,3,2,1,0 through the
-  # glyphs below. Kept for lazygit's own spinner elsewhere; the Ctrl+A
-  # command below draws its own copy of this sequence itself.
   spinner:
     frames:
       - '·'
@@ -17,11 +14,3 @@ gui:
       - '✢'
       - '·'
     rate: 120
-
-customCommands:
-  - key: '<c-a>'
-    context: 'files'
-    description: 'AI: generate commit message (Claude)'
-    # output: terminal, not a tmux popup - see bin/lazygit-claude for why.
-    command: '~/.local/bin/lazygit-claude'
-    output: terminal

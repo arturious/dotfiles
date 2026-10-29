@@ -1,12 +1,10 @@
 #!/usr/bin/env bash
-# One folder per app; this file maps each one to where the app reads it.
-# Safe to re-run: existing symlinks are left alone, real files are backed up.
+# Symlinks each app's folder into place. Idempotent; real files are backed up.
 set -euo pipefail
 
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 APP_SUPPORT="$HOME/Library/Application Support"
 
-# link <path in dotfiles> <destination>
 link() {
   local src="$DOTFILES_DIR/$1" dest="$2"
 
@@ -20,7 +18,7 @@ link() {
 
   mkdir -p "$(dirname "$dest")"
   if [ -L "$dest" ]; then
-    rm "$dest"                       # stale symlink (e.g. an old dotfiles path)
+    rm "$dest"
   elif [ -e "$dest" ]; then
     local backup="$dest.bak.$(date +%Y%m%d%H%M%S)"
     echo "    Backing up $dest -> $backup"
@@ -35,7 +33,6 @@ link() {
 # Homebrew packages
 # ---------------------------------------------------------------------------
 echo "==> Homebrew"
-# bash doesn't read fish's PATH, so on a fresh Mac brew isn't found by name.
 if ! command -v brew >/dev/null 2>&1; then
   if [ -x /opt/homebrew/bin/brew ]; then
     eval "$(/opt/homebrew/bin/brew shellenv)"
@@ -63,17 +60,12 @@ for fn in "$DOTFILES_DIR"/fish/functions/*.fish; do
 done
 link ghostty/config.ghostty    "$APP_SUPPORT/com.mitchellh.ghostty/config.ghostty"
 link hammerspoon               "$HOME/.hammerspoon"
-# The whole directory, not just karabiner.json: Karabiner watches
-# ~/.config/karabiner, and edits to a symlinked file's target never show up
-# there, so the config wouldn't reload on its own.
+# Whole dir: Karabiner doesn't reload on edits behind a symlinked file.
 link karabiner                 "$HOME/.config/karabiner"
 link lazygit/config.yml        "$APP_SUPPORT/lazygit/config.yml"
-link nvim                      "$HOME/.config/nvim"
 link starship/starship.toml    "$HOME/.config/starship.toml"
 link tmux                      "$HOME/.config/tmux"
 link vscode/settings.json      "$APP_SUPPORT/Code/User/settings.json"
-
-link bin/lazygit-claude        "$HOME/.local/bin/lazygit-claude"
 
 # ---------------------------------------------------------------------------
 # Special cases
@@ -84,7 +76,6 @@ if [ -L "$HOME/.tmux.conf" ]; then
   rm "$HOME/.tmux.conf"
 fi
 
-# TPM (tmux plugin manager) - only used for tmux-claude-hatch.
 echo "==> TPM"
 tpm_dir="$HOME/.tmux/plugins/tpm"
 if [ ! -d "$tpm_dir" ]; then
@@ -92,7 +83,6 @@ if [ ! -d "$tpm_dir" ]; then
 fi
 "$tpm_dir/bin/install_plugins"
 
-# fish as the login shell.
 echo "==> fish"
 fish_path="$(command -v fish || true)"
 if [ -n "$fish_path" ] && [ "$SHELL" != "$fish_path" ]; then

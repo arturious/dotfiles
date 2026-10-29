@@ -1,6 +1,4 @@
-# Terminal/pane title (#T in the tmux tab pills): same as fish's built-in
-# fish_title, but only the last folder name instead of prompt_pwd's
-# "~/dev" - just "dev" (still "~" at home).
+# Built-in fish_title, but with only the last folder name ("~" at home).
 function fish_title
     set -l dir (path basename -- $PWD)
     test "$PWD" = "$HOME"; and set dir '~'

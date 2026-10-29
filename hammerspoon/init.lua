@@ -1,11 +1,7 @@
--- ~/dotfiles/hammerspoon/init.lua (~/.hammerspoon -> ~/dotfiles/hammerspoon)
--- Каждый инструмент лежит в отдельном файле рядом и подключается здесь.
+require("hs.ipc")  -- CLI `hs`
 
-require("hs.ipc")  -- для управления через CLI `hs`
-
--- Модули держим в глобальной таблице, иначе сборщик мусора удалит их
--- таймеры, watcher'ы и eventtap'ы. Каждый запускаем отдельно: ошибка в
--- одном не должна оставить остальные без ссылки в _G.tools.
+-- Глобальная таблица, иначе GC соберёт таймеры, watcher'ы и eventtap'ы.
+-- pcall на каждый модуль: ошибка в одном не ломает остальные.
 _G.tools = {}
 for name, module in pairs({
   dockSwipeQuit   = "dock_swipe_quit",

@@ -13,6 +13,7 @@ brew "fish"
 brew "carapace"   # completions for fish (fish/config.fish)
 brew "tmux"
 brew "fzf"
+brew "zoxide"
 brew "eza"
 brew "lazygit"
 brew "neovim"

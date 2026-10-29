@@ -30,6 +30,7 @@
   "timeFormat": "24-hour-utc",
   "skipDangerousModePermissionPrompt": true,
   "theme": "custom:custom",
+  "editorMode": "normal",
   "preferredNotifChannel": "ghostty",
   "showTurnDuration": false,
   "inputNeededNotifEnabled": true,

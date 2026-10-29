@@ -5,7 +5,6 @@ function c
         claude
         return
     end
-    # No spinner when stderr isn't a terminal (e.g. `c ... 2>log`).
     if not isatty stderr
         claude -p "$argv"
         return
@@ -13,15 +12,12 @@ function c
 
     set -l out (mktemp)
     set -l rc (mktemp)
-    # Run via sh + disown rather than a plain fish `&` job, so fish
-    # doesn't print "Job 1 has ended" once it finishes; the exit code
-    # comes back through $rc instead of `wait`.
+    # sh + disown instead of a fish job: no "Job 1 has ended" message.
     sh -c 'claude -p "$1" >"$2" 2>&1; echo $? >"$3"' _ "$argv" $out $rc &
     set -l pid $last_pid
     disown $pid
 
-    # Ctrl+C stops the spinner loop - kill claude too, not just the loop.
-    # $pid is the sh wrapper; claude is its child and wouldn't get the signal.
+    # Ctrl+C: claude is a child of the sh wrapper, so kill it explicitly.
     function __c_cancel --on-signal SIGINT --inherit-variable pid --inherit-variable out --inherit-variable rc
         pkill -P $pid 2>/dev/null
         kill $pid 2>/dev/null
