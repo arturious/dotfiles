@@ -7,13 +7,13 @@ set -gx CLAUDE_CODE_TMUX_TRUECOLOR 1
 set -g fish_greeting
 
 if status is-interactive
-    starship init fish | source
-
-    # One tmux session per Ghostty tab, killed when the tab closes.
-    # Ghostty only: VS Code's interactive fish has no terminal for tmux.
+    # Ghostty: attach to the one tmux session "main" (or create it); closing
+    # Ghostty only detaches. Not in VS Code: its fish has no terminal for tmux.
     if not set -q TMUX; and test "$TERM_PROGRAM" = ghostty
-        exec tmux new-session \; set-option destroy-unattached on
+        exec tmux new-session -A -s main
     end
+
+    starship init fish | source
 
     bind tab __carapace_tab
 
@@ -32,6 +32,8 @@ if status is-interactive
     set -g fish_pager_color_selected_completion cyan
     set -g fish_pager_color_selected_description yellow --italics
 
+    zoxide init fish | source
+
     alias ll 'eza -la -F --icons=auto --hyperlink=auto --sort=date --reverse --no-filesize --no-time --no-user --git --git-repos'
     alias vim nvim
     alias cc 'claude --continue'
@@ -42,5 +44,3 @@ if status is-interactive
         cd ~/warp; and ./wireproxy -c wgcf-profile.conf
     end
 end
-
-zoxide init fish | source

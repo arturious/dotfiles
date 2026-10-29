@@ -20,8 +20,34 @@ macos-option-as-alt = left
 keybind = alt+left=unbind
 keybind = alt+right=unbind
 keybind = f18=text:\x1b[24~
-keybind = cmd+[=previous_tab
-keybind = cmd+]=next_tab
+# No Ghostty tabs: these send private sequences that tmux binds (user-keys
+# in tmux/settings.conf). Cmd+T new window, Cmd+[ / Cmd+] previous/next,
+# Cmd+Shift+[ / Cmd+Shift+] move it. Written as [ and ], not bracket_left:
+# only the same spelling replaces Ghostty's default previous_tab/next_tab.
+keybind = cmd+t=text:\x1et
+keybind = cmd+[=text:\x1ep
+keybind = cmd+]=text:\x1en
+keybind = cmd+shift+[=text:\x1eP
+keybind = cmd+shift+]=text:\x1eN
+# Cmd+1..9: tmux window N. Both spellings, like Ghostty's own goto_tab defaults.
+keybind = cmd+1=text:\x1e1
+keybind = cmd+digit_1=text:\x1e1
+keybind = cmd+2=text:\x1e2
+keybind = cmd+digit_2=text:\x1e2
+keybind = cmd+3=text:\x1e3
+keybind = cmd+digit_3=text:\x1e3
+keybind = cmd+4=text:\x1e4
+keybind = cmd+digit_4=text:\x1e4
+keybind = cmd+5=text:\x1e5
+keybind = cmd+digit_5=text:\x1e5
+keybind = cmd+6=text:\x1e6
+keybind = cmd+digit_6=text:\x1e6
+keybind = cmd+7=text:\x1e7
+keybind = cmd+digit_7=text:\x1e7
+keybind = cmd+8=text:\x1e8
+keybind = cmd+digit_8=text:\x1e8
+keybind = cmd+9=text:\x1e9
+keybind = cmd+digit_9=text:\x1e9
 copy-on-select = clipboard
 undo-timeout = 1s
 
