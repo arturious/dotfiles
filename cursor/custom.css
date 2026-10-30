@@ -1,0 +1,27 @@
+/* Loaded by "Custom CSS and JS Loader" (vscode_custom_css.imports in
+   settings.json). Re-run "Reload Custom CSS and JS" after editing, and
+   "Enable Custom CSS and JS" after a Cursor update. */
+
+/* Sidebar view icons (Explorer, Search, Git...) packed together on the left,
+   like VS Code. Cursor's modern UI draws them as its own .sidebar2-item divs
+   with inline styles: the row centered with a 2px gap, each icon with a
+   margin. Inline styles need !important to override. */
+.part.sidebar div:has(> [class*="sidebar2-item"]) {
+  justify-content: flex-start !important;
+  gap: 0 !important;
+}
+.part.sidebar div:has(> [class*="sidebar2-item"]) > [class*="sidebar2-item"] {
+  margin: 0 !important;
+}
+
+/* Cursor fits floor(width / 40) - 1 icons in that row, measuring its outer
+   relative div with a ResizeObserver: 40px per icon, but they're 26px now.
+   That div only holds the absolutely positioned bar, so it's made 1.5x as
+   wide (Cursor then counts ~27px per icon) and the bar is shrunk back to
+   the sidebar's width. */
+.part.sidebar div[style^="position: relative"]:has(> div[style*="position: absolute"] [class*="sidebar2-item"]) {
+  width: 150% !important;
+}
+.part.sidebar div[style^="position: relative"]:has(> div[style*="position: absolute"] [class*="sidebar2-item"]) > div[style*="position: absolute"] {
+  width: calc(100% / 1.5) !important;
+}

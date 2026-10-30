@@ -1,0 +1,78 @@
+{
+    "workbench.tips.enabled": false,
+    "editor.guides.bracketPairs": true,
+    "editor.fontSize": 13,
+    "editor.fontFamily": "JetBrainsMono Nerd Font Mono",
+    "editor.minimap.enabled": false,
+    "editor.fontLigatures": "'calt', 'liga', 'ss02'",
+    "workbench.iconTheme": "file-icons",
+    "claudeCode.preferredLocation": "panel",
+    "workbench.browser.showInTitleBar": true,
+    "chat.viewSessions.orientation": "stacked",
+    "git.enableSmartCommit": true,
+    "git.confirmSync": false,
+    "explorer.confirmDelete": false,
+    "git.autofetch": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": true,
+    "[html]": {
+        "editor.defaultFormatter": "vscode.html-language-features"
+    },
+    "workbench.startupEditor": "none",
+    "workbench.tree.renderIndentGuides": "always",
+    "editor.unicodeHighlight.nonBasicASCII": false,
+    "editor.tokenColorCustomizations": {
+        "textMateRules": [
+            {
+                "scope": [
+                    "comment",
+                    "punctuation.definition.comment"
+                ],
+                "settings": {
+                    "fontStyle": "italic"
+                }
+            },
+            {
+                "scope": [
+                    "keyword",
+                    "storage.type",
+                    "storage.modifier"
+                ],
+                "settings": {
+                    "fontStyle": "italic"
+                }
+            }
+        ]
+    },
+    "security.workspace.trust.banner": "always",
+    "workbench.trustedDomains.promptInTrustedWorkspace": true,
+    "security.workspace.trust.startupPrompt": "always",
+    "editor.unicodeHighlight.allowedCharacters": {
+        "❯": true
+    },
+    "chat.titleBar.openInAgentsWindow.enabled": true,
+    "security.workspace.trust.untrustedFiles": "open",
+    "workbench.experimental.modernUI": true,
+    "chat.tools.terminal.autoApprove": {
+        "/^command -v swift \\|\\| true; command -v xcodebuild \\|\\| true; command -v xcodegen \\|\\| true; swift --version 2>/dev/null \\|\\| true$/": {
+            "approve": true,
+            "matchCommandLine": true
+        },
+        "/^git status --short && printf '\\\\n--- top-level ---\\\\n' && find \\. -maxdepth 2 -type f \\| sort \\| sed -n '1,160p'$/": {
+            "approve": true,
+            "matchCommandLine": true
+        }
+    },
+    "chat.editor.fontSize": 13,
+    "workbench.panel.showLabels": false,
+    "terminal.integrated.fontFamily": "JetBrains Mono Nerd Font",
+    "terminal.integrated.fontSize": 13,
+    "editor.tabSize": 3,
+    "workbench.commandPalette.experimental.suggestCommands": true,
+    "workbench.commandPalette.preserveInput": true,
+    "workbench.externalBrowser": "zen",
+    "editor.cursorStyle": "block-outline",
+    "workbench.editor.editorActionsLocation": "titleBar",
+    "vscode_custom_css.imports": ["file://${userHome}/.cursor/custom.css"],
+}

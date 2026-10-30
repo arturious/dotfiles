@@ -53,6 +53,11 @@ link claude/settings.json      "$HOME/.claude/settings.json"
 link claude/statusline.py      "$HOME/.claude/statusline.py"
 link claude/theme.json         "$HOME/.claude/themes/custom.json"
 
+# Cursor (custom.css is loaded by the Custom CSS and JS Loader extension)
+link cursor/settings.json      "$APP_SUPPORT/Cursor/User/settings.json"
+link cursor/custom.css         "$HOME/.cursor/custom.css"
+link cursor/fix.sh             "$HOME/.cursor/fix.sh"
+
 link fish/config.fish          "$HOME/.config/fish/config.fish"
 # One file per function, not the whole dir: fisher keeps its own files there.
 for fn in "$DOTFILES_DIR"/fish/functions/*.fish; do
