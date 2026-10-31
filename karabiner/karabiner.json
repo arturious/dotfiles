@@ -253,6 +253,44 @@
                                 "type": "basic"
                             }
                         ]
+                    },
+                    {
+                        "description": "F7/F8/F9 = Spotify previous/play-pause/next everywhere (F8 opens Spotify if not running)",
+                        "manipulators": [
+                            {
+                                "type": "basic",
+                                "from": {
+                                    "key_code": "f7"
+                                },
+                                "to": [
+                                    {
+                                        "shell_command": "pgrep -qx Spotify && osascript -e 'tell application \"Spotify\" to previous track'"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "basic",
+                                "from": {
+                                    "key_code": "f8"
+                                },
+                                "to": [
+                                    {
+                                        "shell_command": "if pgrep -qx Spotify; then osascript -e 'tell application \"Spotify\" to playpause'; else open -a Spotify; fi"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "basic",
+                                "from": {
+                                    "key_code": "f9"
+                                },
+                                "to": [
+                                    {
+                                        "shell_command": "pgrep -qx Spotify && osascript -e 'tell application \"Spotify\" to next track'"
+                                    }
+                                ]
+                            }
+                        ]
                     }
                 ]
             },

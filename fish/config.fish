@@ -39,6 +39,11 @@ if status is-interactive
     alias cc 'claude --continue'
     alias cr 'claude --resume'
 
+    # `spotify`: re-apply SpotX (Spotify adblock) after a Spotify update.
+    function spotify
+        curl -sSL https://spotx-official.github.io/run.sh | bash -s -- $argv
+    end
+
     # Cloudflare WARP SOCKS5 proxy
     function warp
         cd ~/warp; and ./wireproxy -c wgcf-profile.conf
