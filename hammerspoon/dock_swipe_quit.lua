@@ -1,5 +1,5 @@
 -- Наводишь курсор на иконку в Dock, свайпаешь двумя пальцами к краю экрана,
--- где стоит Dock, и приложение закрывается. Порт DockSwipeQuitController.swift
+-- где стоит Dock, и приложение закрывается (а Корзина очищается). Порт DockSwipeQuitController.swift
 -- из github.com/arturious/q: те же пороги и та же логика.
 -- Нужно разрешение Accessibility для Hammerspoon.
 
@@ -92,9 +92,13 @@ local function overDock(p)
   return f ~= nil and p.x >= f.x and p.x <= f.x + f.w and p.y >= f.y and p.y <= f.y + f.h
 end
 
+local TRASH = "trash"   -- вместо bundle ID: свайп по Корзине её очищает
+
 local function bundleIDAt(point)
   local el = hs.axuielement.systemElementAtPosition(point)
-  if not el or el:attributeValue("AXSubrole") ~= "AXApplicationDockItem" then return nil end
+  local subrole = el and el:attributeValue("AXSubrole")
+  if subrole == "AXTrashDockItem" then return TRASH end
+  if subrole ~= "AXApplicationDockItem" then return nil end
 
   local url = el:attributeValue("AXURL")
   local path = type(url) == "table" and url.filePath or nil
@@ -111,6 +115,12 @@ local function bundleIDAt(point)
 end
 
 local function quit(bundleID)
+  if bundleID == TRASH then
+    -- Finder очищает без своего окна подтверждения; нужно разрешение
+    -- Automation (Hammerspoon -> Finder), macOS спросит его в первый раз.
+    hs.osascript.applescript('tell application "Finder" to if (count of items of trash) > 0 then empty trash')
+    return
+  end
   if PROTECTED[bundleID] then return end
   local app = hs.application.applicationsForBundleID(bundleID)[1]
   if app then app:kill() end   -- обычное завершение, как NSRunningApplication.terminate()
