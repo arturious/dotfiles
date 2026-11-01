@@ -1,0 +1,36 @@
+#!/bin/bash
+
+set -eufo pipefail
+
+{{ $brews := list
+     "carapace"
+     "chezmoi"
+     "eza"
+     "fd"
+     "fish"
+     "fzf"
+     "lazygit"
+     "neovim"
+     "ripgrep"
+     "starship"
+     "tmux"
+     "zoxide" -}}
+{{ $casks := list
+     "font-jetbrains-mono-nerd-font"
+     "hammerspoon"
+     "karabiner-elements" -}}
+
+if [ ! -x /opt/homebrew/bin/brew ]; then
+  echo "Homebrew is not installed, see https://brew.sh" >&2
+  exit 1
+fi
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
+brew bundle --file=/dev/stdin <<EOF
+{{ range ($brews | sortAlpha | uniq) -}}
+brew "{{ . }}"
+{{ end -}}
+{{ range ($casks | sortAlpha | uniq) -}}
+cask "{{ . }}"
+{{ end -}}
+EOF
