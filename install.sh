@@ -69,8 +69,7 @@ link hammerspoon               "$HOME/.hammerspoon"
 link karabiner                 "$HOME/.config/karabiner"
 link lazygit/config.yml        "$APP_SUPPORT/lazygit/config.yml"
 link starship/starship.toml    "$HOME/.config/starship.toml"
-link tmux.conf                 "$HOME/.config/tmux/tmux.conf"
-link tmux-cyrillic-keys.sh     "$HOME/.config/tmux/tmux-cyrillic-keys.sh"
+link tmux                      "$HOME/.config/tmux"
 link vscode/settings.json      "$APP_SUPPORT/Code/User/settings.json"
 
 # ---------------------------------------------------------------------------
