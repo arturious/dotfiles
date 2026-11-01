@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# macOS settings. chezmoi apply runs this again whenever it changes.
+# macOS settings. Run: bash ~/dotfiles/macos/defaults.sh
 
 defaults write -g NSConvolutionOverride1 -float 12
 defaults write -g NSSplitViewItemSidebarDefaultsToFloatingAppearance -bool false
