@@ -1,2 +1,9 @@
 # `chezmoi init` writes this to ~/.config/chezmoi/chezmoi.toml.
 sourceDir = {{ .chezmoi.workingTree | quote }}
+
+# `chezmoi edit <file>` opens the source in Cursor and applies it once the
+# Cursor tab is closed (--wait).
+[edit]
+    command = "/Applications/Cursor.app/Contents/Resources/app/bin/cursor"
+    args = ["--wait"]
+    apply = true
