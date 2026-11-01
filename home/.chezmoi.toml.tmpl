@@ -1,5 +1,9 @@
 # `chezmoi init` writes this to ~/.config/chezmoi/chezmoi.toml.
 sourceDir = {{ .chezmoi.workingTree | quote }}
+# Targets are symlinks into this repo, so edits on either side are the same
+# file. Files named executable_*, private_* or *.tmpl would be copied instead:
+# keep scripts executable with chmod +x (git stores it), not executable_.
+mode = "symlink"
 
 # `chezmoi edit <file>` opens the source in Cursor and applies it once the
 # Cursor tab is closed (--wait).
