@@ -255,8 +255,40 @@
                         ]
                     },
                     {
-                        "description": "F7/F8/F9 = Spotify previous/play-pause/next everywhere (F8 opens Spotify if not running)",
+                        "description": "F7/F8/F9 = Spotify previous/play-pause/next everywhere (F8 opens Spotify if not running); Cmd+F7/F9 = Spotify volume -/+",
                         "manipulators": [
+                            {
+                                "type": "basic",
+                                "from": {
+                                    "key_code": "f7",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "command"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "shell_command": "pgrep -qx Spotify && osascript -e 'tell application \"Spotify\" to set sound volume to (sound volume - 10)'"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "basic",
+                                "from": {
+                                    "key_code": "f9",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "command"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "shell_command": "pgrep -qx Spotify && osascript -e 'tell application \"Spotify\" to set sound volume to (sound volume + 10)'"
+                                    }
+                                ]
+                            },
                             {
                                 "type": "basic",
                                 "from": {
