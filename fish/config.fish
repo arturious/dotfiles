@@ -36,8 +36,8 @@ if status is-interactive
 
     alias ll 'eza -la -F --icons=auto --hyperlink=auto --sort=date --reverse --no-filesize --no-time --no-user --git --git-repos'
     alias vim nvim
-    alias cc 'claude --continue'
-    alias cr 'claude --resume'
+    abbr -a cc 'claude --continue'
+    abbr -a cr 'claude --resume'
 
     # `spotify`: re-apply SpotX (Spotify adblock) after a Spotify update.
     function spotify

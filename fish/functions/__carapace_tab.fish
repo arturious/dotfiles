@@ -1,6 +1,7 @@
-# Loads carapace (~40ms) on the first Tab instead of at shell start.
+# Loads carapace (~40ms) on the first Tab instead of at shell start,
+# then hands Tab to the fzf picker (__fzf_complete).
 function __carapace_tab
-    bind tab complete
+    bind tab __fzf_complete
     carapace _carapace fish | source
-    commandline -f complete
+    __fzf_complete
 end
