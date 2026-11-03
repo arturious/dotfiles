@@ -1,7 +1,7 @@
--- С зажатым Option ведёшь одним пальцем вверх/вниз у левого края трекпада -
--- яркость, у правого - громкость, с системной плашкой (как Slidr / Glissé).
--- Жест начинается, только если палец коснулся узкой полосы у края, пока
--- зажат Option, и пошёл вертикально; пока он идёт,
+-- Ведёшь одним пальцем вверх/вниз у левого края трекпада - яркость,
+-- у правого - громкость, с системной плашкой (как Slidr / Glissé).
+-- Жест начинается, только если палец коснулся узкой полосы у края
+-- и пошёл вертикально; пока он идёт,
 -- курсор стоит на месте. Сразу после набора текста не срабатывает.
 -- Нужно разрешение Accessibility для Hammerspoon.
 
@@ -51,7 +51,6 @@ local function onGesture(e)
 
   if not slide then
     if t.phase ~= "began" then return false end
-    if not hs.eventtap.checkKeyboardModifiers().alt then return false end
     if hs.timer.secondsSinceEpoch() - lastKey < TYPE_PAUSE then return false end
     local side = (p.x <= EDGE and "left") or (p.x >= 1 - EDGE and "right") or nil
     if side then
