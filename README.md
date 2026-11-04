@@ -59,6 +59,7 @@ Run `chezmoi diff` first if unsure which side is newer.
 | `dot_config/private_karabiner/` | `~/.config/karabiner/` (Karabiner backups are ignored) |
 | `dot_config/starship.toml` | `~/.config/starship.toml` |
 | `dot_config/tmux/` | `~/.config/tmux/` |
+| `dot_config/cursor/` | `~/.config/cursor/` (settings, custom.css, fix.sh, extensions.txt; symlinked into Application Support by a script) |
 | `dot_config/hammerspoon/` | `~/.config/hammerspoon/` (MJConfigFile set in `macos/defaults.sh`) |
 | `Brewfile` | not deployed, used by the Homebrew script |
 | `macos/defaults.sh` | not deployed, run by the defaults script |
@@ -70,6 +71,11 @@ lists what stays out of `$HOME`, `.chezmoi.toml.tmpl` becomes
 
 ## Cursor
 
-Cursor has no account-based settings sync, so its settings are kept out of this
-repo, in a secret Gist: https://gist.github.com/arturious/969c4270882a5a5b7ebb33d30fedeb55
-(`settings.json`, `custom.css`, `fix.sh`, `extensions.txt`).
+Cursor only reads settings from `~/Library/Application Support/Cursor/User`.
+The real files live in `dot_config/cursor/` (deployed to `~/.config/cursor/`) and
+`run_onchange_after_link-cursor.sh.tmpl` symlinks `settings.json` (and
+`keybindings.json` if added) into Application Support, then installs any
+extension from `extensions.txt` that is missing. Settings changed in the Cursor
+UI land in `~/.config/cursor/settings.json`; pull them back with `chezmoi re-add`.
+Refresh the extension list with
+`cursor --list-extensions > ~/.config/cursor/extensions.txt && chezmoi re-add`.

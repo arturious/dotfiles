@@ -1,0 +1,6 @@
+alefragnani.project-manager
+anysphere.remote-ssh
+arturious.solarized-kuro
+eamodio.gitlens
+file-icons.file-icons
+s-h-a-d-o-w.vscode-custom-css
