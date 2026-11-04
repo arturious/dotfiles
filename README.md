@@ -79,7 +79,7 @@ which are never committed.
 
 Cursor only reads settings from `~/Library/Application Support/Cursor/User`.
 The real files live in `dot_config/cursor/` (deployed to `~/.config/cursor/`) and
-`run_onchange_after_link-cursor.sh.tmpl` symlinks `settings.json` (and
+`run_after_link-cursor.sh.tmpl` (every apply) symlinks `settings.json` (and
 `keybindings.json` if added) into Application Support, then installs any
 extension from `extensions.txt` that is missing. Settings changed in the Cursor
 UI land in `~/.config/cursor/settings.json`; pull them back with `chezmoi re-add`.
