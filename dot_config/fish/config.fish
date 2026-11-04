@@ -38,6 +38,7 @@ if status is-interactive
     alias vim nvim
     abbr -a cc 'claude --continue'
     abbr -a cr 'claude --resume'
+    abbr -a cz chezmoi
 
     # `spotify`: re-apply SpotX (Spotify adblock) after a Spotify update.
     function spotify

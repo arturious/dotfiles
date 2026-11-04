@@ -1,4 +1,4 @@
-# brew bundle --file ~/dotfiles/Brewfile
+# Installed by chezmoi apply (run_onchange_before_install-homebrew-packages.sh.tmpl).
 
 # Fonts
 cask "font-jetbrains-mono-nerd-font"
@@ -8,6 +8,7 @@ cask "karabiner-elements"
 cask "hammerspoon"
 
 # CLI
+brew "chezmoi"
 brew "starship"
 brew "fish"
 brew "carapace"   # completions for fish (fish/config.fish)
