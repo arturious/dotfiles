@@ -22,7 +22,7 @@ On a Mac without Homebrew, the first script installs it (and Brewfile's
 | `run_onchange_before_install-homebrew-packages.sh.tmpl` | Brewfile changed | install Homebrew if missing, `brew bundle` |
 | `run_once_after_install-tmux-plugins.sh.tmpl` | once | remove stale `~/.tmux.conf` link, install TPM + plugins |
 | `run_once_after_set-fish-login-shell.sh.tmpl` | once | add fish to `/etc/shells` (sudo), `chsh` to fish |
-| `run_onchange_after_configure-macos-defaults.sh.tmpl` | `macos/defaults.sh` changed | run `macos/defaults.sh` (restarts Finder and Dock) |
+| `run_onchange_after_configure-macos-defaults.sh.tmpl` | script changed | macOS `defaults write` settings, restarts Finder and Dock |
 | `run_onchange_after_install-fish-plugins.sh.tmpl` | `fish_plugins` changed | install fisher if missing, `fisher update` |
 | `run_onchange_after_link-cursor.sh.tmpl` | extension list changed | symlink Cursor settings, install missing extensions |
 | `run_once_after_install-git-hooks.sh.tmpl` | once | `pre-commit install` (gitleaks) in this repo |
@@ -61,10 +61,8 @@ Run `chezmoi diff` first if unsure which side is newer.
 | `dot_config/tmux/` | `~/.config/tmux/` (`tmux.conf` sources theme, options, bindings, plugins, statusline) |
 | `bin/` | `~/bin/` (own scripts, on PATH via fish) |
 | `dot_config/cursor/` | `~/.config/cursor/` (settings, custom.css, fix.sh, extensions.txt; symlinked into Application Support by a script) |
-| `dot_config/hammerspoon/` | `~/.config/hammerspoon/` (MJConfigFile set in `macos/defaults.sh`) |
+| `dot_config/hammerspoon/` | `~/.config/hammerspoon/` (MJConfigFile set by the macOS defaults script) |
 | `Brewfile` | not deployed, used by the Homebrew script |
-| `macos/defaults.sh` | not deployed, run by the defaults script |
-| `userscripts/` | not deployed, browser userscripts installed from the raw GitHub URL |
 
 `executable_` / `private_` / `dot_` are chezmoi name prefixes; `.chezmoiignore`
 lists what stays out of `$HOME`, `.chezmoi.toml.tmpl` becomes
