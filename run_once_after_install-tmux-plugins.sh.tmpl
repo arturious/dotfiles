@@ -1,0 +1,17 @@
+{{- if eq .chezmoi.os "darwin" -}}
+#!/bin/bash
+# tmux plugin manager (TPM) and the plugins listed in tmux.conf.
+set -euo pipefail
+[ -x /opt/homebrew/bin/brew ] && eval "$(/opt/homebrew/bin/brew shellenv)"
+
+# ~/.tmux.conf would win over ~/.config/tmux/tmux.conf: drop the old symlink.
+if [ -L "$HOME/.tmux.conf" ]; then
+  rm "$HOME/.tmux.conf"
+fi
+
+tpm_dir="$HOME/.tmux/plugins/tpm"
+if [ ! -d "$tpm_dir" ]; then
+  git clone --depth 1 https://github.com/tmux-plugins/tpm "$tpm_dir"
+fi
+"$tpm_dir/bin/install_plugins"
+{{ end -}}

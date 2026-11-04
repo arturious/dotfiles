@@ -1,0 +1,12 @@
+{{- if eq .chezmoi.os "darwin" -}}
+#!/bin/bash
+# fish as the login shell (adds it to /etc/shells first, needs sudo once).
+set -euo pipefail
+[ -x /opt/homebrew/bin/brew ] && eval "$(/opt/homebrew/bin/brew shellenv)"
+
+fish_path="$(command -v fish || true)"
+if [ -n "$fish_path" ] && [ "$SHELL" != "$fish_path" ]; then
+  grep -qxF "$fish_path" /etc/shells || echo "$fish_path" | sudo tee -a /etc/shells >/dev/null
+  chsh -s "$fish_path" || echo "!! chsh failed, run manually: chsh -s \"$fish_path\""
+fi
+{{ end -}}

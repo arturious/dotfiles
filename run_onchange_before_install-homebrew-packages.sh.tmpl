@@ -1,0 +1,18 @@
+{{- if eq .chezmoi.os "darwin" -}}
+#!/bin/bash
+# Installs Homebrew if missing, then everything in the Brewfile.
+# Brewfile hash: {{ include "Brewfile" | sha256sum }}
+set -euo pipefail
+
+if ! command -v brew >/dev/null 2>&1 && [ ! -x /opt/homebrew/bin/brew ]; then
+  NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+fi
+for candidate in /opt/homebrew/bin/brew /usr/local/bin/brew; do
+  if [ -x "$candidate" ]; then
+    eval "$("$candidate" shellenv)"
+    break
+  fi
+done
+
+brew bundle --file={{ joinPath .chezmoi.sourceDir "Brewfile" | quote }}
+{{ end -}}

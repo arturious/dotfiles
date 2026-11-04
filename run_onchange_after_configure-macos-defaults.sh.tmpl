@@ -1,0 +1,9 @@
+{{- if eq .chezmoi.os "darwin" -}}
+#!/bin/bash
+# Re-runs macos/defaults.sh whenever it changes (it only does `defaults write`
+# and restarts Finder and Dock, so running it again is harmless).
+# macos/defaults.sh hash: {{ include "macos/defaults.sh" | sha256sum }}
+set -euo pipefail
+
+bash {{ joinPath .chezmoi.sourceDir "macos/defaults.sh" | quote }}
+{{ end -}}

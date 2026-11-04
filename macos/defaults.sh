@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# macOS settings. Run: bash ~/dotfiles/macos/defaults.sh
+# macOS settings. chezmoi apply runs this again whenever it changes
+# (run_onchange_after_configure-macos-defaults.sh.tmpl); by hand: bash macos/defaults.sh
 
 defaults write -g NSConvolutionOverride1 -float 12
 defaults write -g NSSplitViewItemSidebarDefaultsToFloatingAppearance -bool false
