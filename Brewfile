@@ -11,7 +11,7 @@ cask "hammerspoon"
 brew "chezmoi"
 brew "starship"
 brew "fish"
-brew "carapace"   # completions for fish (fish/config.fish)
+brew "carapace"   # completions for fish (~/.config/fish/config.fish)
 brew "tmux"
 brew "fzf"
 brew "zoxide"
