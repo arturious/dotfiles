@@ -1,7 +1,7 @@
--- Тап или нажатие тремя пальцами по трекпаду = клик средней кнопкой
--- (как MiddleClick). Тап срабатывает, если три пальца коснулись и почти сразу
--- отпустили, не сдвинувшись; нажатие - обычный (или правый) клик, пока на
--- трекпаде три пальца. Логика и пороги как в github.com/artginzburg/MiddleClick.
+-- Физическое нажатие тремя пальцами по трекпаду = клик средней кнопкой
+-- (как MiddleClick). Тап тремя пальцами ничего не делает. Нажатие и начало
+-- перетаскивания тремя пальцами приходят одинаковым событием, поэтому их
+-- различает сдвиг курсора (см. onMouse).
 -- Системный тап тремя пальцами (поиск по слову) должен быть выключен.
 -- Нужно разрешение Accessibility для Hammerspoon.
 
@@ -73,13 +73,14 @@ local function onMouse(e)
 
   if pressing == "held" then
     if UP[kind] then
+      -- Оба события средней кнопки отправляются по порядку отсюда, а исходное
+      -- отпускание гасится: иначе оно могло прийти раньше нажатия.
       pressing = false
+      log("press click", hs.inspect(held.ev:getFlags()))
       post(held.ev, types.otherMouseDown)
-      e:setType(types.otherMouseUp)
-      e:setProperty(props.mouseEventButtonNumber, 2)
+      post(e:copy(), types.otherMouseUp)
       held = nil
-      log("press click")
-      return false
+      return true
     end
     local p = e:location()
     if math.abs(p.x - held.pos.x) > DRAG_PX or math.abs(p.y - held.pos.y) > DRAG_PX then
@@ -114,10 +115,11 @@ local function onGesture(e)
     if tap and tap.ok and tap.max == 3 and now - tap.start <= TAP_TIME
         and now - lastPress > TAP_TIME * 0.75     -- только что было нажатие
         and now - lastMiddle > TAP_TIME * 0.3 then -- не два клика подряд
-      log("tap click")
+      -- тап тремя пальцами ничего не делает: гасим только левый клик,
+      -- который macOS шлёт на него (с включённым перетаскиванием тремя пальцами)
+      log("tap swallowed")
       lastMiddle = now
       swallowUntil = now + SWALLOW
-      hs.eventtap.otherClick(hs.mouse.absolutePosition(), nil, 2)
     end
     tap = nil
     return false
