@@ -8,16 +8,12 @@ the chezmoi source state (layout borrowed from
 ## New Mac
 
 ```sh
-git clone https://github.com/arturious/dotfiles ~/dotfiles
-~/dotfiles/install.sh
+sh -c "$(curl -fsLS get.chezmoi.io)" -- -b ~/.local/bin init --apply --source ~/dotfiles arturious
 ```
 
-`install.sh` installs Homebrew (if missing) and chezmoi, then runs
-`chezmoi init --apply --source ~/dotfiles`. Without a checkout the same is:
-
-```sh
-chezmoi init --apply arturious   # clones into ~/.local/share/chezmoi
-```
+This installs chezmoi, clones this repo into `~/dotfiles` and applies it.
+On a Mac without Homebrew, the first script installs it (and Brewfile's
+`chezmoi` replaces the bootstrap binary).
 
 `chezmoi apply` also runs the scripts at the repo root (macOS only):
 

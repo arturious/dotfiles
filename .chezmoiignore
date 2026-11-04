@@ -1,6 +1,5 @@
 # Repo-only files: kept in git, never written to $HOME.
 README.md
-install.sh
 Brewfile
 Brewfile.lock.json
 macos/
