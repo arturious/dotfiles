@@ -24,7 +24,7 @@ On a Mac without Homebrew, the first script installs it (and Brewfile's
 | `run_once_after_set-fish-login-shell.sh.tmpl` | once | add fish to `/etc/shells` (sudo), `chsh` to fish |
 | `run_onchange_after_configure-macos-defaults.sh.tmpl` | script changed | macOS `defaults write` settings, restarts Finder and Dock |
 | `run_onchange_after_install-fish-plugins.sh.tmpl` | `fish_plugins` changed | install fisher if missing, `fisher update` |
-| `run_onchange_after_link-cursor.sh.tmpl` | extension list changed | symlink Cursor settings, install missing extensions |
+| `run_after_link-cursor.sh.tmpl` | every apply | symlink Cursor settings, install missing extensions |
 | `run_once_after_install-git-hooks.sh.tmpl` | once | `pre-commit install` (gitleaks) in this repo |
 
 ## Day to day

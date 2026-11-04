@@ -3,7 +3,7 @@
 # Cursor reads its settings only from ~/Library/Application Support/Cursor/User.
 # The real files live in ~/.config/cursor (dot_config/cursor in this repo);
 # symlink them into place and install any missing extensions.
-# extensions.txt hash: {{ include "dot_config/cursor/extensions.txt" | sha256sum }}
+# Runs on every apply: a Cursor reinstall can replace the symlink with a fresh file.
 set -euo pipefail
 
 src="$HOME/.config/cursor"
