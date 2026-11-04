@@ -1,0 +1,11 @@
+{{ if eq .chezmoi.os "darwin" -}}
+#!/bin/bash
+# fisher (fish plugin manager) and the plugins in ~/.config/fish/fish_plugins.
+# fish_plugins hash: {{ include "dot_config/fish/fish_plugins" | sha256sum }}
+set -euo pipefail
+[ -x /opt/homebrew/bin/brew ] && eval "$(/opt/homebrew/bin/brew shellenv)"
+fish -c 'if not functions -q fisher
+    curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source
+end
+fisher update'
+{{ end -}}

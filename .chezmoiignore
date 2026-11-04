@@ -17,3 +17,14 @@ userscripts/
 .tmux/plugins
 .config/tmux/plugins
 .config/hammerspoon/Spoons
+
+# Fish: generated or machine-only
+.config/fish/fish_variables
+.config/fish/fish_variables*
+.config/fish/completions/
+.config/fish/conf.d/
+.config/fish/functions/fisher.fish
+.config/fish/config-local.fish
+
+# Git: machine-only
+.config/git/local.gitconfig

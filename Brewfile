@@ -20,3 +20,5 @@ brew "lazygit"
 brew "neovim"
 brew "ripgrep"
 brew "fd"
+brew "gitleaks"     # secret scan, run by pre-commit in this repo
+brew "pre-commit"

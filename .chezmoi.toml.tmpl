@@ -1,3 +1,6 @@
+{{- $name := promptStringOnce . "name" "Full name" -}}
+{{- $email := promptStringOnce . "email" "Email address" -}}
+{{- $githubUser := promptStringOnce . "githubUser" "GitHub username" -}}
 # `chezmoi init` renders this to ~/.config/chezmoi/chezmoi.toml.
 # Keep the source where it was cloned (e.g. ~/dotfiles), not ~/.local/share/chezmoi.
 sourceDir = {{ .chezmoi.sourceDir | quote }}
@@ -8,3 +11,8 @@ sourceDir = {{ .chezmoi.sourceDir | quote }}
     command = "/Applications/Cursor.app/Contents/Resources/app/bin/cursor"
     args = ["--wait"]
     apply = true
+
+[data]
+    name = {{ $name | quote }}
+    email = {{ $email | quote }}
+    githubUser = {{ $githubUser | quote }}

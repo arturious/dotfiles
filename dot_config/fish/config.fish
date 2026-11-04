@@ -1,4 +1,4 @@
-fish_add_path --global --path /opt/homebrew/opt/rustup/bin ~/.local/bin
+fish_add_path --global --path /opt/homebrew/opt/rustup/bin ~/.local/bin ~/bin
 
 # Outside is-interactive: tmux popups run `fish -c` and need these too.
 set -gx FORCE_COLOR 3
@@ -50,4 +50,10 @@ if status is-interactive
     function warp
         cd ~/warp; and ./wireproxy -c wgcf-profile.conf
     end
+end
+
+# Machine-only settings and secrets (tokens, work env): not in the repo.
+set -l LOCAL_CONFIG (dirname (status --current-filename))/config-local.fish
+if test -f $LOCAL_CONFIG
+    source $LOCAL_CONFIG
 end

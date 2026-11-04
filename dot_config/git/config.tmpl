@@ -1,0 +1,29 @@
+# Deployed to ~/.config/git/config (git reads it when ~/.gitconfig is absent).
+# Name, email and GitHub user come from chezmoi data (.chezmoi.toml.tmpl).
+[user]
+	name = {{ .name | quote }}
+	email = {{ .email | quote }}
+
+[github]
+	user = {{ .githubUser | quote }}
+
+[init]
+	defaultBranch = main
+
+[core]
+	ignorecase = false
+
+[push]
+	default = simple
+	autoSetupRemote = true
+
+[pull]
+	rebase = false
+
+[color]
+	ui = auto
+
+[include]
+	path = ~/.config/git/aliases.gitconfig
+	# Machine-only settings, not in the repo.
+	path = ~/.config/git/local.gitconfig

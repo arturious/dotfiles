@@ -27,6 +27,9 @@ chezmoi init --apply arturious   # clones into ~/.local/share/chezmoi
 | `run_once_after_install-tmux-plugins.sh.tmpl` | once | remove stale `~/.tmux.conf` link, install TPM + plugins |
 | `run_once_after_set-fish-login-shell.sh.tmpl` | once | add fish to `/etc/shells` (sudo), `chsh` to fish |
 | `run_onchange_after_configure-macos-defaults.sh.tmpl` | `macos/defaults.sh` changed | run `macos/defaults.sh` (restarts Finder and Dock) |
+| `run_onchange_after_install-fish-plugins.sh.tmpl` | `fish_plugins` changed | install fisher if missing, `fisher update` |
+| `run_onchange_after_link-cursor.sh.tmpl` | extension list changed | symlink Cursor settings, install missing extensions |
+| `run_once_after_install-git-hooks.sh.tmpl` | once | `pre-commit install` (gitleaks) in this repo |
 
 ## Day to day
 
@@ -55,10 +58,12 @@ Run `chezmoi diff` first if unsure which side is newer.
 | Source | Target |
 | --- | --- |
 | `dot_claude/` | `~/.claude/` (settings, statusline.py, themes/custom.json) |
-| `dot_config/fish/` | `~/.config/fish/` (config.fish + own functions; fisher's files are left alone) |
+| `dot_config/fish/` | `~/.config/fish/` (config.fish, own functions, `fish_plugins` for fisher; `config-local.fish` is machine-only and ignored) |
+| `dot_config/git/` | `~/.config/git/` (`config` from a template with name/email from `chezmoi init`, aliases, global `ignore`; `local.gitconfig` is machine-only) |
 | `dot_config/private_karabiner/` | `~/.config/karabiner/` (Karabiner backups are ignored) |
 | `dot_config/starship.toml` | `~/.config/starship.toml` |
-| `dot_config/tmux/` | `~/.config/tmux/` |
+| `dot_config/tmux/` | `~/.config/tmux/` (`tmux.conf` sources theme, options, bindings, plugins, statusline) |
+| `bin/` | `~/bin/` (own scripts, on PATH via fish) |
 | `dot_config/cursor/` | `~/.config/cursor/` (settings, custom.css, fix.sh, extensions.txt; symlinked into Application Support by a script) |
 | `dot_config/hammerspoon/` | `~/.config/hammerspoon/` (MJConfigFile set in `macos/defaults.sh`) |
 | `Brewfile` | not deployed, used by the Homebrew script |
@@ -68,6 +73,13 @@ Run `chezmoi diff` first if unsure which side is newer.
 `executable_` / `private_` / `dot_` are chezmoi name prefixes; `.chezmoiignore`
 lists what stays out of `$HOME`, `.chezmoi.toml.tmpl` becomes
 `~/.config/chezmoi/chezmoi.toml` on `chezmoi init`.
+
+## Secrets
+
+`gitleaks` scans every commit through a pre-commit hook (`.pre-commit-config.yaml`)
+and every push through GitHub Actions (`.github/workflows/gitleaks.yml`).
+Keep tokens in `~/.config/fish/config-local.fish` or `~/.config/git/local.gitconfig`,
+which are never committed.
 
 ## Cursor
 

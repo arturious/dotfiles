@@ -1,0 +1,14 @@
+# Global gitignore: git reads ~/.config/git/ignore by default.
+.DS_Store
+*~
+.*~
+*.sw[po]
+*.log
+node_modules/
+.env
+.env.*
+!.env.example
+*.bak
+
+# Claude Code local settings
+settings.local.json
