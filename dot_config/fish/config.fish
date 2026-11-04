@@ -3,6 +3,7 @@ fish_add_path --global --path /opt/homebrew/opt/rustup/bin ~/.local/bin
 # Outside is-interactive: tmux popups run `fish -c` and need these too.
 set -gx FORCE_COLOR 3
 set -gx CLAUDE_CODE_TMUX_TRUECOLOR 1
+set -gx XDG_CONFIG_HOME $HOME/.config
 
 set -g fish_greeting
 
