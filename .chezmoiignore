@@ -1,0 +1,19 @@
+# Repo-only files: kept in git, never written to $HOME.
+README.md
+install.sh
+Brewfile
+Brewfile.lock.json
+macos/
+userscripts/
+
+.DS_Store
+**/.DS_Store
+
+# Karabiner writes these next to karabiner.json (see dot_config/private_karabiner/.gitignore).
+.config/karabiner/automatic_backups
+.config/karabiner/assets
+
+# Plugins installed at runtime.
+.tmux/plugins
+.config/tmux/plugins
+.hammerspoon/Spoons
