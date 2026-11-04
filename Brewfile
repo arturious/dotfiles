@@ -7,12 +7,12 @@ cask "font-jetbrains-mono-nerd-font"
 cask "karabiner-elements"
 cask "hammerspoon"
 cask "ghostty"
-# Installed outside Homebrew on this Mac and macOS blocks adopting it; skip if present.
-cask "cursor" unless File.exist?("/Applications/Cursor.app")
+cask "cursor"
 cask "raycast"
 cask "zen"
 cask "1password"
 cask "itsycal"
+cask "grok-bot"
 
 # CLI
 brew "chezmoi"
