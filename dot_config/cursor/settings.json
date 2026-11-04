@@ -88,4 +88,8 @@
         "*.yaml.tmpl": "yaml",
         "**/git/config.tmpl": "properties",
     },
+    "cursor.composer.showEmptyStateTips": false,
+    "cursor.composer.shouldChimeAfterChatFinishes": true,
+    "cursor.general.fontSmoothingAntialiased_v2": false,
+    "cursor.chatMaxWidth": 1600,
 }
