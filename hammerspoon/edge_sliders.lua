@@ -8,7 +8,7 @@
 local M = {}
 
 local EDGE       = 0.05    -- ширина полосы у края, доля ширины трекпада
-local START_Y    = 0.011   -- сколько пройти вертикально, чтобы жест начался
+local START_Y    = 0.015   -- сколько пройти вертикально, чтобы жест начался
 local MAX_DRIFT  = 0.045   -- если до начала увело вбок дальше, это не жест
 local TYPE_PAUSE = 0.5     -- секунд после нажатия клавиши, когда не срабатывает
 
@@ -54,7 +54,8 @@ local function onGesture(e)
     if hs.timer.secondsSinceEpoch() - lastKey < TYPE_PAUSE then return false end
     local side = (p.x <= EDGE and "left") or (p.x >= 1 - EDGE and "right") or nil
     if side then
-      slide = { id = t.identity, side = side, startX = p.x, startY = p.y, lastY = p.y, active = false }
+      slide = { id = t.identity, side = side, startX = p.x, startY = p.y, lastY = p.y, active = false,
+                mouse = hs.mouse.absolutePosition() }
     end
     return false
   end
@@ -89,9 +90,12 @@ end
 function M.start()
   M.gestureTap = hs.eventtap.new({ hs.eventtap.event.types.gesture }, onGesture):start()
 
-  -- Пока жест идёт, курсор не двигается.
+  -- С момента касания полосы у края курсор стоит на месте: движение гасится,
+  -- а курсор возвращается в точку касания. Если жест отменился - снова двигается.
   M.pointerTap = hs.eventtap.new({ hs.eventtap.event.types.mouseMoved }, function()
-    return slide ~= nil and slide.active
+    if slide == nil then return false end
+    hs.mouse.absolutePosition(slide.mouse)
+    return true
   end):start()
 
   M.keyTap = hs.eventtap.new({ hs.eventtap.event.types.keyDown }, function()
