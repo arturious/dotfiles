@@ -46,7 +46,6 @@ the file back into the repo before the next `apply` overwrites it:
 chezmoi re-add   # all managed files, or name them:
 chezmoi re-add ~/.config/karabiner/karabiner.json \
   "$HOME/Library/Application Support/Cursor/User/settings.json" \
-  "$HOME/Library/Application Support/Code/User/settings.json" \
   ~/.claude/settings.json
 ```
 
@@ -62,8 +61,8 @@ Run `chezmoi diff` first if unsure which side is newer.
 | `dot_config/starship.toml` | `~/.config/starship.toml` |
 | `dot_config/tmux/` | `~/.config/tmux/` |
 | `dot_cursor/` | `~/.cursor/` (custom.css, fix.sh) |
-| `dot_hammerspoon/` | `~/.hammerspoon/` |
-| `private_Library/private_Application Support/` | `~/Library/Application Support/` (Cursor, Code, Ghostty, lazygit) |
+| `dot_config/hammerspoon/` | `~/.config/hammerspoon/` (MJConfigFile set in `macos/defaults.sh`) |
+| `private_Library/private_Application Support/` | `~/Library/Application Support/` (Cursor only; Ghostty and lazygit live in `dot_config/`) |
 | `Brewfile` | not deployed, used by the Homebrew script |
 | `macos/defaults.sh` | not deployed, run by the defaults script |
 | `userscripts/` | not deployed, browser userscripts installed from the raw GitHub URL |

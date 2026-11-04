@@ -16,4 +16,6 @@ defaults write com.apple.dock expose-animation-duration -float 0.1
 defaults write -g NSWindowShouldDragOnGesture -bool true
 defaults write com.apple.finder WarnOnEmptyTrash -bool false
 
+defaults write org.hammerspoon.Hammerspoon MJConfigFile "~/.config/hammerspoon/init.lua"
+
 killall Finder Dock

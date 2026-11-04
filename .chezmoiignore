@@ -16,4 +16,4 @@ userscripts/
 # Plugins installed at runtime.
 .tmux/plugins
 .config/tmux/plugins
-.hammerspoon/Spoons
+.config/hammerspoon/Spoons
