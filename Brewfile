@@ -6,6 +6,13 @@ cask "font-jetbrains-mono-nerd-font"
 # Apps
 cask "karabiner-elements"
 cask "hammerspoon"
+cask "ghostty"
+# Installed outside Homebrew on this Mac and macOS blocks adopting it; skip if present.
+cask "cursor" unless File.exist?("/Applications/Cursor.app")
+cask "raycast"
+cask "zen"
+cask "1password"
+cask "itsycal"
 
 # CLI
 brew "chezmoi"
@@ -22,3 +29,7 @@ brew "ripgrep"
 brew "fd"
 brew "gitleaks"     # secret scan, run by pre-commit in this repo
 brew "pre-commit"
+brew "gh"
+brew "node"
+cask "1password-cli"
+cask "claude-code"
