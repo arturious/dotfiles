@@ -45,7 +45,6 @@ the file back into the repo before the next `apply` overwrites it:
 ```sh
 chezmoi re-add   # all managed files, or name them:
 chezmoi re-add ~/.config/karabiner/karabiner.json \
-  "$HOME/Library/Application Support/Cursor/User/settings.json" \
   ~/.claude/settings.json
 ```
 
@@ -60,9 +59,7 @@ Run `chezmoi diff` first if unsure which side is newer.
 | `dot_config/private_karabiner/` | `~/.config/karabiner/` (Karabiner backups are ignored) |
 | `dot_config/starship.toml` | `~/.config/starship.toml` |
 | `dot_config/tmux/` | `~/.config/tmux/` |
-| `dot_cursor/` | `~/.cursor/` (custom.css, fix.sh) |
 | `dot_config/hammerspoon/` | `~/.config/hammerspoon/` (MJConfigFile set in `macos/defaults.sh`) |
-| `private_Library/private_Application Support/` | `~/Library/Application Support/` (Cursor only; Ghostty and lazygit live in `dot_config/`) |
 | `Brewfile` | not deployed, used by the Homebrew script |
 | `macos/defaults.sh` | not deployed, run by the defaults script |
 | `userscripts/` | not deployed, browser userscripts installed from the raw GitHub URL |
@@ -70,3 +67,9 @@ Run `chezmoi diff` first if unsure which side is newer.
 `executable_` / `private_` / `dot_` are chezmoi name prefixes; `.chezmoiignore`
 lists what stays out of `$HOME`, `.chezmoi.toml.tmpl` becomes
 `~/.config/chezmoi/chezmoi.toml` on `chezmoi init`.
+
+## Cursor
+
+Cursor has no account-based settings sync, so its settings are kept out of this
+repo, in a secret Gist: https://gist.github.com/arturious/969c4270882a5a5b7ebb33d30fedeb55
+(`settings.json`, `custom.css`, `fix.sh`, `extensions.txt`).
