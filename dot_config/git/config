@@ -1,11 +1,10 @@
 # Deployed to ~/.config/git/config (git reads it when ~/.gitconfig is absent).
-# Name, email and GitHub user come from chezmoi data (.chezmoi.toml.tmpl).
 [user]
-	name = {{ .name | quote }}
-	email = {{ .email | quote }}
+	name = arx
+	email = 81509503+arturious@users.noreply.github.com
 
 [github]
-	user = {{ .githubUser | quote }}
+	user = arturious
 
 [init]
 	defaultBranch = main

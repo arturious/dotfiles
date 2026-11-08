@@ -1,9 +1,10 @@
-{{- $name := promptStringOnce . "name" "Full name" -}}
-{{- $email := promptStringOnce . "email" "Email address" -}}
-{{- $githubUser := promptStringOnce . "githubUser" "GitHub username" -}}
 # `chezmoi init` renders this to ~/.config/chezmoi/chezmoi.toml.
 # Keep the source where it was cloned (e.g. ~/dotfiles), not ~/.local/share/chezmoi.
 sourceDir = {{ .chezmoi.sourceDir | quote }}
+
+# Plain files in $HOME are symlinks to this repo: edits show up both ways
+# without apply / re-add.
+mode = "symlink"
 
 # `chezmoi edit <file>` opens the source file in Cursor and applies it once
 # the Cursor tab is closed (--wait).
@@ -11,8 +12,3 @@ sourceDir = {{ .chezmoi.sourceDir | quote }}
     command = "/Applications/Cursor.app/Contents/Resources/app/bin/cursor"
     args = ["--wait"]
     apply = true
-
-[data]
-    name = {{ $name | quote }}
-    email = {{ $email | quote }}
-    githubUser = {{ $githubUser | quote }}

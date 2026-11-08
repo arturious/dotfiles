@@ -2,13 +2,11 @@
 README.md
 Brewfile
 Brewfile.lock.json
+# Karabiner's folder: ~/.config/karabiner links to it (dot_config/symlink_karabiner.tmpl).
+karabiner
 
 .DS_Store
 **/.DS_Store
-
-# Karabiner writes these next to karabiner.json (see dot_config/private_karabiner/.gitignore).
-.config/karabiner/automatic_backups
-.config/karabiner/assets
 
 # Plugins installed at runtime.
 .tmux/plugins

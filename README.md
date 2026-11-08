@@ -2,8 +2,8 @@
 
 My macOS dotfiles, managed with [chezmoi](https://chezmoi.io). The repo root is
 the chezmoi source state (layout borrowed from
-[craftzdog/dotfiles](https://github.com/craftzdog/dotfiles)); files are
-**copied** into `$HOME`, not symlinked.
+[craftzdog/dotfiles](https://github.com/craftzdog/dotfiles)). Files in `$HOME`
+are **symlinks** into this repo (`mode = "symlink"`).
 
 ## New Mac
 
@@ -30,24 +30,21 @@ On a Mac without Homebrew, the first script installs it (and Brewfile's
 ## Day to day
 
 ```sh
-chezmoi edit ~/.config/fish/config.fish   # opens the source in Cursor, applies on close
-chezmoi diff                              # what apply would change
-chezmoi apply                             # write source -> $HOME
+chezmoi add ~/.config/foo/bar.toml       # start managing a file (becomes a symlink)
+chezmoi apply                             # after adding, renaming or removing files
+chezmoi status                            # anything out of place
 chezmoi cd                                # git commit / push from the source dir
 ```
 
 `cz` is a fish abbreviation for `chezmoi`.
 
-Some apps rewrite their own config. After changing settings in the app, pull
-the file back into the repo before the next `apply` overwrites it:
+Editing a file in this repo, or in the app that owns it, changes the same
+file: no `apply` or `re-add` needed. If an app replaces its symlink with a
+regular file, `chezmoi status` shows it; `chezmoi re-add` then `chezmoi apply`
+restores the link.
 
-```sh
-chezmoi re-add   # all managed files, or name them:
-chezmoi re-add ~/.config/karabiner/karabiner.json \
-  ~/.claude/settings.json
-```
-
-Run `chezmoi diff` first if unsure which side is newer.
+New scripts: no `executable_` prefix (it would make chezmoi copy the file);
+`chmod +x` it in the repo instead.
 
 ## Structure
 
@@ -55,8 +52,8 @@ Run `chezmoi diff` first if unsure which side is newer.
 | --- | --- |
 | `dot_claude/` | `~/.claude/` (settings, statusline.py, themes/custom.json) |
 | `dot_config/fish/` | `~/.config/fish/` (config.fish, own functions, `fish_plugins` for fisher; `config-local.fish` is machine-only and ignored) |
-| `dot_config/git/` | `~/.config/git/` (`config` from a template with name/email from `chezmoi init`, aliases, global `ignore`; `local.gitconfig` is machine-only) |
-| `dot_config/private_karabiner/` | `~/.config/karabiner/` (Karabiner backups are ignored) |
+| `dot_config/git/` | `~/.config/git/` (`config`, aliases, global `ignore`; `local.gitconfig` is machine-only) |
+| `karabiner/` | `~/.config/karabiner` is a symlink to the whole folder (`dot_config/symlink_karabiner.tmpl`): Karabiner ignores a symlinked `karabiner.json`. Backups and assets are git-ignored |
 | `dot_config/starship.toml` | `~/.config/starship.toml` |
 | `dot_config/tmux/` | `~/.config/tmux/` (`tmux.conf` sources theme, options, bindings, plugins, statusline) |
 | `bin/` | `~/bin/` (own scripts, on PATH via fish) |
@@ -64,7 +61,7 @@ Run `chezmoi diff` first if unsure which side is newer.
 | `dot_config/hammerspoon/` | `~/.config/hammerspoon/` (MJConfigFile set by the macOS defaults script) |
 | `Brewfile` | not deployed, used by the Homebrew script |
 
-`executable_` / `private_` / `dot_` are chezmoi name prefixes; `.chezmoiignore`
+`dot_` / `symlink_` are chezmoi name prefixes; `.chezmoiignore`
 lists what stays out of `$HOME`, `.chezmoi.toml.tmpl` becomes
 `~/.config/chezmoi/chezmoi.toml` on `chezmoi init`.
 
