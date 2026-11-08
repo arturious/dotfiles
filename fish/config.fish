@@ -1,4 +1,6 @@
-fish_add_path --global --path /opt/homebrew/opt/rustup/bin ~/.local/bin ~/bin
+# Homebrew first: macOS puts it after /usr/bin, so system python3 etc. won.
+fish_add_path --global --move --path /opt/homebrew/bin
+fish_add_path --global --path ~/.local/bin ~/bin
 
 # Outside is-interactive: tmux popups run `fish -c` and need these too.
 set -gx FORCE_COLOR 3
