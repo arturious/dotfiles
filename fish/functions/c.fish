@@ -1,5 +1,4 @@
-# `c` alone opens interactive claude; `c how do I undo a commit` runs a
-# one-shot `claude -p "..."` with all the words joined into one prompt.
+# claude
 function c
     if not set -q argv[1]
         claude
@@ -12,12 +11,12 @@ function c
 
     set -l out (mktemp)
     set -l rc (mktemp)
-    # sh + disown instead of a fish job: no "Job 1 has ended" message.
+    # background
     sh -c 'claude -p "$1" >"$2" 2>&1; echo $? >"$3"' _ "$argv" $out $rc &
     set -l pid $last_pid
     disown $pid
 
-    # Ctrl+C: claude is a child of the sh wrapper, so kill it explicitly.
+    # ctrl+c
     function __c_cancel --on-signal SIGINT --inherit-variable pid --inherit-variable out --inherit-variable rc
         pkill -P $pid 2>/dev/null
         kill $pid 2>/dev/null

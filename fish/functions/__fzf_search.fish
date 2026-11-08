@@ -1,10 +1,4 @@
-# fzf pickers bound in fish_user_key_bindings.fish; each inserts what was
-# picked at the cursor.
-#   files       Ctrl+O      files and folders here, preview with bat / eza
-#   git_log     Ctrl+Alt+L  commits, preview the diff with delta; inserts hashes
-#   git_status  Ctrl+Alt+S  changed files, preview the diff (bat if untracked)
-#   processes   Ctrl+Alt+P  running processes; inserts PIDs
-#   variables   Ctrl+V      shell variables, values in the preview; inserts names
+# fzf pickers
 function __fzf_search -a mode
     switch $mode
         case files
@@ -26,7 +20,7 @@ function __fzf_search -a mode
             set -l picked (git -c color.status=always status --short | \
                 fzf --ansi --multi --nth 2.. \
                     --preview 'git diff --quiet HEAD -- {-1} && bat --style=numbers --color=always {-1} || git diff HEAD -- {-1} | delta --paging=never')
-            # "XY path" or "XY old -> new": keep the (new) path.
+            # renames
             and set -l paths (string sub -s 4 -- $picked | string replace -r '.* -> ' '')
             and commandline -it -- (string escape -- $paths | string join ' ')' '
 

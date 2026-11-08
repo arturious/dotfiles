@@ -1,5 +1,4 @@
-# Ctrl+F: jump to a project. Lists ~/.config, ghq repos, gwq worktrees,
-# subfolders here and ~/dev/*, picked in fzf.
+# ctrl+f projects
 function __fzf_change_directory
     begin
         echo $HOME/.config

@@ -1,5 +1,4 @@
-# Tab: fish/carapace completions picked in fzf (tmux popup via FZF_DEFAULT_OPTS).
-# One candidate is inserted directly; no candidates does nothing.
+# tab completion
 function __fzf_complete
     set -l token (commandline -ct)
     set -l candidates (complete -C (commandline -cp))
@@ -22,7 +21,7 @@ function __fzf_complete
 
     set result (string split -m1 \t -- $result)[1]
     set -l insert (string escape --no-quoted -- $result)
-    # Keep the cursor after a directory so the next Tab goes deeper.
+    # directory
     if not string match -q -- '*/' $result
         set insert "$insert "
     end
