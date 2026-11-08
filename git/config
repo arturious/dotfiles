@@ -1,4 +1,3 @@
-# Deployed to ~/.config/git/config (git reads it when ~/.gitconfig is absent).
 [user]
 	name = arx
 	email = 81509503+arturious@users.noreply.github.com
@@ -10,6 +9,7 @@
 	defaultBranch = main
 
 [core]
+	editor = nvim
 	ignorecase = false
 	pager = delta
 
@@ -21,7 +21,23 @@
 	rebase = false
 
 [color]
+	status = auto
+	diff = auto
+	branch = auto
+	interactive = auto
+	grep = auto
 	ui = auto
+
+[diff]
+	tool = nvimdiff
+
+[difftool "nvimdiff"]
+	cmd = nvim -d \"$LOCAL\" \"$REMOTE\"
+	path =
+
+[mergetool "nvimdiff"]
+	cmd = nvim -d \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+	trustExitCode = true
 
 [include]
 	path = ~/.config/git/aliases.gitconfig

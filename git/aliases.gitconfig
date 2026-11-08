@@ -15,5 +15,7 @@
   open = "!gh browse"
   type = cat-file -t
   dump = cat-file -p
-  # add conflicted files on merge
+  # edit conflicted file on merge
+  edit-unmerged = "!f() { git ls-files --unmerged | cut -f2 | sort -u ; }; nvim `f`"
+  # add conflicted file on merge
   add-unmerged = "!f() { git ls-files --unmerged | cut -f2 | sort -u ; }; git add `f`"
