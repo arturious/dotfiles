@@ -1,13 +1,15 @@
-theme = Solarized Dark Patched
+theme = "Solarized Dark - Patched"
 background-opacity = 0.8
 background-blur = macos-glass-regular
 background = #000000
 font-family = "JetBrainsMono Nerd Font"
 font-size = 14
 font-feature = calt,cv02,cv03,cv04,cv05,cv06,cv07,cv11,cv14,cv16,cv17,cv18,cv19
-shell-integration-features = no-cursor
+shell-integration-features = no-cursor,ssh-env,ssh-terminfo
 title = " "
 cursor-style-blink = true
+#window-padding-x = 8
+#window-padding-y = 8
 confirm-close-surface = false
 notify-on-command-finish = unfocused
 notify-on-command-finish-action = notify
