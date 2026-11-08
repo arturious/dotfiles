@@ -78,16 +78,6 @@
     ],
     "diffEditor.ignoreTrimWhitespace": true,
     "workbench.colorTheme": "Solarized Kuro",
-    // chezmoi templates (.tmpl): highlight as the file they render to.
-    "files.associations": {
-        "*.sh.tmpl": "shellscript",
-        "*.toml.tmpl": "toml",
-        "*.fish.tmpl": "fish",
-        "*.json.tmpl": "json",
-        "*.yml.tmpl": "yaml",
-        "*.yaml.tmpl": "yaml",
-        "**/git/config.tmpl": "properties",
-    },
     "cursor.composer.showEmptyStateTips": false,
     "cursor.composer.shouldChimeAfterChatFinishes": true,
     "cursor.general.fontSmoothingAntialiased_v2": false,

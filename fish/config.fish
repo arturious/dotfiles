@@ -40,7 +40,6 @@ if status is-interactive
     abbr -a cc 'claude --continue'
     abbr -a cr 'claude --resume'
     alias g git
-    alias cz chezmoi
 
     # `spotify`: re-apply SpotX (Spotify adblock) after a Spotify update.
     function spotify

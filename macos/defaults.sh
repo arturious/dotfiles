@@ -1,7 +1,6 @@
-{{- if eq .chezmoi.os "darwin" -}}
 #!/bin/bash
-# macOS settings. chezmoi re-runs this script whenever its content changes
-# (it only does `defaults write` and restarts Finder and Dock).
+# macOS settings: `defaults write`, then restarts Finder and Dock.
+# Run by install.sh; safe to re-run.
 set -euo pipefail
 
 defaults write -g NSConvolutionOverride1 -float 12
@@ -21,4 +20,3 @@ defaults write com.apple.finder WarnOnEmptyTrash -bool false
 defaults write org.hammerspoon.Hammerspoon MJConfigFile "~/.config/hammerspoon/init.lua"
 
 killall Finder Dock
-{{ end -}}

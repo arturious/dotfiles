@@ -1,8 +1,0 @@
-{{ if eq .chezmoi.os "darwin" -}}
-#!/bin/bash
-# pre-commit hook in the dotfiles repo: gitleaks scans every commit for secrets.
-set -euo pipefail
-[ -x /opt/homebrew/bin/brew ] && eval "$(/opt/homebrew/bin/brew shellenv)"
-cd {{ .chezmoi.sourceDir | quote }}
-pre-commit install
-{{ end -}}

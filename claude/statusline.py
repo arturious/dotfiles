@@ -42,7 +42,7 @@ model = (payload.get("model") or {}).get("display_name") or "Claude Code"
 
 cwd = payload.get("cwd") or ""
 
-# For prefix+g in tmux/tmux.conf: pane_current_path doesn't follow
+# For prefix+g in tmux/bindings.conf: pane_current_path doesn't follow
 # Claude's cwd, so expose it as the @claude_cwd pane option.
 pane = os.environ.get("TMUX_PANE")
 if pane and cwd:

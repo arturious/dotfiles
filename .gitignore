@@ -1,2 +1,7 @@
 .DS_Store
 **/.DS_Store
+
+# Written by apps into the folders install.sh links whole.
+git/local.gitconfig
+hammerspoon/Spoons/
+tmux/plugins/
