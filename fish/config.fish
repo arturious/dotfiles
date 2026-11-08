@@ -19,6 +19,7 @@ if status is-interactive
     bind tab __carapace_tab
 
     set -gx FZF_DEFAULT_OPTS "--tmux 90%,70% --border"
+    set -gx FZF_CTRL_T_OPTS "--preview 'bat --style=numbers --color=always --line-range :500 {}'"
     fzf --fish | source
 
     set -g fish_autosuggestion_enabled 0
@@ -33,10 +34,10 @@ if status is-interactive
     set -g fish_pager_color_selected_completion cyan
     set -g fish_pager_color_selected_description yellow --italics
 
-    zoxide init fish | source
-
     alias ll 'eza -la -F --icons=auto --hyperlink=auto --sort=date --reverse --no-filesize --no-time --no-user --git --git-repos'
     alias vim nvim
+    set -gx BAT_THEME "Solarized (dark)"
+    alias less bat
     abbr -a cc 'claude --continue'
     abbr -a cr 'claude --resume'
     alias g git

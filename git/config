@@ -11,6 +11,7 @@
 
 [core]
 	ignorecase = false
+	pager = delta
 
 [push]
 	default = simple
@@ -24,5 +25,7 @@
 
 [include]
 	path = ~/.config/git/aliases.gitconfig
+	path = ~/.config/git/ghq.gitconfig
+	path = ~/.config/git/delta.gitconfig
 	# Machine-only settings, not in the repo.
 	path = ~/.config/git/local.gitconfig

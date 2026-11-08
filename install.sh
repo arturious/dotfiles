@@ -69,6 +69,9 @@ link hammerspoon                 "$HOME/.config/hammerspoon"
 # Whole dir: Karabiner doesn't reload on edits behind a symlinked file.
 link karabiner                   "$HOME/.config/karabiner"
 link lazygit                     "$HOME/.config/lazygit"
+link mise                        "$HOME/.config/mise"
+link gwq                         "$HOME/.config/gwq"
+link commitizen/.czrc            "$HOME/.czrc"
 link starship/starship.toml      "$HOME/.config/starship.toml"
 link tmux                        "$HOME/.config/tmux"
 
@@ -104,6 +107,13 @@ fish -c 'if not functions -q fisher
     curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source
 end
 fisher update'
+
+echo "==> mise (ghq)"
+mise trust "$DOTFILES_DIR/mise/config.toml"
+mise install
+
+echo "==> npm (commitizen)"
+npm install -g commitizen cz-git
 
 echo "==> pre-commit (gitleaks)"
 (cd "$DOTFILES_DIR" && pre-commit install)
