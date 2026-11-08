@@ -35,7 +35,7 @@ if status is-interactive
 
     # aliases
     alias ll 'eza -la -F --icons=auto --hyperlink=auto --sort=date --reverse --no-filesize --no-time --no-user --git --git-repos'
-    alias vim nvim
+    command -qv nvim && alias vim nvim
     alias g git
 
     # abbreviations
