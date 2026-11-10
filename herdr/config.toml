@@ -1,0 +1,35 @@
+onboarding = false
+
+# theme
+[theme]
+name = "solarized"
+
+auto_switch = false
+[theme.custom]
+panel_bg = "reset"
+active_row_bg = "#073642"
+
+# ui
+[ui]
+pane_gaps = false
+pane_borders = "always"
+pane_outer_borders = true
+tab_bar_position = "top"
+sidebar_start_collapsed = true
+sidebar_width = 20
+window_title = "{workspace}: {terminal_title}"
+copy_on_select = true
+
+# claude
+[ui.sidebar.agents.rows_by_agent]
+claude = [["state_icon", "machine", "workspace", "tab"], ["terminal_title_stripped"]]
+
+[ui.sound.agents]
+claude = "on"
+
+# layout
+[experimental]
+switch_ascii_input_source_in_prefix = true
+
+[ui.toast]
+delivery = "terminal"

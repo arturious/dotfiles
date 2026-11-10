@@ -17,6 +17,7 @@ cask "itsycal"
 cask "grok-bot"
 
 # CLI
+brew "herdr"
 brew "starship"
 brew "fish"
 brew "carapace"   # completions for fish (~/.config/fish/config.fish)

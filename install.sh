@@ -63,6 +63,8 @@ done
 link ghostty                     "$HOME/.config/ghostty"
 link git                         "$HOME/.config/git"
 link hammerspoon                 "$HOME/.config/hammerspoon"
+# Single file: ~/.config/herdr also holds sockets, logs and sessions.
+link herdr/config.toml           "$HOME/.config/herdr/config.toml"
 # Whole dir: Karabiner doesn't reload on edits behind a symlinked file.
 link karabiner                   "$HOME/.config/karabiner"
 link lazygit                     "$HOME/.config/lazygit"
