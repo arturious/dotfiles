@@ -73,9 +73,6 @@
     "workbench.commandPalette.preserveInput": true,
     "workbench.externalBrowser": "zen",
     "editor.cursorStyle": "block-outline",
-    "vscode_custom_css.imports": [
-        "file://${userHome}/.config/cursor/custom.css"
-    ],
     "diffEditor.ignoreTrimWhitespace": true,
     "workbench.colorTheme": "Solarized Kuro",
     "cursor.composer.showEmptyStateTips": false,

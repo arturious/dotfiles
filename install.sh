@@ -50,11 +50,8 @@ link claude/settings.json        "$HOME/.claude/settings.json"
 link claude/statusline.py        "$HOME/.claude/statusline.py"
 link claude/themes/custom.json   "$HOME/.claude/themes/custom.json"
 
-# Cursor reads settings only from Application Support. ~/.config/cursor also
-# holds the Cursor CLI's own files, so link single files there too.
+# Cursor reads settings only from Application Support.
 link cursor/settings.json        "$APP_SUPPORT/Cursor/User/settings.json"
-link cursor/custom.css           "$HOME/.config/cursor/custom.css"
-link cursor/fix.sh               "$HOME/.config/cursor/fix.sh"
 
 # fish: single files, fisher keeps its own functions and completions there.
 link fish/config.fish            "$HOME/.config/fish/config.fish"
@@ -78,19 +75,6 @@ link tmux                        "$HOME/.config/tmux"
 # ---------------------------------------------------------------------------
 # Plugins
 # ---------------------------------------------------------------------------
-echo "==> Cursor extensions"
-cursor_bin="/Applications/Cursor.app/Contents/Resources/app/bin/cursor"
-if [ -x "$cursor_bin" ]; then
-  installed="$("$cursor_bin" --list-extensions 2>/dev/null || true)"
-  while IFS= read -r ext; do
-    [ -z "$ext" ] && continue
-    if ! grep -qixF "$ext" <<<"$installed"; then
-      echo "    installing $ext"
-      "$cursor_bin" --install-extension "$ext" >/dev/null 2>&1 || echo "    !! could not install $ext"
-    fi
-  done < "$DOTFILES_DIR/cursor/extensions.txt"
-fi
-
 echo "==> TPM"
 # ~/.tmux.conf would win over ~/.config/tmux/tmux.conf.
 if [ -L "$HOME/.tmux.conf" ]; then
