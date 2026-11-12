@@ -386,6 +386,69 @@
                                 ]
                             }
                         ]
+                    },
+                    {
+                        "description": "Key above Tab (§) = ~ in any layout (RU: Option+M, others: Shift+`)",
+                        "manipulators": [
+                            {
+                                "type": "basic",
+                                "conditions": [
+                                    {
+                                        "type": "input_source_if",
+                                        "input_sources": [
+                                            {
+                                                "input_source_id": "^com\\.apple\\.keylayout\\.Russian$"
+                                            }
+                                        ]
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "grave_accent_and_tilde",
+                                    "modifiers": {
+                                        "optional": [
+                                            "caps_lock"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "m",
+                                        "modifiers": [
+                                            "left_option"
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "basic",
+                                "conditions": [
+                                    {
+                                        "type": "input_source_unless",
+                                        "input_sources": [
+                                            {
+                                                "input_source_id": "^com\\.apple\\.keylayout\\.Russian$"
+                                            }
+                                        ]
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "grave_accent_and_tilde",
+                                    "modifiers": {
+                                        "optional": [
+                                            "caps_lock"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "grave_accent_and_tilde",
+                                        "modifiers": [
+                                            "left_shift"
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
                     }
                 ]
             },

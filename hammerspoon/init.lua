@@ -5,7 +5,8 @@ require("hs.ipc")  -- CLI `hs`
 _G.tools = {}
 for name, module in pairs({
   dockSwipeQuit   = "dock_swipe_quit",
-  windowCloseQuit = "window_close_quit",}) do
+  windowCloseQuit = "window_close_quit",
+}) do
   local ok, result = pcall(function() return require(module).start() end)
   if ok then
     _G.tools[name] = result

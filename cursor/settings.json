@@ -77,6 +77,7 @@
     "workbench.colorTheme": "Solarized Kuro",
     "cursor.composer.showEmptyStateTips": false,
     "cursor.composer.shouldChimeAfterChatFinishes": true,
-    "cursor.general.fontSmoothingAntialiased_v2": false,
     "cursor.chatMaxWidth": 1600,
+    "cursor.composer.conversationDensity": "detailed",
+    "cursor.general.fontSmoothingAntialiased_v2": false,
 }
