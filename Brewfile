@@ -23,6 +23,7 @@ brew "fish"
 brew "carapace"   # completions for fish (~/.config/fish/config.fish)
 brew "tmux"
 brew "fzf"
+brew "zoxide"
 brew "eza"
 brew "lazygit"
 brew "git-delta"    # git pager, ~/.config/git/delta.gitconfig

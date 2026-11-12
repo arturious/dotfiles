@@ -33,6 +33,9 @@ if status is-interactive
     set -gx BAT_THEME "Solarized (dark)"
     alias less bat
 
+    # zoxide
+    zoxide init fish | source
+
     # aliases
     alias ll 'eza -la -F --icons=auto --hyperlink=auto --sort=date --reverse --no-filesize --no-time --no-user --git --git-repos'
     command -qv nvim && alias vim nvim
